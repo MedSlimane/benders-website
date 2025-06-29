@@ -1,0 +1,30 @@
+.inline-text-effect {
+    position: relative;
+    color: inherit;
+    display: inline-block;
+  }
+  
+  .inline-text-effect:hover {
+    /* No styles needed here anymore for the container */
+  }
+  
+  .inline-text-effect-span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-electric-blue);
+    color: white;
+    clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+    transform-origin: center;
+    transition: all cubic-bezier(0.1, 0.5, 0.5, 1) 0.4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* So it doesn't block the hover on the parent */
+  }
+  
+  .inline-text-effect:hover > .inline-text-effect-span {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  } 
