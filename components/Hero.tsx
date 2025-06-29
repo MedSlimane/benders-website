@@ -117,8 +117,8 @@ const Hero = ({ loading }: HeroProps) => {
             </div>
           </nav>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center md:justify-between flex-grow px-6 md:px-16">
-              <div className="flex-1 text-white text-center md:text-left py-8 md:py-0">
+          <div className="relative z-10 flex flex-col md:flex-row items-center flex-grow px-6 md:px-16">
+              <div className="md:w-1/2 text-white text-center md:text-left py-8 md:py-0">
                   <h1 ref={headingRef} className="text-4xl md:text-6xl font-gilroy font-bold mb-6">
                       <span className="block overflow-hidden">
                           <span className="block">We Help <InlineTextEffect hoverText="BEND">Brands</InlineTextEffect></span>
@@ -136,15 +136,15 @@ const Hero = ({ loading }: HeroProps) => {
                       <ShinyText text="Get in Touch" />
                   </button>
               </div>
-              <div ref={imageRef} className="flex-1 mt-10 md:mt-0 flex justify-center items-center">
-                  <Image 
-                      src="/bender-man/bender-man.png" 
-                      alt="Hero Image"
-                      width={600}
-                      height={600}
-                      className="object-contain w-[300px] h-[300px] md:w-[600px] md:h-[600px]"
-                  />
-              </div>
+          </div>
+          <div ref={imageRef} className="absolute bottom-0 inset-x-0 flex justify-center md:justify-end pointer-events-none">
+              <Image 
+                  src="/bender-man/bender-man.png" 
+                  alt="Hero Image"
+                  width={700}
+                  height={700}
+                  className="object-contain w-[350px] h-[350px] md:w-[700px] md:h-[700px] pointer-events-auto"
+              />
           </div>
       </section>
   )
