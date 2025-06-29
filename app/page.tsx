@@ -1,9 +1,19 @@
-import LogoCarousel from '../components/LogoCarousel';
+"use client"
+
+import Hero from "@/components/Hero"
+
+import Preloader from "@/components/preloader"
+import { useState } from "react"
 
 export default function Home() {
+  const [loading, setLoading] = useState(true)
+
+
   return (
-    <div className="min-h-screen bg-background">
-      <LogoCarousel />
-    </div>
-  );
+    <main>
+      {loading && <Preloader onComplete={() => setLoading(false)} />}
+      <Hero loading={loading} />
+    
+    </main>
+  )
 }

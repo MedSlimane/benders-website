@@ -93,6 +93,7 @@
   /* Gradient Definitions */
   --gradient-primary: linear-gradient(135deg, var(--color-electric-blue) 0%, var(--color-royal-navy) 100%);
   --gradient-secondary: linear-gradient(135deg, var(--color-mint-cyan) 0%, var(--color-teal-medium) 100%);
+  --gradient-tertiary: linear-gradient(135deg, var(--color-midnight-navy) 0%, var(--color-royal-navy) 70%, var(--color-electric-blue) 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -103,10 +104,19 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--gradient-tertiary);
   color: var(--foreground);
   font-family: var(--font-sans);
   font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  scroll-behavior: smooth;
 }
 
 /* Utility classes for brand gradients */
@@ -116,6 +126,10 @@ body {
 
 .gradient-secondary {
   background: var(--gradient-secondary);
+}
+
+.gradient-tertiary {
+  background: var(--gradient-tertiary);
 }
 
 /* Typography utilities */
@@ -220,4 +234,16 @@ body {
   to {
     transform: translateX(calc(-100% - 1px));
   }
+}
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-electric-blue), var(--color-mint-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-secondary {
+  background: linear-gradient(135deg, var(--color-blue-lightest), var(--color-mint-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
