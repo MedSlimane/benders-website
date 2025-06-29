@@ -22,6 +22,9 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
 
       if (!icon || !text || !svg) return
 
+      const initialWidth = window.innerWidth < 768 ? 300 : 400
+      gsap.set(svg, { width: initialWidth, height: "auto" })
+
       // Calculate the necessary shift to center the icon
       const iconRect = icon.getBoundingClientRect()
       const wrapperRect = logoWrapper.getBoundingClientRect()
@@ -32,7 +35,12 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       // Initial states
       gsap.set(logoWrapper, { opacity: 1, scale: 1, willChange: "transform" })
       gsap.set(text, { opacity: 1, willChange: "opacity" })
-      gsap.set(svg, { x: 0, willChange: "transform" })
+      gsap.set(svg, {
+        x: 0,
+        willChange: "transform",
+        force3D: true,
+        rotation: 0.01,
+      })
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -85,7 +93,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             opacity: 0,
             duration: 1,
           },
-          "-=1.5",
+          "-=0.8",
         )
     }, preloaderRef)
 
@@ -95,10 +103,10 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   return (
     <div
       ref={preloaderRef}
-      className="fixed inset-0 bg-midnight-navy flex justify-center items-center z-[100] text-white"
+      className="fixed inset-0 flex justify-center items-center z-[100] text-white"
     >
       <div ref={logoWrapperRef} style={{ overflow: "hidden" }}>
-        <Logo width={400} height={96} />
+        <Logo className="w-[300px] sm:w-[400px] h-auto" />
       </div>
     </div>
   )
