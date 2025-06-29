@@ -3,7 +3,7 @@ const Hero = () => {
   return (
       <section className='relative overflow-hidden w-full h-screen bg-midnight-navy'>
           {/* navbar*/}
-          <nav className='flex justify-between items-center p-4 w-full'>
+          <nav className='flex justify-between items-center p-4 w-full m-5'>
             <div className='flex items-center gap-8 p-2'>
                 <Image src="/Benders-logo/png/1@2x.png" alt='Benders Logo' width={100} height={100} />
             </div>
