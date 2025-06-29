@@ -147,3 +147,16 @@ html, body {
 .font-neue-montreal {
   font-family: var(--font-neue-montreal);
 }
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-electric-blue), var(--color-mint-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-secondary {
+  background: linear-gradient(135deg, var(--color-blue-lightest), var(--color-mint-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

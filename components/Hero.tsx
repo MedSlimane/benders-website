@@ -113,7 +113,7 @@ const Hero = ({ loading }: HeroProps) => {
       <section ref={heroRef} className='relative overflow-hidden w-full h-screen gradient-tertiary'>
           <nav className='flex justify-between items-center p-4 w-full m-5'>
             <div ref={logoRef} className='flex items-center gap-8 p-2'>
-                <Image src="/Benders-logo/png/3@2x.png" alt='Benders Logo' width={100} height={100} />
+                <Image src="/Benders-logo/png/3@2x.png" alt='Benders Logo' width={125} height={125} />
             </div>
           </nav>
 
@@ -130,9 +130,9 @@ const Hero = ({ loading }: HeroProps) => {
                       </span>
                   </h1>
                   <p ref={paragraphRef} className="text-xl font-neue-montreal mb-8 max-w-2xl">
-                     We Design And Manage Marketing Campaigns That Drive Results. 
+                     We Design And Manage Marketing Campaigns That Drive <span className="text-2xl font-bold text-gradient-secondary">Results.</span> 
                   </p>
-                  <button ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
+                  <button type="button" ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
                       <ShinyText text="Get in Touch" />
                   </button>
               </div>
