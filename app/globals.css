@@ -93,7 +93,7 @@
   /* Gradient Definitions */
   --gradient-primary: linear-gradient(135deg, var(--color-electric-blue) 0%, var(--color-royal-navy) 100%);
   --gradient-secondary: linear-gradient(135deg, var(--color-mint-cyan) 0%, var(--color-teal-medium) 100%);
-  --gradient-tertiary: linear-gradient(135deg, var(--color-midnight-navy) 0%, var(--color-royal-navy) 70%, var(--color-electric-blue) 100%);
+  --gradient-tertiary: linear-gradient(135deg,var(--color-midnight-navy) 0%, var(--color-royal-navy) 25%, var(--color-electric-blue) 66%, var(--color-mint-cyan) 90%);
 }
 
 @media (prefers-color-scheme: dark) {
