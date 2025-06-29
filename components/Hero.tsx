@@ -1,30 +1,144 @@
+"use client"
 import Image from "next/image"
-const Hero = () => {
+import { useRef } from "react"
+import { gsap } from "gsap"
+import { useGSAP } from "@gsap/react"
+
+interface HeroProps {
+  loading: boolean
+}
+
+const Hero = ({ loading }: HeroProps) => {
+  const heroRef = useRef<HTMLElement>(null)
+  const logoRef = useRef<HTMLDivElement>(null)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const paragraphRef = useRef<HTMLParagraphElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(
+    () => {
+      // Set initial states (elements are invisible/offset)
+      gsap.set(
+        [
+          logoRef.current,
+          headingRef.current,
+          paragraphRef.current,
+          buttonRef.current,
+        ],
+        {
+          opacity: 0,
+          y: 30,
+        },
+      )
+
+      gsap.set(imageRef.current, {
+        opacity: 0,
+        x: 100,
+        scale: 0.8,
+      })
+
+      if (loading) return
+      // Create timeline for coordinated animations
+      const tl = gsap.timeline({ delay: 0.2 })
+
+      // Animate logo
+      tl.to(logoRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      })
+
+      // Animate heading with split text effect
+      .to(headingRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out"
+      }, "-=0.4")
+
+      // Animate paragraph
+      .to(paragraphRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.6")
+
+      // Animate button
+      .to(buttonRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "back.out(1.7)"
+      }, "-=0.4")
+
+      // Animate hero image
+      .to(imageRef.current, {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "power2.out"
+      }, "-=0.8")
+
+      // Add floating animation to the image
+      gsap.to(imageRef.current, {
+        y: "-10px",
+        duration: 2,
+        ease: "power1.inOut",
+        yoyo: true,
+        repeat: -1,
+        delay: 2
+      })
+
+      // Add subtle hover animations
+      const button = buttonRef.current
+      if (button) {
+        button.addEventListener('mouseenter', () => {
+          gsap.to(button, {
+            scale: 1.05,
+            duration: 0.3,
+            ease: "power2.out"
+          })
+        })
+
+        button.addEventListener('mouseleave', () => {
+          gsap.to(button, {
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          })
+        })
+      }
+    },
+    { scope: heroRef, dependencies: [loading] },
+  )
+
   return (
-      <section className='relative overflow-hidden w-full h-screen bg-midnight-navy'>
+      <section ref={heroRef} className='relative overflow-hidden w-full h-screen gradient-tertiary'>
           {/* navbar*/}
           <nav className='flex justify-between items-center p-4 w-full m-5'>
-            <div className='flex items-center gap-8 p-2'>
-                <Image src="/Benders-logo/png/1@2x.png" alt='Benders Logo' width={100} height={100} />
+            <div ref={logoRef} className='flex items-center gap-8 p-2'>
+                <Image src="/Benders-logo/png/3@2x.png" alt='Benders Logo' width={100} height={100} />
             </div>
           </nav>
 
           <div className="flex items-center justify-between h-[calc(100vh-88px)] px-16">
              
               <div className="flex-1 text-white">
-                  <h1 className="text-6xl font-gilroy font-bold mb-6">
-                      Bending Creativity,
+                  <h1 ref={headingRef} className="text-6xl font-gilroy font-bold mb-6">
+                      We Help Brands Grow
                       <br />
-                      Into Growth
+                      Though Creative Strategy
                   </h1>
-                  <p className="text-xl font-neue-montreal mb-8">
-                      Transforming ideas into digital reality
+                  <p ref={paragraphRef} className="text-xl font-neue-montreal mb-8">
+                  We design and manage marketing campaigns that drive results
                   </p>
-                  <button className="bg-electric-blue text-white px-8 py-3 rounded font-gilroy">
-                      Learn More
-                  </button>
+                
               </div>
-              <div className="flex-1 mt-10">
+              <div ref={imageRef} className="flex-1 mt-10">
                   <Image 
                       src="/bender-man/bender-man.png" 
                       alt="Hero Image"
