@@ -5,6 +5,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import InlineTextEffect from "./InlineTextEffect"
 import "./inline-text-effect.css"
+import ShinyText from "./ShinyText/ShinyText"
 
 interface HeroProps {
   loading: boolean
@@ -132,7 +133,7 @@ const Hero = ({ loading }: HeroProps) => {
                      We Design And Manage Marketing Campaigns That Drive Results. 
                   </p>
                   <button ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
-                      Get in Touch
+                      <ShinyText text="Get in Touch" />
                   </button>
               </div>
               <div ref={imageRef} className="flex-1 mt-10 flex justify-center items-center">

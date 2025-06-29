@@ -117,6 +117,15 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
+/* Smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
 /* Utility classes for brand gradients */
 .gradient-primary {
   background: var(--gradient-primary);
