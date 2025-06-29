@@ -1,103 +1,133 @@
-import Image from "next/image";
+
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 gradient-primary opacity-95"></div>
+        
+        {/* Content */}
+        <div className="relative z-10 px-6 py-24 mx-auto max-w-7xl sm:py-32 lg:px-8">
+          <div className="text-center">
+            <h1 className="font-neue-montreal text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              BENDERS
+              <span className="block text-mint-cyan">Digital Innovation</span>
+            </h1>
+            
+            <p className="font-gilroy mt-6 text-lg leading-8 text-blue-lightest max-w-2xl mx-auto sm:text-xl">
+              Creating dynamic digital experiences with modern design and cutting-edge technology. 
+              We bend the rules of what&apos;s possible.
+            </p>
+            
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <button className="font-neue-montreal rounded-lg bg-mint-cyan px-6 py-3 text-base font-semibold text-midnight-navy shadow-sm hover:bg-teal-light transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint-cyan">
+                Get Started
+              </button>
+              <button className="font-gilroy text-base font-semibold leading-7 text-white hover:text-mint-cyan transition-colors">
+                Learn more <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Brand Colors Showcase */}
+      <section className="py-24 bg-background">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-neue-montreal text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Brand Identity
+            </h2>
+            <p className="font-gilroy mt-4 text-lg text-foreground/70">
+              Our color palette and typography system
+            </p>
+          </div>
+          
+          {/* Color Palette */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
+            <div className="text-center">
+              <div className="w-full h-24 bg-electric-blue rounded-lg mb-3 shadow-lg"></div>
+              <p className="font-neue-montreal text-sm font-medium text-foreground">Electric Blue</p>
+              <p className="font-gilroy text-xs text-foreground/60">#0055ff</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-full h-24 bg-royal-navy rounded-lg mb-3 shadow-lg"></div>
+              <p className="font-neue-montreal text-sm font-medium text-foreground">Royal Navy</p>
+              <p className="font-gilroy text-xs text-foreground/60">#030d54</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-full h-24 bg-midnight-navy rounded-lg mb-3 shadow-lg"></div>
+              <p className="font-neue-montreal text-sm font-medium text-foreground">Midnight Navy</p>
+              <p className="font-gilroy text-xs text-foreground/60">#04082e</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-full h-24 bg-mint-cyan rounded-lg mb-3 shadow-lg"></div>
+              <p className="font-neue-montreal text-sm font-medium text-foreground">Mint Cyan</p>
+              <p className="font-gilroy text-xs text-foreground/60">#2de6c7</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-full h-24 bg-blue-medium rounded-lg mb-3 shadow-lg"></div>
+              <p className="font-neue-montreal text-sm font-medium text-foreground">Blue Medium</p>
+              <p className="font-gilroy text-xs text-foreground/60">#1e8bff</p>
+            </div>
+          </div>
+
+          {/* Typography Showcase */}
+          <div className="space-y-8">
+            <div>
+              <h3 className="font-neue-montreal text-2xl font-bold text-foreground mb-4">Typography System</h3>
+            </div>
+            
+            <div className="bg-blue-lightest p-6 rounded-lg">
+              <h4 className="font-neue-montreal text-xl font-bold text-royal-navy mb-4">Neue Montreal - Display Font</h4>
+              <div className="space-y-2">
+                <p className="font-neue-montreal text-3xl font-light text-royal-navy">Light Weight</p>
+                <p className="font-neue-montreal text-3xl font-normal text-royal-navy">Regular Weight</p>
+                <p className="font-neue-montreal text-3xl font-medium text-royal-navy">Medium Weight</p>
+                <p className="font-neue-montreal text-3xl font-bold text-royal-navy">Bold Weight</p>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <h4 className="font-gilroy text-xl font-bold text-royal-navy mb-4">Gilroy - Primary Typeface</h4>
+              <div className="space-y-2">
+                <p className="font-gilroy text-lg text-foreground">Regular text for body content and descriptions</p>
+                <p className="font-gilroy text-lg font-medium text-foreground">Medium weight for emphasis and subheadings</p>
+                <p className="font-gilroy text-lg font-bold text-foreground">Bold weight for strong statements</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gradient Showcase */}
+      <section className="py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-neue-montreal text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Brand Gradients
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="gradient-primary p-8 rounded-lg text-center">
+              <h3 className="font-neue-montreal text-2xl font-bold text-white mb-4">Primary Gradient</h3>
+              <p className="font-gilroy text-blue-lightest">Electric Blue to Royal Navy</p>
+            </div>
+            
+            <div className="gradient-secondary p-8 rounded-lg text-center">
+              <h3 className="font-neue-montreal text-2xl font-bold text-midnight-navy mb-4">Secondary Gradient</h3>
+              <p className="font-gilroy text-midnight-navy">Mint Cyan to Teal Medium</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
