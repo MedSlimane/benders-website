@@ -8,6 +8,7 @@ import { useState } from "react"
 export default function Home() {
   const [loading, setLoading] = useState(true)
 
+
   return (
     <main>
       {loading && <Preloader onComplete={() => setLoading(false)} />}
