@@ -97,9 +97,9 @@ export default function Home() {
             <div className="bg-gray-50 p-6 rounded-lg">
               <h4 className="font-gilroy text-xl font-bold text-royal-navy mb-4">Gilroy - Primary Typeface</h4>
               <div className="space-y-2">
-                <p className="font-gilroy text-lg text-foreground">Regular text for body content and descriptions</p>
-                <p className="font-gilroy text-lg font-medium text-foreground">Medium weight for emphasis and subheadings</p>
-                <p className="font-gilroy text-lg font-bold text-foreground">Bold weight for strong statements</p>
+                <p className="font-gilroy text-lg text-gray-800">Regular text for body content and descriptions</p>
+                <p className="font-gilroy text-lg font-medium text-gray-800">Medium weight for emphasis and subheadings</p>
+                <p className="font-gilroy text-lg font-bold text-gray-800">Bold weight for strong statements</p>
               </div>
             </div>
           </div>
