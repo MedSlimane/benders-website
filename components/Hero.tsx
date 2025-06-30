@@ -137,7 +137,7 @@ const Hero = ({ loading }: HeroProps) => {
                   </button>
               </div>
           </div>
-          <div ref={imageRef} className="absolute bottom-0 inset-x-0 flex justify-center md:justify-end pointer-events-none">
+          <div ref={imageRef} className="absolute bottom-0 inset-x-0 m-[-12] flex justify-center md:justify-end pointer-events-none">
               <Image 
                   src="/bender-man/bender-man.png" 
                   alt="Hero Image"
