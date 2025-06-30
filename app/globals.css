@@ -222,9 +222,7 @@ html, body {
   background: linear-gradient(to right, rgba(4, 8, 46, 0), #04082e);
 }
 
-.logos:hover .logos-slide {
-  animation-play-state: paused;
-}
+/* Removed hover pause effect to keep animation smooth */
 
 .logos-slide {
   display: inline-block;
@@ -235,20 +233,26 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 200px;
+  min-width: 280px;
   padding: 0 40px;
 }
 
-.logo-image {
-  height: 35px !important;
-  width: auto !important;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
+.logo-container {
+  width: 200px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logo-image:hover {
-  opacity: 1;
+.logo-image {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  object-fit: contain;
 }
 
 @keyframes slide {

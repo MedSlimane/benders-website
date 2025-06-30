@@ -3,14 +3,16 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { motion } from "framer-motion"
 
 gsap.registerPlugin(ScrollTrigger)
 
 interface ProcessSectionProps {
   className?: string
+  loading: boolean
 }
 
-const ProcessSection = ({ className = "" }: ProcessSectionProps) => {
+const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const descriptionRef = useRef<HTMLParagraphElement>(null)
@@ -44,6 +46,8 @@ const ProcessSection = ({ className = "" }: ProcessSectionProps) => {
         scale: 0,
         opacity: 0,
       })
+
+      if (loading) return
 
       // Create timeline with ScrollTrigger
       const tl = gsap.timeline({
@@ -92,7 +96,7 @@ const ProcessSection = ({ className = "" }: ProcessSectionProps) => {
         ease: "back.out(1.4)",
       }, "-=0.6")
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [loading] }
   )
 
   const processSteps = [
@@ -141,9 +145,13 @@ const ProcessSection = ({ className = "" }: ProcessSectionProps) => {
   ]
 
   return (
-    <section 
+    <motion.section 
       ref={sectionRef} 
       className={`relative overflow-hidden w-full py-20 md:py-32 ${className}`}
+      style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
     >
       <div className="container mx-auto px-6 md:px-16">
         {/* Header */}
@@ -269,7 +277,7 @@ const ProcessSection = ({ className = "" }: ProcessSectionProps) => {
       <div className="absolute top-20 left-10 w-2 h-2 bg-[var(--color-mint-cyan)] rounded-full opacity-60"></div>
       <div className="absolute bottom-32 right-16 w-3 h-3 bg-[var(--color-electric-blue)] rounded-full opacity-40"></div>
       <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full opacity-30"></div>
-    </section>
+    </motion.section>
   )
 }
 

@@ -22,11 +22,11 @@ export default function Home() {
     <main>
       {loading && <Preloader onComplete={() => setLoading(false)} />}
       <Hero loading={loading} />
-      <LogoCarousel />
-      <Services />
-      <ProcessSection />
-      <Testimonials />
-      <CTA />
+      <LogoCarousel loading={loading} />
+      <Services loading={loading} />
+      <ProcessSection loading={loading} />
+      <Testimonials loading={loading} />
+      <CTA loading={loading} />
     </main>
   )
 }

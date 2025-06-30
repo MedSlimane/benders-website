@@ -3,19 +3,22 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import ShinyText from "./ShinyText/ShinyText"
+import { motion } from "framer-motion"
 
 interface CTAProps {
   title?: string
   subtitle?: string
   buttonText?: string
   className?: string
+  loading: boolean
 }
 
 const CTA = ({ 
   title = "Ready to Transform Your Brand?", 
   subtitle = "Let's discuss how we can help you achieve your marketing goals through creative strategy.",
   buttonText = "Book a Call",
-  className = ""
+  className = "",
+  loading
 }: CTAProps) => {
   const ctaRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -29,6 +32,8 @@ const CTA = ({
         opacity: 0,
         y: 30,
       })
+
+      if (loading) return
 
       // Create timeline for animation
       const tl = gsap.timeline({
@@ -79,13 +84,17 @@ const CTA = ({
         })
       }
     },
-    { scope: ctaRef }
+    { scope: ctaRef, dependencies: [loading] }
   )
 
   return (
-    <section 
+    <motion.section 
       ref={ctaRef} 
       className={`relative w-full py-16 md:py-24 ${className}`}
+      style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.8 }}
     >
       <div className="container mx-auto px-6 md:px-16 text-center">
         <h2 
@@ -114,7 +123,7 @@ const CTA = ({
           <ShinyText text={buttonText} />
         </button>
       </div>
-    </section>
+    </motion.section>
   )
 }
 

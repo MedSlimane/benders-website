@@ -1,9 +1,21 @@
 'use client'
 
+import { useRef } from "react"
+import { gsap } from "gsap"
+import { useGSAP } from "@gsap/react"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { motion } from "framer-motion"
+
+gsap.registerPlugin(ScrollTrigger)
+
 interface Service {
   title: string
   description: string
   iconName: string
+}
+
+interface ServicesProps {
+  loading: boolean
 }
 
 const services: Service[] = [
@@ -49,12 +61,62 @@ const services: Service[] = [
   }
 ]
 
-export default function Services() {
+export default function Services({ loading }: ServicesProps) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const cardsRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(
+    () => {
+      const cards = cardsRef.current?.querySelectorAll('.service-card')
+      
+      // Set initial states
+      gsap.set([headerRef.current, cards || []], {
+        opacity: 0,
+        y: 30,
+      })
+
+      if (loading) return
+
+      // Create timeline with ScrollTrigger
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse"
+        }
+      })
+
+      tl.to(headerRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+      })
+      .to(cards || [], {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+      }, "-=0.4")
+    },
+    { scope: sectionRef, dependencies: [loading] }
+  )
+
   return (
-    <section className="relative overflow-hidden w-full py-20 md:py-32">
+    <motion.section 
+      ref={sectionRef} 
+      className="relative overflow-hidden w-full py-20 md:py-32" 
+      style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+    >
       <div className="container mx-auto px-6 md:px-16">
         {/* Header */}
-        <div className="text-center mb-16 md:mb-24">
+        <div ref={headerRef} className="text-center mb-16 md:mb-24">
           <div className="inline-block bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
             <span className="text-[var(--color-mint-cyan)] font-neue-montreal font-medium text-sm">
               Services
@@ -72,11 +134,11 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12">
           {services.map((service, index) => (
             <div
               key={index}
-              className="group relative p-6 rounded-2xl backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-electric-blue/20"
+              className="service-card group relative p-6 rounded-2xl backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-electric-blue/20"
             >
               {/* Icon Placeholder */}
               <div className="w-12 h-12 mb-4 rounded-xl bg-gradient-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -121,6 +183,6 @@ export default function Services() {
       <div className="absolute top-20 left-10 w-2 h-2 bg-[var(--color-mint-cyan)] rounded-full opacity-60"></div>
       <div className="absolute bottom-32 right-16 w-3 h-3 bg-[var(--color-electric-blue)] rounded-full opacity-40"></div>
       <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full opacity-30"></div>
-    </section>
+    </motion.section>
   )
 } 

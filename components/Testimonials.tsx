@@ -2,6 +2,10 @@
 import { useRef, useEffect } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { motion } from "framer-motion"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Testimonial {
   id: number
@@ -13,6 +17,10 @@ interface Testimonial {
   verified?: boolean
   likes?: number
   time?: string
+}
+
+interface TestimonialsProps {
+  loading: boolean
 }
 
 const testimonials: Testimonial[] = [
@@ -166,7 +174,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   )
 }
 
-const Testimonials = () => {
+const Testimonials = ({ loading }: TestimonialsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const carouselRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -175,6 +183,8 @@ const Testimonials = () => {
     // Title animation
     gsap.set(titleRef.current, { opacity: 0, y: 30 })
     
+    if (loading) return
+
     const titleTl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -208,7 +218,7 @@ const Testimonials = () => {
         }
       })
     }
-  }, { scope: containerRef })
+  }, { scope: containerRef, dependencies: [loading] })
 
   useEffect(() => {
     const carousel = carouselRef.current
@@ -232,7 +242,14 @@ const Testimonials = () => {
   }, [])
 
   return (
-    <section ref={containerRef} className="py-16 md:py-24 overflow-hidden">
+    <motion.section 
+      ref={containerRef} 
+      className="py-16 md:py-24 overflow-hidden" 
+      style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.7 }}
+    >
       <div className="container mx-auto px-6 md:px-16">
         <h2 
           ref={titleRef}
@@ -262,7 +279,7 @@ const Testimonials = () => {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
