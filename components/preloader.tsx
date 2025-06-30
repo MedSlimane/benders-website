@@ -32,10 +32,8 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         svg.setAttribute("vector-effect", "non-scaling-stroke")
         svg.setAttribute("shape-rendering", "geometricPrecision")
         svg.setAttribute("color-rendering", "optimizeQuality")
-        // Force the browser to keep it as vector during scaling
-        svg.style.willChange = "transform"
+        // Avoid GPU‐forcing hints so the SVG remains vector during scaling
         svg.style.backfaceVisibility = "hidden"
-        svg.style.transform = "translateZ(0)"
       }
       
       gsap.set(svg, { 
@@ -54,9 +52,6 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       gsap.set(logoWrapper, { 
         opacity: 1, 
         scale: 1, 
-        willChange: "transform, opacity",
-        // Ensure hardware acceleration and vector rendering
-        force3D: true,
         transformOrigin: "center center"
       })
       gsap.set(text, { 
@@ -65,8 +60,6 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       })
       gsap.set(svg, {
         x: 0,
-        willChange: "transform, width, height",
-        force3D: true,
         rotation: 0.01,
         transformOrigin: "center center"
       })
@@ -105,13 +98,15 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           },
           "<",
         )
-        // 3. Zoom in
+        // 3. Zoom in by scaling the SVG itself (vector-safe)
         .to(
-          logoWrapper,
+          svg,
           {
-            scale: 200,
+            attr: { transform: "scale(200)" },
             duration: 1.8,
             ease: "expo.in",
+            opacity: 0,
+            transformOrigin: "center center"
           },
           "+=0.2",
         )
@@ -144,9 +139,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         ref={logoWrapperRef} 
         style={{ 
           overflow: "hidden",
-          // Additional rendering hints
-          willChange: "transform, opacity",
-          backfaceVisibility: "hidden",
+          // Keep wrapper simple so browser stays on CPU pipeline
           perspective: 1000
         }}
       >
@@ -156,11 +149,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             // Force crisp vector rendering at all scales
             imageRendering: "-webkit-optimize-contrast",
             shapeRendering: "geometricPrecision",
-            // Additional browser-specific optimizations
-            WebkitTransform: "translateZ(0)",
-            transform: "translateZ(0)",
-            // Prevent rasterization
-            willChange: "transform",
+            // Prevent rasterisation hints
             vectorEffect: "non-scaling-stroke"
           }}
         />
