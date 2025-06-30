@@ -22,8 +22,26 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
 
       if (!icon || !text || !svg) return
 
-      const initialWidth = window.innerWidth < 768 ? 300 : 400
-      gsap.set(svg, { width: initialWidth, height: "auto" })
+      const initialWidth = window.innerWidth < 768 ? 600 : 800 // Start with higher resolution
+      
+      // Apply CSS properties directly to avoid GSAP conflicts and prevent rasterization
+      if (svg instanceof SVGElement) {
+        svg.style.imageRendering = "-webkit-optimize-contrast"
+        svg.style.shapeRendering = "geometricPrecision"
+        svg.style.textRendering = "geometricPrecision"
+        svg.setAttribute("vector-effect", "non-scaling-stroke")
+        svg.setAttribute("shape-rendering", "geometricPrecision")
+        svg.setAttribute("color-rendering", "optimizeQuality")
+        // Force the browser to keep it as vector during scaling
+        svg.style.willChange = "transform"
+        svg.style.backfaceVisibility = "hidden"
+        svg.style.transform = "translateZ(0)"
+      }
+      
+      gsap.set(svg, { 
+        width: initialWidth, 
+        height: "auto"
+      })
 
       // Calculate the necessary shift to center the icon
       const iconRect = icon.getBoundingClientRect()
@@ -32,14 +50,25 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       const wrapperCenterX = wrapperRect.left + wrapperRect.width / 2
       const shiftX = wrapperCenterX - iconCenterX
 
-      // Initial states
-      gsap.set(logoWrapper, { opacity: 1, scale: 1, willChange: "transform" })
-      gsap.set(text, { opacity: 1, willChange: "opacity" })
+      // Initial states with improved rendering properties
+      gsap.set(logoWrapper, { 
+        opacity: 1, 
+        scale: 1, 
+        willChange: "transform, opacity",
+        // Ensure hardware acceleration and vector rendering
+        force3D: true,
+        transformOrigin: "center center"
+      })
+      gsap.set(text, { 
+        opacity: 1, 
+        willChange: "opacity" 
+      })
       gsap.set(svg, {
         x: 0,
-        willChange: "transform",
+        willChange: "transform, width, height",
         force3D: true,
         rotation: 0.01,
+        transformOrigin: "center center"
       })
 
       const tl = gsap.timeline({
@@ -104,9 +133,37 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
     <div
       ref={preloaderRef}
       className="fixed inset-0 flex justify-center items-center z-[100] text-white"
+      style={{
+        // Ensure proper rendering context
+        imageRendering: "-webkit-optimize-contrast",
+        WebkitFontSmoothing: "antialiased",
+        textRendering: "geometricPrecision"
+      }}
     >
-      <div ref={logoWrapperRef} style={{ overflow: "hidden" }}>
-        <Logo className="w-[300px] sm:w-[400px] h-auto" />
+      <div 
+        ref={logoWrapperRef} 
+        style={{ 
+          overflow: "hidden",
+          // Additional rendering hints
+          willChange: "transform, opacity",
+          backfaceVisibility: "hidden",
+          perspective: 1000
+        }}
+      >
+        <Logo 
+          className="w-[600px] sm:w-[800px] h-auto" 
+          style={{
+            // Force crisp vector rendering at all scales
+            imageRendering: "-webkit-optimize-contrast",
+            shapeRendering: "geometricPrecision",
+            // Additional browser-specific optimizations
+            WebkitTransform: "translateZ(0)",
+            transform: "translateZ(0)",
+            // Prevent rasterization
+            willChange: "transform",
+            vectorEffect: "non-scaling-stroke"
+          }}
+        />
       </div>
     </div>
   )

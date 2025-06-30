@@ -141,9 +141,9 @@ const Hero = ({ loading }: HeroProps) => {
               <Image 
                   src="/bender-man/bender-man.png" 
                   alt="Hero Image"
-                  width={700}
-                  height={700}
-                  className="object-contain w-[350px] h-[350px] md:w-[700px] md:h-[700px] pointer-events-auto"
+                  width={800}
+                  height={800}
+                  className="object-contain w-[350px] h-[350px] md:w-[700px] md:h-[700px] 2xl:w-[850px] 2xl:h-[850px] pointer-events-auto"
               />
           </div>
       </section>
