@@ -236,11 +236,11 @@ const Testimonials = () => {
   }, [])
 
   return (
-    <section ref={containerRef} className="py-16 md:py-24 bg-gray-50 overflow-hidden">
+    <section ref={containerRef} className="py-16 md:py-24 gradient-primary overflow-hidden">
       <div className="container mx-auto px-6 md:px-16">
         <h2 
           ref={titleRef}
-          className="text-3xl md:text-5xl font-gilroy font-bold text-center text-gray-900 mb-12"
+          className="text-3xl md:text-5xl font-gilroy font-bold text-center text-white mb-12"
         >
           What Our Clients Say
         </h2>
