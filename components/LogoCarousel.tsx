@@ -10,7 +10,7 @@ export default function LogoCarousel() {
     <section className="pt-8 ">
     <div className="text-center">
       <h2 className="font-neue-montreal font-medium text-md text-white/90">
-        Brands that <span className="text-gradient-secondary text-2xl font-bold"> Scale</span> with us :
+        Brands that <span className="text-gradient-secondary text-xl font-bold"> Scale</span> with us :
       </h2>
     </div>
 
@@ -44,7 +44,7 @@ export default function LogoCarousel() {
       </div>
       <div className="text-center">
       <h2 className="font-neue-montreal font-medium text-white/90">
-        You Could Be <span className="text-gradient-secondary text-2xl font-bold">Next</span>
+        You Could Be <span className="text-gradient-secondary text-xl font-bold">Next</span>
       </h2>
     </div>
   </section>

@@ -133,7 +133,7 @@ const Hero = ({ loading }: HeroProps) => {
                      We Design And Manage Marketing Campaigns That Drive <span className="text-xl md:text-2xl font-bold text-gradient-secondary">Results.</span> 
                   </p>
                   <button type="button" ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
-                      <ShinyText text="Get in Touch" />
+                      <ShinyText text="Lets Scale" />
                   </button>
               </div>
           </div>

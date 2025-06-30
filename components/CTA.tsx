@@ -85,7 +85,7 @@ const CTA = ({
   return (
     <section 
       ref={ctaRef} 
-      className={`relative w-full py-16 md:py-24 gradient-tertiary ${className}`}
+      className={`relative w-full py-16 md:py-24 ${className}`}
     >
       <div className="container mx-auto px-6 md:px-16 text-center">
         <h2 

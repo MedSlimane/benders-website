@@ -226,17 +226,13 @@ const Testimonials = () => {
       repeatDelay: 1
     })
 
-    // Pause on hover
-    carousel.addEventListener('mouseenter', () => autoScroll.pause())
-    carousel.addEventListener('mouseleave', () => autoScroll.resume())
-
     return () => {
       autoScroll.kill()
     }
   }, [])
 
   return (
-    <section ref={containerRef} className="py-16 md:py-24 gradient-primary overflow-hidden">
+    <section ref={containerRef} className="py-16 md:py-24 overflow-hidden">
       <div className="container mx-auto px-6 md:px-16">
         <h2 
           ref={titleRef}
