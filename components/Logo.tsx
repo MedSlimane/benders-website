@@ -4,6 +4,7 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 1038.61 243.75"
+    shapeRendering="geometricPrecision"
     {...props}
   >
     <g id="logo-icon">

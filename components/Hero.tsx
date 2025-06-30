@@ -49,7 +49,7 @@ const Hero = ({ loading }: HeroProps) => {
       tl.to(logoRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
+        duration: 0.2,
         ease: "power2.out",
       })
       .to(headingSpans || [], {
@@ -61,20 +61,20 @@ const Hero = ({ loading }: HeroProps) => {
       .to(paragraphRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
+        duration: 0.2,
         ease: "power2.out",
       }, "-=0.6")
       .to(buttonRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
+        duration: 0.2,
         ease: "back.out(1.7)",
       }, "-=0.4")
       .to(imageRef.current, {
         opacity: 1,
         x: 0,
         scale: 1,
-        duration: 1.2,
+        duration: 0.5,
         ease: "power2.out",
       }, "-=0.8")
 
@@ -110,41 +110,41 @@ const Hero = ({ loading }: HeroProps) => {
   )
 
   return (
-      <section ref={heroRef} className='relative overflow-hidden w-full h-screen gradient-tertiary'>
-          <nav className='flex justify-between items-center p-4 w-full m-5'>
+      <section ref={heroRef} className='relative overflow-hidden w-full min-h-screen gradient-tertiary flex flex-col'>
+          <nav className='flex justify-between items-center p-4 w-full md:m-5'>
             <div ref={logoRef} className='flex items-center gap-8 p-2'>
                 <Image src="/Benders-logo/png/3@2x.png" alt='Benders Logo' width={125} height={125} />
             </div>
           </nav>
 
-          <div className="relative z-10 flex items-center justify-between h-[calc(100vh-88px)] px-16">
-              <div className="flex-1 text-white">
-                  <h1 ref={headingRef} className="text-6xl font-gilroy font-bold mb-6">
+          <div className="relative z-10 flex flex-col md:flex-row items-center flex-grow px-6 md:px-16">
+              <div className="md:w-1/2 text-white text-center md:text-left py-8 md:py-0">
+                  <h1 ref={headingRef} className="text-4xl md:text-6xl font-gilroy font-bold mb-6">
                       <span className="block overflow-hidden">
                           <span className="block">We Help <InlineTextEffect hoverText="BEND">Brands</InlineTextEffect></span>
                       </span>
                       <span className="block overflow-hidden">
-                          <span className="block text-4xl font-normal font-neue-montreal mt-2">
+                          <span className="block text-2xl md:text-4xl font-normal font-neue-montreal mt-2">
                               Grow Through <InlineTextEffect hoverText="YOUR">Creative</InlineTextEffect> <InlineTextEffect hoverText="WILL">Strategy.</InlineTextEffect>
                           </span>
                       </span>
                   </h1>
-                  <p ref={paragraphRef} className="text-xl font-neue-montreal mb-8 max-w-2xl">
-                     We Design And Manage Marketing Campaigns That Drive <span className="text-2xl font-bold text-gradient-secondary">Results.</span> 
+                  <p ref={paragraphRef} className="text-lg md:text-xl font-neue-montreal mb-8 max-w-2xl mx-auto md:mx-0">
+                     We Design And Manage Marketing Campaigns That Drive <span className="text-xl md:text-2xl font-bold text-gradient-secondary">Results.</span> 
                   </p>
                   <button type="button" ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
                       <ShinyText text="Get in Touch" />
                   </button>
               </div>
-              <div ref={imageRef} className="flex-1 mt-10 flex justify-center items-center">
-                  <Image 
-                      src="/bender-man/bender-man.png" 
-                      alt="Hero Image"
-                      width={600}
-                      height={600}
-                      className="object-cover"
-                  />
-              </div>
+          </div>
+          <div ref={imageRef} className="absolute bottom-0 inset-x-0 m-[-12] flex justify-center md:justify-end pointer-events-none">
+              <Image 
+                  src="/bender-man/bender-man.png" 
+                  alt="Hero Image"
+                  width={700}
+                  height={700}
+                  className="object-contain w-[350px] h-[350px] md:w-[700px] md:h-[700px] pointer-events-auto"
+              />
           </div>
       </section>
   )
