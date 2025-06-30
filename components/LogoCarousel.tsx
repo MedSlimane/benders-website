@@ -7,14 +7,10 @@ export default function LogoCarousel() {
   useLogoSlider()
   
   return (
-    <section className="py-16 bg-midnight-navy">
-      <div className="text-center mb-12">
-        <h2 className="font-neue-montreal font-medium text-sm text-white/90">
-          Trusted by employees of some of the best companies
-        </h2>
-      </div>
+    <section className=" ">
+     
 
-      <div className="logos">
+ <div className="logos">
         <div className="logos-slide">
           <div className="slide-item">
             <Image src="/logos/3m.svg" alt="3M" width={120} height={35} className="logo-image" />
