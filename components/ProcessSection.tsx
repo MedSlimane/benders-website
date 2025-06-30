@@ -156,27 +156,21 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       <div className="container mx-auto px-6 md:px-16">
         {/* Header */}
         <div className="text-center mb-16 md:mb-24">
-          <div className="inline-block bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
-            <span className="text-[var(--color-mint-cyan)] font-neue-montreal font-medium text-sm">
-              Process
-            </span>
-          </div>
           
           <h2 
             ref={headingRef}
             className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-5xl mx-auto leading-tight"
           >
-            Our simple 3-step process<br />
-            to <span className="italic text-gradient-secondary">skyrocket</span> your business.
+            How We
+            <span className="font-black text-gradient-secondary"> Grow  </span>  <br />
+            Brands in Just 3 Steps.
           </h2>
           
           <p 
             ref={descriptionRef}
             className="text-lg md:text-xl font-neue-montreal text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            Our three-step process makes influencer marketing easy and effective. 
-            We handle everything—from planning to execution to tracking results—so 
-            your brand can grow without the hassle.
+            A clear strategy. Powerful creative. Precise execution — all focused on driving growth.
           </p>
         </div>
 
