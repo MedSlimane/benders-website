@@ -5,11 +5,18 @@ import LogoCarousel from "@/components/LogoCarousel"
 import ProcessSection from "@/components/ProcessSection"
 import Services from "@/components/Services"
 import Preloader from "@/components/preloader"
-import { useState } from "react"
+import CTA from "@/components/CTA"
+import Testimonials from "@/components/Testimonials"
+import { useState, useEffect } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+  }, [])
 
   return (
     <main>
@@ -18,6 +25,8 @@ export default function Home() {
       <LogoCarousel />
       <Services />
       <ProcessSection />
+      <Testimonials />
+      <CTA />
     </main>
   )
 }
