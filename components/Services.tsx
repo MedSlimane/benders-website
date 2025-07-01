@@ -1,10 +1,10 @@
 'use client'
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -12,6 +12,8 @@ interface Service {
   title: string
   description: string
   iconName: string
+  videoSrc?: string
+  imageSrc?: string
 }
 
 interface ServicesProps {
@@ -22,42 +24,50 @@ const services: Service[] = [
   {
     title: "Brand Mission & Services",
     description: "Strategic brand development and comprehensive service planning to define your brand's core identity and market positioning.",
-    iconName: "mission"
+    iconName: "mission",
+    videoSrc: "/videos/sample.mp4"
   },
   {
     title: "Branding & Logo Design",
     description: "Custom logo design and complete brand identity systems that capture your brand's essence and resonate with your audience.",
-    iconName: "branding"
+    iconName: "branding",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   },
   {
     title: "Video Production & VFX",
     description: "Professional video content creation with cutting-edge visual effects to tell your brand story with cinematic quality.",
-    iconName: "video"
+    iconName: "video",
+    videoSrc: "/videos/mongela.mp4"
   },
   {
     title: "Website Development",
     description: "Modern, responsive websites built with the latest technologies to deliver exceptional user experiences and drive conversions.",
-    iconName: "web"
+    iconName: "web",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   },
   {
     title: "Social Media Management",
     description: "Complete social media strategy and management to build your community and engage with your audience across all platforms.",
-    iconName: "social"
+    iconName: "social",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   },
   {
     title: "Paid Advertising",
     description: "Strategic Meta & Google Ads campaigns optimized for maximum ROI and targeted reach to grow your business effectively.",
-    iconName: "ads"
+    iconName: "ads",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   },
   {
     title: "Copywriting & Content Strategy",
     description: "Compelling copy and strategic content planning that converts readers into customers and builds lasting brand connections.",
-    iconName: "copy"
+    iconName: "copy",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   },
   {
     title: "Influencer Content & Brand Building",
     description: "Authentic influencer partnerships and brand building strategies that amplify your reach and establish market authority.",
-    iconName: "influencer"
+    iconName: "influencer",
+    imageSrc: "/Benders-logo/png/1@2x.png"
   }
 ]
 
@@ -65,6 +75,7 @@ export default function Services({ loading }: ServicesProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<HTMLDivElement>(null)
+  const [activeService, setActiveService] = useState<Service | null>(null)
 
   useGSAP(
     () => {
@@ -152,7 +163,8 @@ export default function Services({ loading }: ServicesProps) {
             return (
               <div
                 key={index}
-                className={`service-card group relative overflow-hidden rounded-2xl ${spanClass}`}
+                className={`service-card group relative overflow-hidden rounded-2xl cursor-pointer ${spanClass}`}
+                onClick={() => setActiveService(service)}
               >
                 {/* Background layer – swap for an actual image / icon if available */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 group-hover:scale-105 transition-transform duration-500" />
@@ -198,6 +210,77 @@ export default function Services({ loading }: ServicesProps) {
       <div className="absolute top-20 left-10 w-2 h-2 bg-[var(--color-mint-cyan)] rounded-full opacity-60"></div>
       <div className="absolute bottom-32 right-16 w-3 h-3 bg-[var(--color-electric-blue)] rounded-full opacity-40"></div>
       <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full opacity-30"></div>
+
+      {/* Full-screen modal */}
+      <AnimatePresence>
+        {activeService && (
+          <motion.div
+            key="service-modal"
+            className="fixed inset-0 z-[1000] flex items-center justify-center  backdrop-blur-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="relative w-full h-full md:w-5/6 md:h-4/5 flex flex-col md:flex-row overflow-hidden"
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
+            >
+              {/* Close button */}
+              <button
+                className="absolute top-4 right-4 z-20 text-white hover:text-[var(--color-mint-cyan)] transition-colors"
+                onClick={() => setActiveService(null)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-7 h-7"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Text section */}
+              <div className="md:w-1/2 w-full h-1/2 md:h-full p-8 md:p-12 flex items-center justify-center gradient-primary">
+                <div className="max-w-lg text-center md:text-left">
+                  <h2 className="font-gilroy text-3xl md:text-4xl text-white mb-6 drop-shadow-lg">
+                    {activeService.title}
+                  </h2>
+                  <p className="font-neue-montreal text-lg text-white/80 leading-relaxed">
+                    {activeService.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Media section */}
+              <div className="md:w-1/2 w-full h-auto md:h-full flex items-center justify-center bg-black/20 p-4">
+                {/* Preserve media aspect ratio */}
+                {activeService.videoSrc ? (
+                  <video
+                    src={activeService.videoSrc}
+                    autoPlay
+                    loop
+                    muted
+                    controls
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
+                  />
+                ) : (
+                  <img
+                    src={activeService.imageSrc || ""}
+                    alt={activeService.title}
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
+                  />
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.section>
   )
 } 
