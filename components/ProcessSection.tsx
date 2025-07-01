@@ -66,7 +66,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 95%",
           end: "bottom 20%",
           toggleActions: "play none none reverse"
         }
@@ -119,19 +119,19 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       id: 1,
       title: "Discovery & Strategy",
       description: "We audit your current presence and identify growth opportunities",
-      icon: <Search size={32} />
+      icon: <Search className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 2,
       title: "Launch & Optimize",
       description: "We don't just deliver - we measure, refine, and scale",
-      icon: <Rocket size={32} />
+      icon: <Rocket className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 3,
       title: "Growth & Scale",
       description: "Your dedicated partner for sustainable, measurable growth",
-      icon: <TrendingUp size={32} />
+      icon: <TrendingUp className="w-6 h-6 md:w-8 md:h-8" />
     }
   ]
 

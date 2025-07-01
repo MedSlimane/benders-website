@@ -22,7 +22,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
 
       if (!icon || !text || !svg) return
 
-      const initialWidth = window.innerWidth < 768 ? 600 : 800 // Start with higher resolution
+      const initialWidth = window.innerWidth < 768 ? 320 : 800 // Start with higher resolution
       
       // Apply CSS properties directly to avoid GSAP conflicts and prevent rasterization
       if (svg instanceof SVGElement) {
@@ -144,7 +144,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         }}
       >
         <Logo 
-          className="w-[600px] sm:w-[800px] h-auto" 
+          className="w-[320px] sm:w-[800px] h-auto" 
           style={{
             // Force crisp vector rendering at all scales
             imageRendering: "-webkit-optimize-contrast",
