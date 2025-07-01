@@ -125,7 +125,7 @@ export default function Services({ loading }: ServicesProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
     >
-      <div className="container mx-auto px-6 md:px-16">
+      <div className="container mx-auto px-6 py-16 md:px-16">
         {/* Header */}
         <div ref={headerRef} className="text-center mb-16 md:mb-24">
           
@@ -180,6 +180,8 @@ export default function Services({ loading }: ServicesProps) {
                     autoPlay
                     loop
                     muted
+                    playsInline
+                    preload="metadata"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                 ) : service.imageSrc ? (

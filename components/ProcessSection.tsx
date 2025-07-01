@@ -181,7 +181,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
               {processSteps.map((step) => (
                 <div 
                   key={step.id}
-                  className="timeline-card relative group"
+                  className="timeline-card relative group mt-4"
                 >
                   {/* Main Card */}
                   <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 lg:p-8 transition-all duration-500 group-hover:bg-white/10 group-hover:border-white/20 group-hover:scale-105 group-hover:-translate-y-2">
@@ -252,10 +252,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
         </div>
       </div>
       
-      {/* Background decorative elements */}
-      <div className="absolute top-20 left-10 w-2 h-2 bg-[var(--color-mint-cyan)] rounded-full opacity-60"></div>
-      <div className="absolute bottom-32 right-16 w-3 h-3 bg-[var(--color-electric-blue)] rounded-full opacity-40"></div>
-      <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full opacity-30"></div>
+
     </motion.section>
   )
 }
