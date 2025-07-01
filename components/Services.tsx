@@ -26,13 +26,13 @@ const services: Service[] = [
     title: "Brand Mission & Services",
     description: "Strategic brand development and comprehensive service planning to define your brand's core identity and market positioning.",
     iconName: "mission",
-    imageSrc: "/branding.jpg"
+    imageSrc: "/bending.png"
   },
   {
     title: "Branding & Logo Design",
     description: "Custom logo design and complete brand identity systems that capture your brand's essence and resonate with your audience.",
     iconName: "branding",
-    imageSrc: "/logo-design.jpg"
+    imageSrc: "/logos.jpeg"
   },
   {
     title: "Video Production & VFX",
@@ -44,19 +44,19 @@ const services: Service[] = [
     title: "Website Development",
     description: "Modern, responsive websites built with the latest technologies to deliver exceptional user experiences and drive conversions.",
     iconName: "web",
-    imageSrc: "/web-dev.jpg"
+    imageSrc: "/web.jpeg"
   },
   {
     title: "Social Media Management",
     description: "Complete social media strategy and management to build your community and engage with your audience across all platforms.",
     iconName: "social",
-    imageSrc: "/social-media.jpg"
+    imageSrc: "/managment.jpeg"
   },
   {
     title: "Paid Advertising",
     description: "Strategic Meta & Google Ads campaigns optimized for maximum ROI and targeted reach to grow your business effectively.",
     iconName: "ads",
-    imageSrc: "/advertising.jpg"
+    imageSrc: "/advertising.jpeg"
   },
   {
     title: "Copywriting & Content Strategy",
@@ -68,7 +68,7 @@ const services: Service[] = [
     title: "Influencer Content & Brand Building",
     description: "Authentic influencer partnerships and brand building strategies that amplify your reach and establish market authority.",
     iconName: "influencer",
-    imageSrc: "/influencer.jpg"
+    imageSrc: "/influencer.jpeg"
   }
 ]
 
@@ -119,7 +119,7 @@ export default function Services({ loading }: ServicesProps) {
   return (
     <motion.section 
       ref={sectionRef} 
-      className="relative overflow-hidden w-full py-20 md:py-32" 
+      className="relative overflow-hidden w-full" 
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
@@ -128,11 +128,6 @@ export default function Services({ loading }: ServicesProps) {
       <div className="container mx-auto px-6 md:px-16">
         {/* Header */}
         <div ref={headerRef} className="text-center mb-16 md:mb-24">
-          <div className="inline-block bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
-            <span className="text-[var(--color-mint-cyan)] font-neue-montreal font-medium text-sm">
-              Services
-            </span>
-          </div>
           
           <h2 className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-5xl mx-auto leading-tight">
             Our <span className="italic text-gradient-secondary">comprehensive</span><br />
@@ -147,7 +142,7 @@ export default function Services({ loading }: ServicesProps) {
         {/* Services Grid – Masonry style */}
         <div
           ref={cardsRef}
-          className="grid grid-flow-dense auto-rows-[180px] sm:auto-rows-[220px] md:auto-rows-[250px] grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-flow-dense auto-rows-[180px] sm:auto-rows-[220px] md:auto-rows-[250px] grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
         >
           {services.map((service, index) => {
             // Add some variety to the card sizes – adjust as desired
@@ -155,21 +150,21 @@ export default function Services({ loading }: ServicesProps) {
                (() => {
                  switch (index) {
                    case 0:
-                     return "md:col-span-2 md:row-span-2";
+                     return "col-span-2 row-span-2";
                    case 1:
-                     return "md:col-span-1";
+                     return "col-span-1";
                    case 2:
-                     return "md:row-span-2";
+                     return "row-span-2";
                    case 3:
-                     return "md:col-span-1";
+                     return "col-span-1";
                    case 4:
-                     return "md:col-span-1";
+                     return "col-span-1";
                    case 5:
-                     return "md:col-span-2";
+                     return "col-span-1";
                    case 6:
-                     return "md:col-span-1";
+                     return "col-span-1";
                    default:
-                     return "md:col-span-1";
+                     return "col-span-1";
                  }
                })()
 

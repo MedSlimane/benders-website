@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { motion } from "framer-motion"
+import { Search, Rocket, TrendingUp } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -17,12 +18,22 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const descriptionRef = useRef<HTMLParagraphElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
+  const mobileTimelineRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     () => {
-      const cards = timelineRef.current?.querySelectorAll('.timeline-card')
-      const line = timelineRef.current?.querySelector('.timeline-line')
-      const dots = timelineRef.current?.querySelectorAll('.timeline-dot')
+      // Get elements from both desktop and mobile timelines
+      const desktopCards = timelineRef.current?.querySelectorAll('.timeline-card')
+      const mobileCards = mobileTimelineRef.current?.querySelectorAll('.timeline-card')
+      const desktopLine = timelineRef.current?.querySelector('.timeline-line')
+      const mobileLine = mobileTimelineRef.current?.querySelector('.timeline-line')
+      const desktopDots = timelineRef.current?.querySelectorAll('.timeline-dot')
+      const mobileDots = mobileTimelineRef.current?.querySelectorAll('.timeline-dot')
+      
+      // Combine elements
+      const allCards = [...(desktopCards || []), ...(mobileCards || [])]
+      const allDots = [...(desktopDots || []), ...(mobileDots || [])]
+      const currentLine = desktopLine || mobileLine
       
       // Set initial states
       gsap.set([headingRef.current, descriptionRef.current], {
@@ -30,19 +41,21 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
         y: 30,
       })
       
-      gsap.set(cards || [], {
+      gsap.set(allCards, {
         opacity: 0,
         scale: 0.8,
         y: 50,
       })
 
-      if (line) {
-        gsap.set(line, {
-          width: 0,
+      if (currentLine) {
+        // Set initial state based on whether it's mobile (vertical) or desktop (horizontal)
+        const isMobile = window.innerWidth < 768
+        gsap.set(currentLine, {
+          ...(isMobile ? { height: 0 } : { width: 0 }),
         })
       }
 
-      gsap.set(dots || [], {
+      gsap.set(allDots, {
         scale: 0,
         opacity: 0,
       })
@@ -72,22 +85,24 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
         ease: "power2.out",
       }, "-=0.4")
       
-      if (line) {
-        tl.to(line, {
-          width: "100%",
+      if (currentLine) {
+        // Check if it's mobile (vertical) or desktop (horizontal) timeline
+        const isMobile = window.innerWidth < 768
+        tl.to(currentLine, {
+          ...(isMobile ? { height: "100%" } : { width: "100%" }),
           duration: 1.5,
           ease: "power2.inOut",
         }, "-=0.3")
       }
       
-      tl.to(dots || [], {
+      tl.to(allDots, {
         scale: 1,
         opacity: 1,
         duration: 0.4,
         stagger: 0.2,
         ease: "back.out(2)",
       }, "-=0.8")
-      .to(cards || [], {
+      .to(allCards, {
         opacity: 1,
         scale: 1,
         y: 0,
@@ -104,50 +119,26 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       id: 1,
       title: "Discovery & Strategy",
       description: "We audit your current presence and identify growth opportunities",
-      icon: (
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M12 1v6m0 6v6"/>
-          <path d="m15.4 6.4 4.2-4.2"/>
-          <path d="M18.4 18.4l-4.2-4.2"/>
-          <path d="m8.6 6.4-4.2-4.2"/>
-          <path d="M5.6 18.4l4.2-4.2"/>
-        </svg>
-      )
+      icon: <Search size={32} />
     },
     {
       id: 2,
       title: "Launch & Optimize",
       description: "We don't just deliver - we measure, refine, and scale",
-      icon: (
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M7 10v12"/>
-          <path d="M15 5v17"/>
-          <path d="M5 8l4-4 4 4"/>
-          <path d="M13 3l4 4-4 4"/>
-        </svg>
-      )
+      icon: <Rocket size={32} />
     },
     {
       id: 3,
       title: "Growth & Scale",
       description: "Your dedicated partner for sustainable, measurable growth",
-      icon: (
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 3v18h18"/>
-          <path d="M7 12l3-3 3 3 5-5"/>
-          <circle cx="7" cy="12" r="1" fill="currentColor"/>
-          <circle cx="13" cy="9" r="1" fill="currentColor"/>
-          <circle cx="18" cy="7" r="1" fill="currentColor"/>
-        </svg>
-      )
+      icon: <TrendingUp size={32} />
     }
   ]
 
   return (
     <motion.section 
       ref={sectionRef} 
-      className={`relative overflow-hidden w-full py-20 md:py-32 ${className}`}
+      className={`relative overflow-hidden w-full py-16 md:py-16 ${className}`}
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
@@ -187,7 +178,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
 
             {/* Process Cards */}
             <div className="grid grid-cols-3 mt-15 gap-12 lg:gap-16">
-              {processSteps.map((step, index) => (
+              {processSteps.map((step) => (
                 <div 
                   key={step.id}
                   className="timeline-card relative group"
@@ -216,15 +207,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
                     </div>
                   </div>
 
-                  {/* Arrow Connector */}
-                  {index < processSteps.length - 1 && (
-                    <div className="absolute top-1/2 -right-6 lg:-right-8 transform -translate-y-1/2 z-10">
-                      <div className="flex items-center">
-                        <div className="w-6 h-6 bg-[var(--color-electric-blue)] rotate-45 border-2 border-white/20 group-hover:scale-110 transition-all duration-300"></div>
-                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[var(--color-mint-cyan)] rounded-full"></div>
-                      </div>
-                    </div>
-                  )}
+                 
                 </div>
               ))}
             </div>
@@ -233,16 +216,18 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
 
         {/* Mobile Timeline - Vertical */}
         <div className="block md:hidden">
-          <div className="relative max-w-md mx-auto">
-            {/* Vertical Timeline Line */}
-            <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[var(--color-electric-blue)] via-[var(--color-mint-cyan)] to-[var(--color-electric-blue)] rounded-full"></div>
+          <div ref={mobileTimelineRef} className="relative max-w-md mx-auto">
+            {/* Vertical Timeline Line Background */}
+            <div className="absolute left-8 top-0 bottom-0 w-1 bg-white/10 rounded-full"></div>
+            {/* Vertical Timeline Line Animated */}
+            <div className="timeline-line absolute left-8 top-0 w-1 bg-gradient-to-b from-[var(--color-electric-blue)] via-[var(--color-mint-cyan)] to-[var(--color-electric-blue)] rounded-full h-0"></div>
             
             {/* Mobile Steps */}
             <div className="space-y-16">
               {processSteps.map((step) => (
-                <div key={step.id} className="relative flex items-start">
+                <div key={step.id} className="timeline-card relative flex items-start">
                   {/* Step Number */}
-                  <div className="w-16 h-16 bg-[var(--color-electric-blue)] rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white/20 flex-shrink-0">
+                  <div className="timeline-dot w-16 h-16 bg-[var(--color-electric-blue)] rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white/20 flex-shrink-0">
                     {step.id}
                   </div>
                   
