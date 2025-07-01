@@ -127,7 +127,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   return (
     <div
       ref={preloaderRef}
-      className="fixed inset-0 flex justify-center items-center z-[100] text-white"
+      className="fixed inset-0 flex justify-center items-center z-[100] text-white bg-[#04082e]"
       style={{
         // Ensure proper rendering context
         imageRendering: "-webkit-optimize-contrast",

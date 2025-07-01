@@ -353,3 +353,25 @@ html, body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Prevent flash of unstyled content */
+.loading-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Smooth transition when content becomes visible */
+.content-transition {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Ensure preloader always covers content */
+.preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: #04082e;
+}

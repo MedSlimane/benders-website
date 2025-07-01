@@ -110,7 +110,7 @@ const Hero = ({ loading }: HeroProps) => {
   )
 
   return (
-      <section ref={heroRef} className='relative overflow-hidden w-full min-h-screen gradient-tertiary flex flex-col'>
+      <section ref={heroRef} className={`relative overflow-hidden w-full min-h-screen gradient-tertiary flex flex-col ${loading ? 'opacity-0' : ''}`}>
           <nav className='flex justify-between items-center p-4 w-full md:m-5'>
             <div ref={logoRef} className='flex items-center gap-8 p-2'>
                 <Image src="/Benders-logo/png/3@2x.png" alt='Benders Logo' width={125} height={125} />

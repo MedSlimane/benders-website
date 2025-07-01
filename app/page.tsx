@@ -21,12 +21,14 @@ export default function Home() {
   return (
     <main>
       {loading && <Preloader onComplete={() => setLoading(false)} />}
-      <Hero loading={loading} />
-      <LogoCarousel loading={loading} />
-      <Services loading={loading} />
-      <ProcessSection loading={loading} />
-      <Testimonials loading={loading} />
-      <CTA loading={loading} />
+      <div className={`content-transition ${loading ? 'loading-hidden' : 'opacity-100'}`}>
+        <Hero loading={loading} />
+        <LogoCarousel loading={loading} />
+        <Services loading={loading} />
+        <ProcessSection loading={loading} />
+        <Testimonials loading={loading} />
+        <CTA loading={loading} />
+      </div>
     </main>
   )
 }
