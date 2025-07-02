@@ -1,34 +1,39 @@
 "use client"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
-import ShinyText from "./ShinyText/ShinyText"
 import { motion } from "framer-motion"
 
 interface CTAProps {
   title?: string
   subtitle?: string
-  buttonText?: string
   className?: string
   loading: boolean
+}
+
+// Add type declaration for window.calendar
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    calendar?: any;
+  }
 }
 
 const CTA = ({ 
   title = "Ready to Transform Your Brand?", 
   subtitle = "Let's discuss how we can help you achieve your marketing goals through creative strategy.",
-  buttonText = "Book a Call",
   className = "",
   loading
 }: CTAProps) => {
   const ctaRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonTargetRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     () => {
       // Set initial states
-      gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], {
+      gsap.set([titleRef.current, subtitleRef.current], {
         opacity: 0,
         y: 30,
       })
@@ -57,15 +62,9 @@ const CTA = ({
         duration: 0.6,
         ease: "power2.out",
       }, "-=0.4")
-      .to(buttonRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "back.out(1.7)",
-      }, "-=0.4")
 
       // Button hover effects
-      const button = buttonRef.current
+      const button = buttonTargetRef.current
       if (button) {
         button.addEventListener('mouseenter', () => {
           gsap.to(button, {
@@ -86,6 +85,47 @@ const CTA = ({
     },
     { scope: ctaRef, dependencies: [loading] }
   )
+
+  // Load Google Calendar Scheduling Button script and CSS, and initialize the button
+  useEffect(() => {
+    if (loading) return;
+    // Load CSS
+    if (!document.getElementById('gcal-scheduling-css')) {
+      const link = document.createElement('link');
+      link.id = 'gcal-scheduling-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://calendar.google.com/calendar/scheduling-button-script.css';
+      document.head.appendChild(link);
+    }
+    // Load Script
+    if (!document.getElementById('gcal-scheduling-script')) {
+      const script = document.createElement('script');
+      script.id = 'gcal-scheduling-script';
+      script.src = 'https://calendar.google.com/calendar/scheduling-button-script.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.calendar && buttonTargetRef.current) {
+          window.calendar.schedulingButton.load({
+            url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ31zb6ylOEMCB2-9Ry7xOENsETmqbZZQG9l8PV_v2lYL9E81yyeglqpPqSq_Za1sYB9N3YCURuz?gv=true',
+            color: '#039BE5',
+            label: 'Book an appointment',
+            target: buttonTargetRef.current,
+          });
+        }
+      };
+      document.body.appendChild(script);
+    } else {
+      // Script already loaded
+      if (window.calendar && buttonTargetRef.current) {
+        window.calendar.schedulingButton.load({
+          url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ31zb6ylOEMCB2-9Ry7xOENsETmqbZZQG9l8PV_v2lYL9E81yyeglqpPqSq_Za1sYB9N3YCURuz?gv=true',
+          color: '#039BE5',
+          label: 'Book an appointment',
+          target: buttonTargetRef.current,
+        });
+      }
+    }
+  }, [loading]);
 
   return (
     <motion.section 
@@ -111,18 +151,7 @@ const CTA = ({
           {subtitle}
         </p>
         
-        <button 
-          ref={buttonRef}
-          type="button"
-          className="bg-[var(--color-electric-blue)] text-white font-bold py-4 px-8 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300 shadow-lg"
-          onClick={() => {
-            // Add your booking logic here
-            window.open("https://calendar.app.google/L6GNBsTHzKW9mzVPA", "_blank", "noopener,noreferrer");
-            console.log('Book a call clicked')
-          }}
-        >
-          <ShinyText text={buttonText} />
-        </button>
+        <div ref={buttonTargetRef} className="flex justify-center"></div>
       </div>
     </motion.section>
   )
