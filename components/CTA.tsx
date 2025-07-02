@@ -151,7 +151,17 @@ const CTA = ({
           {subtitle}
         </p>
         
-        <div ref={buttonTargetRef} className="flex justify-center"></div>
+        <div ref={buttonTargetRef} className="flex justify-center">
+          <button
+            type="button"
+            className="bg-[var(--color-electric-blue)] text-white font-bold py-4 px-8 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300 shadow-lg"
+            onClick={() => {
+              window.open('https://calendar.google.com/calendar/appointments/schedules/AcZssZ31zb6ylOEMCB2-9Ry7xOENsETmqbZZQG9l8PV_v2lYL9E81yyeglqpPqSq_Za1sYB9N3YCURuz?gv=true', '_blank', 'noopener,noreferrer');
+            }}
+          >
+            Book an appointment
+          </button>
+        </div>
       </div>
     </motion.section>
   )
