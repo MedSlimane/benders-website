@@ -66,7 +66,7 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 95%",
+          start: "top 80%",
           end: "bottom 20%",
           toggleActions: "play none none reverse"
         }

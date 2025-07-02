@@ -113,10 +113,11 @@ const CTA = ({
         
         <button 
           ref={buttonRef}
-          type="button" 
+          type="button"
           className="bg-[var(--color-electric-blue)] text-white font-bold py-4 px-8 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300 shadow-lg"
           onClick={() => {
             // Add your booking logic here
+            window.open("https://calendar.app.google/L6GNBsTHzKW9mzVPA", "_blank", "noopener,noreferrer");
             console.log('Book a call clicked')
           }}
         >
