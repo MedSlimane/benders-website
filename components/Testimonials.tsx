@@ -26,69 +26,66 @@ interface TestimonialsProps {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah Johnson",
-    handle: "@sarahj_marketing",
+    name: "Mohamed Amine Gharbi",
+    handle: "@mohamed_amine_gharbi",
     avatar: "/api/placeholder/40/40",
-    content: "Working with Benders transformed our brand completely! Their creative strategy increased our engagement by 300% in just 3 months. Absolutely incredible results! 🚀",
+    content: "Working with Rayen was a fantastic experience. As a VFX artist, his skills are top-tier, and as a filmmaker, he knows how to tell a story that resonates. He has a rare combination of technical ability and artistic vision that makes every project he touches better than you could ever imagine. Highly recommended!",
     platform: "twitter",
-    verified: true,
-    likes: 127,
-    time: "2h"
+    verified: true
   },
   {
     id: 2,
-    name: "Mike Chen",
-    handle: "@mikechenco",
+    name: "Zied Grombali",
+    handle: "@zied_grombali",
     avatar: "/api/placeholder/40/40",
-    content: "The team at Benders doesn't just deliver campaigns, they deliver results. Our ROI has never been higher. Best marketing investment we've ever made! 💯",
-    platform: "linkedin",
-    verified: true,
-    likes: 89,
-    time: "4h"
+    content: "I've worked with many filmmakers and VFX artists, but Rayen's approach was refreshingly different. He listens intently to your vision and then enhances it in ways you never expected. His work not only meets the brief but often exceeds it. I will definitely be collaborating with him again in the future.",
+    platform: "instagram",
+    verified: true
   },
   {
     id: 3,
-    name: "Emma Rodriguez",
-    handle: "@emma.creative",
+    name: "Aziz Mbarek",
+    handle: "@aziz_mbarek",
     avatar: "/api/placeholder/40/40",
-    content: "From concept to execution, Benders exceeded every expectation. Their attention to detail and creative vision is unmatched in the industry. Highly recommend! ✨",
-    platform: "instagram",
-    verified: true,
-    likes: 156,
-    time: "6h"
+    content: "We hired Rayen for a commercial project, and his expertise in both filmmaking and VFX was evident from start to finish. The creative ideas he brought to the table were beyond our expectations, and the final piece truly stood out. His attention to detail, coupled with his technical know-how, made him a valuable asset to our team.",
+    platform: "linkedin",
+    verified: true
   },
   {
     id: 4,
-    name: "David Park",
-    handle: "@davidpark_ceo",
+    name: "Ahmed Amraoui",
+    handle: "@ahmed_amraoui",
     avatar: "/api/placeholder/40/40",
-    content: "Benders helped us scale from startup to market leader. Their strategic approach and execution are world-class. Can't imagine growing without them! 📈",
+    content: "Working with Rayen was a game-changer for our brand. His cinematic approach and VFX expertise turned our simple concept into a visually stunning masterpiece that left our audience in awe.",
     platform: "twitter",
-    verified: true,
-    likes: 203,
-    time: "8h"
+    verified: true
   },
   {
     id: 5,
-    name: "Lisa Thompson",
-    handle: "@lisathompsonbrand",
+    name: "Emna Sadfii",
+    handle: "@emna_sadfii",
     avatar: "/api/placeholder/40/40",
-    content: "The creative campaigns Benders developed for us went viral across multiple platforms. Their understanding of modern marketing is exceptional! 🔥",
+    content: "Rayen's eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. He doesn't just edit — he crafts an experience that feels alive and powerful.",
     platform: "instagram",
-    verified: true,
-    likes: 342,
-    time: "12h"
+    verified: true
   },
   {
     id: 6,
-    name: "Alex Kumar",
-    handle: "@alexkumar_tech",
+    name: "Seif Eddine Bayaa",
+    handle: "@seif_eddine_bayaa",
     avatar: "/api/placeholder/40/40",
-    content: "Working with Benders was a game-changer for our SaaS company. They know how to turn complex products into compelling stories that convert! 💡",
+    content: "Rayen captured the soul of our event perfectly. The teaser he crafted wasn't just a highlight reel — it was an experience. His edits amplified the energy and excitement, making viewers feel like they were right there with us, reliving the moment.",
     platform: "linkedin",
-    verified: true,
-    likes: 178,
-    time: "1d"
+    verified: true
+  },
+  {
+    id: 7,
+    name: "Foued Rouchka",
+    handle: "@foued_rouchka",
+    avatar: "/api/placeholder/40/40",
+    content: "I gave Rayen a rough idea, and he transformed it into a high-energy, mind-blowing visual that boosted my engagement like crazy. He's a magician with the camera and effects!",
+    platform: "twitter",
+    verified: true
   }
 ]
 

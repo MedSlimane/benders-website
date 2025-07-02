@@ -118,7 +118,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             duration: 0.5,
           },
           "-=0.8",
-        )
+        ) 
     }, preloaderRef)
 
     return () => ctx.revert()
