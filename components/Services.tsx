@@ -57,9 +57,9 @@ export default function Services({ loading }: ServicesProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
     >
-      <div className="container mx-auto px-6 py-16 md:px-16">
+      <div className="container mx-auto px-6 py-2 md:px-16">
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-16 md:mb-24">
+        <div ref={headerRef} className="text-center mb-16 md:mb-8">
           
           <h2 className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-5xl mx-auto leading-tight">
             Struggling with no clear <br />
