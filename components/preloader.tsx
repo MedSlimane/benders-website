@@ -103,7 +103,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           svg,
           {
             attr: { transform: "scale(200)" },
-            duration: 0.5,
+            duration: 0.4,
             ease: "expo.in",
             opacity: 0,
             transformOrigin: "center center"
@@ -115,9 +115,10 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           logoWrapper,
           {
             opacity: 0,
-            duration: 0.5,
+            duration: 0.2
+          ,
           },
-          "-=0.8",
+          "-=0.2",
         ) 
     }, preloaderRef)
 
