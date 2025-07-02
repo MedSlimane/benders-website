@@ -62,7 +62,7 @@ export default function Services({ loading }: ServicesProps) {
         <div ref={headerRef} className="text-center mb-16 md:mb-24">
           
           <h2 className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-5xl mx-auto leading-tight">
-            Struggling with no clear, <br />
+            Struggling with no clear <br />
             <span className="italic text-gradient-secondary">Creative Strategy</span>
           </h2>
           
