@@ -143,7 +143,7 @@ const Hero = ({ loading }: HeroProps) => {
                   alt="Hero Image"
                   width={800}
                   height={800}
-                  className="object-contain w-[350px] h-[350px] md:w-[700px] md:h-[700px] 2xl:w-[850px] 2xl:h-[850px] pointer-events-auto"
+                  className="object-contain w-[350px] h-[350px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] 2xl:w-[850px] 2xl:h-[850px] pointer-events-auto"
               />
           </div>
       </section>
