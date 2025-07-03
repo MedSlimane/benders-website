@@ -89,11 +89,14 @@ export default function Services({ loading }: ServicesProps) {
         y: 30,
       })
 
-      gsap.set(serviceCards, {
-        opacity: 0,
-        scale: 0.8,
-        y: 50,
-      })
+      // Check if serviceCards exists before setting properties
+      if (serviceCards && serviceCards.length > 0) {
+        gsap.set(serviceCards, {
+          opacity: 0,
+          scale: 0.8,
+          y: 50,
+        })
+      }
 
       if (loading) return
 
@@ -119,14 +122,18 @@ export default function Services({ loading }: ServicesProps) {
         duration: 0.6,
         ease: "power2.out",
       }, "-=0.4")
-      .to(serviceCards, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.4)",
-      }, "-=0.3")
+      
+      // Only animate service cards if they exist
+      if (serviceCards && serviceCards.length > 0) {
+        tl.to(serviceCards, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "back.out(1.4)",
+        }, "-=0.3")
+      }
     },
     { scope: sectionRef, dependencies: [loading] }
   )
