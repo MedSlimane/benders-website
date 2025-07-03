@@ -16,4 +16,5 @@ const InlineTextEffect: React.FC<InlineTextEffectProps> = ({ children, hoverText
   );
 };
 
+
 export default InlineTextEffect; 
