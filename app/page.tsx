@@ -24,7 +24,7 @@ export default function Home() {
       <div className={`content-transition ${loading ? 'loading-hidden' : 'opacity-100'}`}>
         <Hero loading={loading} />
         <LogoCarousel loading={loading} />
-        <Services loading={loading} />
+        {/* <Services loading={loading} /> */}
         <ProcessSection loading={loading} />
         <Testimonials loading={loading} />
         <CTA loading={loading} />

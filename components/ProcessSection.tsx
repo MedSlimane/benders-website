@@ -3,8 +3,7 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { motion } from "framer-motion"
-import { Search, Rocket, TrendingUp } from "lucide-react"
+import { Search, Rocket, TrendingUp, ArrowDown } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,43 +21,40 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
 
   useGSAP(
     () => {
-      // Get elements from both desktop and mobile timelines
-      const desktopCards = timelineRef.current?.querySelectorAll('.timeline-card')
-      const mobileCards = mobileTimelineRef.current?.querySelectorAll('.timeline-card')
-      const desktopLine = timelineRef.current?.querySelector('.timeline-line')
-      const mobileLine = mobileTimelineRef.current?.querySelector('.timeline-line')
-      const desktopDots = timelineRef.current?.querySelectorAll('.timeline-dot')
-      const mobileDots = mobileTimelineRef.current?.querySelectorAll('.timeline-dot')
+      // Get all elements that need animation
+      const allCards = sectionRef.current?.querySelectorAll('.timeline-card') || []
+      const allArrows = sectionRef.current?.querySelectorAll('.process-arrow') || []
       
-      // Combine elements
-      const allCards = [...(desktopCards || []), ...(mobileCards || [])]
-      const allDots = [...(desktopDots || []), ...(mobileDots || [])]
-      const currentLine = desktopLine || mobileLine
-      
-      // Set initial states
-      gsap.set([headingRef.current, descriptionRef.current], {
-        opacity: 0,
-        y: 30,
+      console.log('ProcessSection Animation Debug:', {
+        loading,
+        allCardsLength: allCards.length,
+        allArrowsLength: allArrows.length,
+        sectionRef: sectionRef.current,
+        isMobile: window.innerWidth < 768
       })
       
-      gsap.set(allCards, {
-        opacity: 0,
-        scale: 0.8,
-        y: 50,
-      })
-
-      if (currentLine) {
-        // Set initial state based on whether it's mobile (vertical) or desktop (horizontal)
-        const isMobile = window.innerWidth < 768
-        gsap.set(currentLine, {
-          ...(isMobile ? { height: 0 } : { width: 0 }),
+      // Set initial states only if elements exist
+      if (headingRef.current && descriptionRef.current) {
+        gsap.set([headingRef.current, descriptionRef.current], {
+          opacity: 0,
+          y: 30,
+        })
+      }
+      
+      if (allCards.length > 0) {
+        gsap.set(allCards, {
+          opacity: 0,
+          scale: 0.8,
+          y: 50,
         })
       }
 
-      gsap.set(allDots, {
-        scale: 0,
-        opacity: 0,
-      })
+      if (allArrows.length > 0) {
+        gsap.set(allArrows, {
+          opacity: 0,
+          scale: 0.5,
+        })
+      }
 
       if (loading) return
 
@@ -68,48 +64,53 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
           trigger: sectionRef.current,
           start: "top 80%",
           end: "bottom 20%",
-          toggleActions: "play none none reverse"
+          toggleActions: "play none none reverse",
+          onEnter: () => console.log('ScrollTrigger entered'),
+          onLeave: () => console.log('ScrollTrigger left'),
         }
       })
 
-      tl.to(headingRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-      })
-      .to(descriptionRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      }, "-=0.4")
-      
-      if (currentLine) {
-        // Check if it's mobile (vertical) or desktop (horizontal) timeline
-        const isMobile = window.innerWidth < 768
-        tl.to(currentLine, {
-          ...(isMobile ? { height: "100%" } : { width: "100%" }),
-          duration: 1.5,
-          ease: "power2.inOut",
+      // Animate header elements
+      if (headingRef.current) {
+        tl.to(headingRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+        })
+      }
+
+      if (descriptionRef.current) {
+        tl.to(descriptionRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+        }, "-=0.4")
+      }
+
+      // Animate all cards with stagger for better mobile experience
+      if (allCards.length > 0) {
+        tl.to(allCards, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.3,
+          ease: "back.out(1.4)",
         }, "-=0.3")
       }
-      
-      tl.to(allDots, {
-        scale: 1,
-        opacity: 1,
-        duration: 0.4,
-        stagger: 0.2,
-        ease: "back.out(2)",
-      }, "-=0.8")
-      .to(allCards, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.3,
-        ease: "back.out(1.4)",
-      }, "-=0.6")
+
+      // Animate all arrows with stagger
+      if (allArrows.length > 0) {
+        tl.to(allArrows, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+        }, "-=0.4")
+      }
     },
     { scope: sectionRef, dependencies: [loading] }
   )
@@ -118,80 +119,63 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
     {
       id: 1,
       title: "Discovery & Strategy",
-      description: "We audit your current presence and identify growth opportunities",
+      description: "We start by understanding your goals — then audit your brand to uncover the clearest path to growth.",
       icon: <Search className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 2,
       title: "Launch & Optimize",
-      description: "We don't just deliver - we measure, refine, and scale",
+      description: "We bring your vision to life, then fine-tune every detail to align with your goals and maximize results.",
       icon: <Rocket className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 3,
       title: "Growth & Scale",
-      description: "Your dedicated partner for sustainable, measurable growth",
+      description: "With your long-term success in mind, we scale what works and become your partner in consistent growth.",
       icon: <TrendingUp className="w-6 h-6 md:w-8 md:h-8" />
     }
-  ]
+  ]  
 
   return (
-    <motion.section 
+    <section 
       ref={sectionRef} 
       className={`relative overflow-hidden w-full py-16 md:py-16 ${className}`}
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.6 }}
     >
-      <div className="container mx-auto px-6 md:px-16">
+      <div className="container mx-auto px-6 md:px-16 pt-8">
         {/* Header */}
-        <div className="text-center mb-16 md:mb-24">
+        <div className="text-center mb-5">
           
-          <h2 
+            <h2 
             ref={headingRef}
-            className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-5xl mx-auto leading-tight"
-          >
-            How We
-            <span className="font-black text-gradient-secondary"> Grow  </span>  <br />
-            Brands in Just 3 Steps.
-          </h2>
-          
+            className="text-4xl md:text-6xl font-gilroy font-bold text-white mb-6 max-w-3xl mx-auto leading-tight"
+            >
+            Our Strategic <br />
+            <span className="font-black italic text-gradient-secondary"> Process </span>  
+            for Exceptional Growth
+            </h2>
           <p 
             ref={descriptionRef}
-            className="text-lg md:text-xl font-neue-montreal text-white/80 max-w-3xl mx-auto leading-relaxed"
+            className="text-sm md:text-md font-neue-montreal text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            A clear strategy. Powerful creative. Precise execution — all focused on driving growth.
+           A clear strategy rooted in real insights. Creative that stands out and converts. Execution that adapts, improves, and scales. From discovery to optimization to long-term growth — we partner with you every step of the way.
           </p>
         </div>
 
         {/* Desktop Timeline */}
         <div className="hidden md:block">
           <div ref={timelineRef} className="relative max-w-6xl mx-auto">
-            {/* Timeline Line Container */}
-            <div className="relative mb-16">
-              {/* Background Line */}
-              <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 rounded-full transform -translate-y-1/2"></div>
-              {/* Animated Line */}
-              <div className="timeline-line absolute top-1/2 left-0 h-1 bg-gradient-to-r from-[var(--color-electric-blue)] via-[var(--color-mint-cyan)] to-[var(--color-electric-blue)] rounded-full transform -translate-y-1/2 w-0"></div>
-            </div>
-
             {/* Process Cards */}
-            <div className="grid grid-cols-3 mt-15 gap-12 lg:gap-16">
+            <div className="grid grid-cols-3 gap-12 lg:gap-16">
               {processSteps.map((step) => (
                 <div 
                   key={step.id}
-                  className="timeline-card relative group mt-4"
+                  className="timeline-card relative group mt-8"
                 >
                   {/* Main Card */}
-                  <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 lg:p-8 transition-all duration-500 group-hover:bg-white/10 group-hover:border-white/20 group-hover:scale-105 group-hover:-translate-y-2">
-                    {/* Step Number */}
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-[var(--color-electric-blue)] rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-white/20 z-10">
-                      {step.id}
-                    </div>
-                    
+                  <div className="relative backdrop-blur-sm rounded-2xl p-6 lg:p-8 transition-all duration-500">
                     {/* Icon */}
-                    <div className="w-14 h-14 lg:w-16 lg:h-16 bg-[var(--color-electric-blue)]/20 rounded-xl flex items-center justify-center text-[var(--color-mint-cyan)] mb-4 lg:mb-6 group-hover:bg-[var(--color-electric-blue)]/30 transition-all duration-300 mx-auto mt-4">
+                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl flex items-center justify-center text-[var(--color-mint-cyan)] mb-4 lg:mb-6 transition-all duration-300 mx-auto mt-4">
                       {step.icon}
                     </div>
                     
@@ -201,60 +185,104 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
                         {step.title}
                       </h3>
                       
-                      <p className="text-white/70 font-neue-montreal leading-relaxed text-sm lg:text-base">
+                      <p className="text-white/70 font-neue-montreal leading-relaxed text-sm md:text-sm">
                         {step.description}
                       </p>
                     </div>
                   </div>
-
-                 
                 </div>
               ))}
+            </div>
+
+            {/* Custom positioned arrows */}
+            <div className="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 pointer-events-none">
+              {/* First Arrow: Between process 1 and 2 */}
+              <div className="process-arrow absolute" style={{ left: 'calc(33.33% - 1rem)' }}>
+                <svg 
+                  width="60" 
+                  height="20" 
+                  viewBox="0 0 60 20" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-[var(--color-mint-cyan)]"
+                >
+                  <path 
+                    d="M0 10 L50 10 M45 5 L50 10 L45 15" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+
+              {/* Second Arrow: Between process 2 and 3 */}
+              <div className="process-arrow absolute" style={{ left: 'calc(66.66% + 2rem)' }}>
+                <svg 
+                  width="60" 
+                  height="20" 
+                  viewBox="0 0 60 20" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-[var(--color-mint-cyan)]"
+                >
+                  <path 
+                    d="M0 10 L50 10 M45 5 L50 10 L45 15" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile Timeline - Vertical */}
+        {/* Mobile Timeline - Vertical with Centered Layout */}
         <div className="block md:hidden">
-          <div ref={mobileTimelineRef} className="relative max-w-md mx-auto">
-            {/* Vertical Timeline Line Background */}
-            <div className="absolute left-8 top-0 bottom-0 w-1 bg-white/10 rounded-full"></div>
-            {/* Vertical Timeline Line Animated */}
-            <div className="timeline-line absolute left-8 top-0 w-1 bg-gradient-to-b from-[var(--color-electric-blue)] via-[var(--color-mint-cyan)] to-[var(--color-electric-blue)] rounded-full h-0"></div>
-            
+          <div ref={mobileTimelineRef} className="relative max-w-sm mx-auto">
             {/* Mobile Steps */}
-            <div className="space-y-16">
-              {processSteps.map((step) => (
-                <div key={step.id} className="timeline-card relative flex items-start">
-                  {/* Step Number */}
-                  <div className="timeline-dot w-16 h-16 bg-[var(--color-electric-blue)] rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white/20 flex-shrink-0">
-                    {step.id}
-                  </div>
-                  
-                  {/* Content Card */}
-                  <div className="ml-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex-1">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-[var(--color-electric-blue)]/20 rounded-lg flex items-center justify-center text-[var(--color-mint-cyan)] mr-4">
+            <div className="space-y-8">
+              {processSteps.map((step, index) => (
+                <div key={step.id} className="flex flex-col items-center">
+                  {/* Process Card */}
+                  <div className="timeline-card relative w-full">
+                    <div className="relative backdrop-blur-sm rounded-2xl p-6">
+                      {/* Icon - Centered */}
+                      <div className="w-20 h-20 rounded-xl flex items-center justify-center text-[var(--color-mint-cyan)] mb-4 mx-auto mt-4">
                         {step.icon}
                       </div>
-                      <h3 className="text-lg font-gilroy font-bold text-white">
-                        {step.title}
-                      </h3>
+                      
+                      {/* Content - Centered */}
+                      <div className="text-center">
+                        <h3 className="text-lg font-gilroy font-bold text-white mb-3">
+                          {step.title}
+                        </h3>
+                        
+                        <p className="text-white/70 font-neue-montreal leading-relaxed text-sm">
+                          {step.description}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-white/70 font-neue-montreal leading-relaxed text-sm">
-                      {step.description}
-                    </p>
                   </div>
+
+                  {/* Vertical Arrow (except for last item) */}
+                  {index < processSteps.length - 1 && (
+                    <div className="process-arrow flex items-center justify-center my-4">
+                 
+                        <ArrowDown className="w-5 h-5 text-[var(--color-mint-cyan)]" />
+             
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-      
-
-    </motion.section>
+    </section>
   )
 }
 
-export default ProcessSection 
+export default ProcessSection

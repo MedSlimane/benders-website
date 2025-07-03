@@ -23,14 +23,14 @@ const logos = [
 export default function LogoCarousel({ loading }: LogoCarouselProps) {
   return (
     <motion.section 
-      className="py-2" 
+      className="py-4" 
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
     >
       <motion.div 
-        className="text-center mb-2"
+        className="text-center mb-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
@@ -96,7 +96,7 @@ export default function LogoCarousel({ loading }: LogoCarouselProps) {
       </div>
 
       <motion.div 
-        className="text-center mt-2"
+        className="text-center mt-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}

@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -27,8 +28,8 @@ const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "Mohamed Amine Gharbi",
-    handle: "mohamed_amine_gharbi",
-    avatar: "/api/placeholder/40/40",
+    handle: "transformini_24",
+    avatar: "/testo/mouhamed.jpg",
     content: "Working with Benders was a fantastic experience. As VFX artists, their skills are top-tier, and as filmmakers, they know how to tell a story that resonates. The team has a rare combination of technical ability and artistic vision that makes every project they touch better than you could ever imagine. Highly recommended!",
     platform: "instagram",
     verified: true
@@ -36,8 +37,8 @@ const testimonials: Testimonial[] = [
   {
     id: 2,
     name: "Zied Grombali",
-    handle: "zied_grombali",
-    avatar: "/api/placeholder/40/40",
+    handle: "ziedgrombali",
+    avatar: "/testo/zied.jpg",
     content: "I've worked with many filmmakers and VFX artists, but Benders' approach was refreshingly different. They listen intently to your vision and then enhance it in ways you never expected. Their work not only meets the brief but often exceeds it. I will definitely be collaborating with them again in the future.",
     platform: "instagram",
     verified: true
@@ -45,8 +46,8 @@ const testimonials: Testimonial[] = [
   {
     id: 3,
     name: "Aziz Mbarek",
-    handle: "aziz_mbarek",
-    avatar: "/api/placeholder/40/40",
+    handle: "mahfelroom",
+    avatar: "/testo/aziz.jpg",
     content: "We hired Benders for a commercial project, and their expertise in both filmmaking and VFX was evident from start to finish. The creative ideas they brought to the table were beyond our expectations, and the final piece truly stood out. Their attention to detail, coupled with their technical know-how, made them a valuable asset to our team.",
     platform: "instagram",
     verified: true
@@ -54,8 +55,8 @@ const testimonials: Testimonial[] = [
   {
     id: 4,
     name: "Ahmed Amraoui",
-    handle: "ahmed_amraoui",
-    avatar: "/api/placeholder/40/40",
+    handle: "gameworld.tn",
+    avatar: "/testo/ahmed.jpg",
     content: "Working with Benders was a game-changer for our brand. Their cinematic approach and VFX expertise turned our simple concept into a visually stunning masterpiece that left our audience in awe.",
     platform: "instagram",
     verified: true
@@ -63,8 +64,8 @@ const testimonials: Testimonial[] = [
   {
     id: 5,
     name: "Emna Sadfii",
-    handle: "emna_sadfii",
-    avatar: "/api/placeholder/40/40",
+    handle: "emnasadfii",
+    avatar: "/testo/emna.jpg",
     content: "Benders' eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. They don't just edit — they craft an experience that feels alive and powerful.",
     platform: "instagram",
     verified: true
@@ -72,8 +73,8 @@ const testimonials: Testimonial[] = [
   {
     id: 6,
     name: "Seif Eddine Bayaa",
-    handle: "seif_eddine_bayaa",
-    avatar: "/api/placeholder/40/40",
+    handle: "seifeddinebayaa",
+    avatar: "/testo/seif.jpeg",
     content: "Benders captured the soul of our event perfectly. The teaser they crafted wasn't just a highlight reel — it was an experience. Their edits amplified the energy and excitement, making viewers feel like they were right there with us, reliving the moment.",
     platform: "instagram",
     verified: true
@@ -82,7 +83,7 @@ const testimonials: Testimonial[] = [
     id: 7,
     name: "Foued Rouchka",
     handle: "foued_rouchka",
-    avatar: "/api/placeholder/40/40",
+    avatar: "/testo/foued.jpeg",
     content: "I gave Benders a rough idea, and they transformed it into a high-energy, mind-blowing visual that boosted my engagement like crazy. They're magicians with the camera and effects!",
     platform: "instagram",
     verified: true
@@ -136,16 +137,37 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col flex-shrink-0 w-80 bg-white rounded-xl p-6 shadow-lg border border-gray-100 mx-4 h-full transition-transform hover:scale-105 focus:scale-105 outline-none"
+      className="flex flex-col flex-shrink-0 w-80 bg-white rounded-xl p-6 shadow-lg border border-gray-100 mx-4 h-full transition-transform duration-300 hover:scale-105 active:scale-100"
       tabIndex={0}
       aria-label={`View ${testimonial.name}'s Instagram profile`}
+      onMouseLeave={(e) => {
+        // Force reset transform on mouse leave
+        const target = e.currentTarget as HTMLElement
+        target.style.transform = 'scale(1)'
+      }}
+      onFocus={(e) => {
+        // Reset any stuck transforms when focused
+        const target = e.currentTarget as HTMLElement
+        target.style.transform = 'scale(1)'
+      }}
+      onBlur={(e) => {
+        // Reset transform when losing focus
+        const target = e.currentTarget as HTMLElement
+        target.style.transform = 'scale(1)'
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-pink-400 to-yellow-500"></div>
+              <Image
+                src={testimonial.avatar}
+                alt={`${testimonial.name} avatar`}
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+              />
             </div>
             {testimonial.verified && (
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 rounded-full flex items-center justify-center">
@@ -303,4 +325,4 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
   )
 }
 
-export default Testimonials 
+export default Testimonials

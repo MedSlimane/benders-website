@@ -109,6 +109,10 @@ const Hero = ({ loading }: HeroProps) => {
     { scope: heroRef, dependencies: [loading] },
   )
 
+  const handleScaleClick = () => {
+    window.open('https://calendar.google.com/calendar/appointments/schedules/AcZssZ31zb6ylOEMCB2-9Ry7xOENsETmqbZZQG9l8PV_v2lYL9E81yyeglqpPqSq_Za1sYB9N3YCURuz?gv=true', '_blank')
+  }
+
   return (
       <section ref={heroRef} className={`relative overflow-hidden w-full min-h-screen gradient-tertiary flex flex-col ${loading ? 'opacity-0' : ''}`}>
           <nav className='flex justify-between items-center p-4 w-full md:m-5'>
@@ -132,7 +136,11 @@ const Hero = ({ loading }: HeroProps) => {
                   <p ref={paragraphRef} className="text-lg md:text-xl font-neue-montreal mb-8 max-w-2xl mx-auto md:mx-0">
                      We Design And Manage Marketing Campaigns That Drive <span className="text-xl md:text-2xl font-bold text-gradient-secondary">Results.</span> 
                   </p>
-                  <button type="button" ref={buttonRef} className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300">
+                  <button 
+                    ref={buttonRef} 
+                    onClick={handleScaleClick}
+                    className="bg-[var(--color-electric-blue)] text-white font-bold py-3 px-6 rounded-full hover:bg-[var(--color-blue-medium)] transition-colors duration-300"
+                  >
                       <ShinyText text="Lets Scale" />
                   </button>
               </div>
