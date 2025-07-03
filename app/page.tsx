@@ -3,7 +3,6 @@
 import Hero from "@/components/Hero"
 import LogoCarousel from "@/components/LogoCarousel"
 import ProcessSection from "@/components/ProcessSection"
-import Services from "@/components/Services"
 import Preloader from "@/components/preloader"
 import CTA from "@/components/CTA"
 import Testimonials from "@/components/Testimonials"
