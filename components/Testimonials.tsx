@@ -27,67 +27,80 @@ const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "Mohamed Amine Gharbi",
-    handle: "@mohamed_amine_gharbi",
+    handle: "mohamed_amine_gharbi",
     avatar: "/api/placeholder/40/40",
-    content: "Working with Rayen was a fantastic experience. As a VFX artist, his skills are top-tier, and as a filmmaker, he knows how to tell a story that resonates. He has a rare combination of technical ability and artistic vision that makes every project he touches better than you could ever imagine. Highly recommended!",
-    platform: "twitter",
+    content: "Working with Benders was a fantastic experience. As VFX artists, their skills are top-tier, and as filmmakers, they know how to tell a story that resonates. The team has a rare combination of technical ability and artistic vision that makes every project they touch better than you could ever imagine. Highly recommended!",
+    platform: "instagram",
     verified: true
   },
   {
     id: 2,
     name: "Zied Grombali",
-    handle: "@zied_grombali",
+    handle: "zied_grombali",
     avatar: "/api/placeholder/40/40",
-    content: "I've worked with many filmmakers and VFX artists, but Rayen's approach was refreshingly different. He listens intently to your vision and then enhances it in ways you never expected. His work not only meets the brief but often exceeds it. I will definitely be collaborating with him again in the future.",
+    content: "I've worked with many filmmakers and VFX artists, but Benders' approach was refreshingly different. They listen intently to your vision and then enhance it in ways you never expected. Their work not only meets the brief but often exceeds it. I will definitely be collaborating with them again in the future.",
     platform: "instagram",
     verified: true
   },
   {
     id: 3,
     name: "Aziz Mbarek",
-    handle: "@aziz_mbarek",
+    handle: "aziz_mbarek",
     avatar: "/api/placeholder/40/40",
-    content: "We hired Rayen for a commercial project, and his expertise in both filmmaking and VFX was evident from start to finish. The creative ideas he brought to the table were beyond our expectations, and the final piece truly stood out. His attention to detail, coupled with his technical know-how, made him a valuable asset to our team.",
-    platform: "linkedin",
+    content: "We hired Benders for a commercial project, and their expertise in both filmmaking and VFX was evident from start to finish. The creative ideas they brought to the table were beyond our expectations, and the final piece truly stood out. Their attention to detail, coupled with their technical know-how, made them a valuable asset to our team.",
+    platform: "instagram",
     verified: true
   },
   {
     id: 4,
     name: "Ahmed Amraoui",
-    handle: "@ahmed_amraoui",
+    handle: "ahmed_amraoui",
     avatar: "/api/placeholder/40/40",
-    content: "Working with Rayen was a game-changer for our brand. His cinematic approach and VFX expertise turned our simple concept into a visually stunning masterpiece that left our audience in awe.",
-    platform: "twitter",
+    content: "Working with Benders was a game-changer for our brand. Their cinematic approach and VFX expertise turned our simple concept into a visually stunning masterpiece that left our audience in awe.",
+    platform: "instagram",
     verified: true
   },
   {
     id: 5,
     name: "Emna Sadfii",
-    handle: "@emna_sadfii",
+    handle: "emna_sadfii",
     avatar: "/api/placeholder/40/40",
-    content: "Rayen's eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. He doesn't just edit — he crafts an experience that feels alive and powerful.",
+    content: "Benders' eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. They don't just edit — they craft an experience that feels alive and powerful.",
     platform: "instagram",
     verified: true
   },
   {
     id: 6,
     name: "Seif Eddine Bayaa",
-    handle: "@seif_eddine_bayaa",
+    handle: "seif_eddine_bayaa",
     avatar: "/api/placeholder/40/40",
-    content: "Rayen captured the soul of our event perfectly. The teaser he crafted wasn't just a highlight reel — it was an experience. His edits amplified the energy and excitement, making viewers feel like they were right there with us, reliving the moment.",
-    platform: "linkedin",
+    content: "Benders captured the soul of our event perfectly. The teaser they crafted wasn't just a highlight reel — it was an experience. Their edits amplified the energy and excitement, making viewers feel like they were right there with us, reliving the moment.",
+    platform: "instagram",
     verified: true
   },
   {
     id: 7,
     name: "Foued Rouchka",
-    handle: "@foued_rouchka",
+    handle: "foued_rouchka",
     avatar: "/api/placeholder/40/40",
-    content: "I gave Rayen a rough idea, and he transformed it into a high-energy, mind-blowing visual that boosted my engagement like crazy. He's a magician with the camera and effects!",
-    platform: "twitter",
+    content: "I gave Benders a rough idea, and they transformed it into a high-energy, mind-blowing visual that boosted my engagement like crazy. They're magicians with the camera and effects!",
+    platform: "instagram",
     verified: true
   }
 ]
+
+const getPlatformUrl = (platform: string, handle: string) => {
+  switch (platform) {
+    case 'twitter':
+      return `https://twitter.com/${handle}`
+    case 'instagram':
+      return `https://instagram.com/${handle}`
+    case 'linkedin':
+      return `https://linkedin.com/in/${handle}` // Placeholder, might need adjustment
+    default:
+      return '#'
+  }
+}
 
 const PlatformIcon = ({ platform }: { platform: string }) => {
   const iconClass = "w-4 h-4 fill-current"
@@ -117,23 +130,25 @@ const PlatformIcon = ({ platform }: { platform: string }) => {
 }
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
-  const platformColors = {
-    twitter: 'text-blue-400',
-    instagram: 'text-pink-500',
-    linkedin: 'text-blue-600'
-  }
-
+  const url = getPlatformUrl('instagram', testimonial.handle)
   return (
-    <div className="flex-shrink-0 w-80 bg-white rounded-xl p-6 shadow-lg border border-gray-100 mx-4">
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col flex-shrink-0 w-80 bg-white rounded-xl p-6 shadow-lg border border-gray-100 mx-4 h-full transition-transform hover:scale-105 focus:scale-105 outline-none"
+      tabIndex={0}
+      aria-label={`View ${testimonial.name}'s Instagram profile`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
+              <div className="w-full h-full bg-gradient-to-br from-pink-400 to-yellow-500"></div>
             </div>
             {testimonial.verified && (
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-pink-500 rounded-full flex items-center justify-center">
                 <svg className="w-2.5 h-2.5 text-white fill-current" viewBox="0 0 20 20">
                   <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
                 </svg>
@@ -142,16 +157,14 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
           </div>
           <div>
             <div className="font-bold text-gray-900 text-sm">{testimonial.name}</div>
-            <div className="text-gray-500 text-xs">{testimonial.handle}</div>
+            <div className="text-gray-500 text-xs">@{testimonial.handle}</div>
           </div>
         </div>
-        <div className={`${platformColors[testimonial.platform]}`}>
-          <PlatformIcon platform={testimonial.platform} />
-        </div>
+        <PlatformIcon platform="instagram" />
       </div>
 
       {/* Content */}
-      <div className="text-gray-800 text-sm leading-relaxed mb-4 font-neue-montreal">
+      <div className="flex-grow text-gray-800 text-sm leading-relaxed mb-4 font-neue-montreal">
         {testimonial.content}
       </div>
 
@@ -167,7 +180,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
         </div>
         <div>{testimonial.time}</div>
       </div>
-    </div>
+    </a>
   )
 }
 
@@ -233,8 +246,18 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
       repeatDelay: 1
     })
 
+    const pauseAnimation = () => autoScroll.pause()
+    const resumeAnimation = () => autoScroll.resume()
+
+    carousel.addEventListener('mouseenter', pauseAnimation)
+    carousel.addEventListener('mouseleave', resumeAnimation)
+
     return () => {
       autoScroll.kill()
+      if (carousel) {
+        carousel.removeEventListener('mouseenter', pauseAnimation)
+        carousel.removeEventListener('mouseleave', resumeAnimation)
+      }
     }
   }, [])
 
@@ -258,7 +281,7 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
         <div className="relative">
           <div 
             ref={carouselRef}
-            className="flex items-start"
+            className="flex items-stretch"
             style={{ width: `${testimonials.length * 320 * 2}px` }}
           >
             {/* First set */}

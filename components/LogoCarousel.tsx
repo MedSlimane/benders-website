@@ -62,14 +62,14 @@ export default function LogoCarousel({ loading }: LogoCarouselProps) {
             {logos.map((logo, index) => (
               <div 
                 key={index} 
-                className="mx-4 sm:mx-6 md:mx-8 lg:mx-12 w-[120px] sm:w-[160px] md:w-[200px] lg:w-[220px] h-[60px] sm:h-[80px] md:h-[100px] flex items-center justify-center flex-shrink-0"
+                className="mx-8 p-4 h-24 w-40 flex items-center justify-center flex-shrink-0"
               >
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={200}
                   height={80}
-                  className="w-auto max-h-[50px] sm:max-h-[60px] md:max-h-[80px] object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
+                  className="w-auto h-full object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
                 />
               </div>
             ))}
@@ -80,14 +80,14 @@ export default function LogoCarousel({ loading }: LogoCarouselProps) {
             {logos.map((logo, index) => (
               <div 
                 key={`dup-${index}`} 
-                className="mx-4 sm:mx-6 md:mx-8 lg:mx-12 w-[120px] sm:w-[160px] md:w-[200px] lg:w-[220px] h-[60px] sm:h-[80px] md:h-[100px] flex items-center justify-center flex-shrink-0"
+                className="mx-8 p-4 h-24 w-40 flex items-center justify-center flex-shrink-0"
               >
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={200}
                   height={80}
-                  className="w-auto max-h-[50px] sm:max-h-[60px] md:max-h-[80px] object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
+                  className="w-auto h-full object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
                 />
               </div>
             ))}
