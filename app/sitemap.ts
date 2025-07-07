@@ -7,8 +7,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'weekly',
       priority: 1,
+    },
+    {
+      url: `${baseUrl}#services`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}#process`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}#testimonials`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}#contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
     },
     // Add more pages as your site grows
     // {
@@ -18,16 +42,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     //   priority: 0.8,
     // },
     // {
-    //   url: `${baseUrl}/services`,
+    //   url: `${baseUrl}/portfolio`,
     //   lastModified: new Date(),
-    //   changeFrequency: 'monthly',
-    //   priority: 0.8,
+    //   changeFrequency: 'weekly',
+    //   priority: 0.7,
     // },
     // {
-    //   url: `${baseUrl}/contact`,
+    //   url: `${baseUrl}/blog`,
     //   lastModified: new Date(),
-    //   changeFrequency: 'monthly',
-    //   priority: 0.7,
+    //   changeFrequency: 'daily',
+    //   priority: 0.6,
     // },
   ]
 }
