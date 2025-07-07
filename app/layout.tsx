@@ -70,9 +70,10 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
-    yandex: process.env.YANDEX_VERIFICATION,
-    yahoo: process.env.YAHOO_VERIFICATION,
+    // Add these only if you want to verify with search engines (optional)
+    // google: process.env.GOOGLE_SITE_VERIFICATION,
+    // yandex: process.env.YANDEX_VERIFICATION,
+    // yahoo: process.env.YAHOO_VERIFICATION,
   },
   category: 'Digital Marketing',
 };
