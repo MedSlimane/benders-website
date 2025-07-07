@@ -10,10 +10,7 @@ const nextConfig: NextConfig = {
   trailingSlash: false,
   poweredByHeader: false,
   compress: true,
-  // Performance optimizations
-  experimental: {
-    optimizeCss: true,
-  },
+  // Performance optimizations (removed experimental optimizeCss due to build issues)
   // Security headers for better SEO
   async headers() {
     return [
