@@ -8,31 +8,13 @@ export function generateOrganizationSchema() {
     alternateName: 'Benders',
     url: baseUrl,
     logo: `${baseUrl}/Benders-logo/SVG/1.svg`,
-    description: 'Digital marketing agency providing web development, SEO, social media marketing, and creative solutions to help businesses grow online.',
-    foundingDate: '2020',
-    sameAs: [
-      'https://www.facebook.com/bendersagency',
-      'https://www.instagram.com/bendersagency',
-      'https://www.linkedin.com/company/bendersagency',
-      'https://twitter.com/bendersagency',
-    ],
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '+1-555-123-4567',
-      contactType: 'customer service',
-      availableLanguage: ['English', 'French', 'Arabic'],
-    },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Your City',
-      addressRegion: 'Your State',
-      addressCountry: 'Your Country',
-    },
+    description: 'Digital marketing agency providing web development, social media marketing, and creative solutions to help businesses grow online.',
+    foundingDate: '2025',
     service: [
       {
         '@type': 'Service',
         name: 'Digital Marketing',
-        description: 'Comprehensive digital marketing strategies including SEO, PPC, and social media marketing.',
+        description: 'Comprehensive digital marketing strategies including PPC and social media marketing.',
       },
       {
         '@type': 'Service',
@@ -58,14 +40,6 @@ export function generateOrganizationSchema() {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: 'SEO Optimization',
-            description: 'Search Engine Optimization to improve website visibility',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
             name: 'Web Development',
             description: 'Custom website and web application development',
           },
@@ -76,6 +50,14 @@ export function generateOrganizationSchema() {
             '@type': 'Service',
             name: 'Social Media Marketing',
             description: 'Strategic social media management and advertising',
+          },
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Brand Design',
+            description: 'Creative brand identity and graphic design services',
           },
         },
       ],
