@@ -123,7 +123,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
     }, preloaderRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [onComplete])
 
   return (
     <div

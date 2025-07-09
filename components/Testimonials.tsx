@@ -1,12 +1,13 @@
 "use client"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Draggable } from "gsap/Draggable"
 import { motion } from "framer-motion"
 import Image from "next/image"
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, Draggable)
 
 interface Testimonial {
   id: number
@@ -97,7 +98,7 @@ const getPlatformUrl = (platform: string, handle: string) => {
     case 'instagram':
       return `https://instagram.com/${handle}`
     case 'linkedin':
-      return `https://linkedin.com/in/${handle}` // Placeholder, might need adjustment
+      return `https://linkedin.com/in/${handle}`
     default:
       return '#'
   }
@@ -130,8 +131,27 @@ const PlatformIcon = ({ platform }: { platform: string }) => {
   }
 }
 
-const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
+const TestimonialCard = ({ testimonial, isDragging }: { testimonial: Testimonial; isDragging: boolean }) => {
   const url = getPlatformUrl('instagram', testimonial.handle)
+  const [wasDragged, setWasDragged] = useState(false)
+
+  useEffect(() => {
+    if (isDragging) {
+      setWasDragged(true)
+    } else {
+      // Reset after a delay
+      const timer = setTimeout(() => setWasDragged(false), 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isDragging])
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (wasDragged) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+  
   return (
     <a
       href={url}
@@ -140,18 +160,16 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       className="flex flex-col flex-shrink-0 w-80 bg-white rounded-xl p-6 shadow-lg border border-gray-100 mx-4 h-full transition-transform duration-300 hover:scale-105 active:scale-100"
       tabIndex={0}
       aria-label={`View ${testimonial.name}'s Instagram profile`}
+      onClick={handleClick}
       onMouseLeave={(e) => {
-        // Force reset transform on mouse leave
         const target = e.currentTarget as HTMLElement
         target.style.transform = 'scale(1)'
       }}
       onFocus={(e) => {
-        // Reset any stuck transforms when focused
         const target = e.currentTarget as HTMLElement
         target.style.transform = 'scale(1)'
       }}
       onBlur={(e) => {
-        // Reset transform when losing focus
         const target = e.currentTarget as HTMLElement
         target.style.transform = 'scale(1)'
       }}
@@ -210,6 +228,11 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const carouselRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
+  const [autoScrollRef, setAutoScrollRef] = useState<gsap.core.Tween | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const totalWidth = testimonials.length * 320 // card width + margin
+  const maxDrag = -totalWidth // Maximum drag distance
 
   useGSAP(() => {
     // Title animation
@@ -231,57 +254,96 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
       duration: 0.8,
       ease: "power2.out"
     })
-
-    // Cards animation
-    const cards = carouselRef.current?.querySelectorAll('.testimonial-card')
-    if (cards) {
-      gsap.set(cards, { opacity: 0, y: 50 })
-      
-      gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: carouselRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
-      })
-    }
   }, { scope: containerRef, dependencies: [loading] })
 
+  // Auto-scroll effect with drag functionality - THE CRITICAL PART!
   useEffect(() => {
-    const carousel = carouselRef.current
-    if (!carousel) return
+    if (loading || !carouselRef.current) return
 
-    // Auto-scroll animation
-    const totalWidth = testimonials.length * 320 // card width + margin
+    const carousel = carouselRef.current
     const animationDuration = testimonials.length * 3 // 3 seconds per card
 
+    // Set initial position
+    gsap.set(carousel, { x: 0 })
+
+    // Create draggable instance
+    const draggable = Draggable.create(carousel, {
+      type: "x",
+      inertia: true,
+      onDragStart: () => {
+        setIsDragging(true)
+        if (autoScrollRef) {
+          autoScrollRef.kill() // Kill instead of pause for smooth restart
+        }
+      },
+      onDragEnd: () => {
+        setIsDragging(false)
+        
+        // Get current position
+        let currentX = gsap.getProperty(carousel, "x") as number
+        
+        // Handle infinite scroll wrapping smoothly
+        if (currentX <= maxDrag) {
+          currentX = 0
+          gsap.set(carousel, { x: 0 })
+        } else if (currentX > 0) {
+          currentX = maxDrag
+          gsap.set(carousel, { x: maxDrag })
+        }
+        
+        // Calculate remaining distance and time for smooth continuation
+        const remainingDistance = maxDrag - currentX
+        const totalDistance = Math.abs(maxDrag)
+        const remainingDuration = animationDuration * (Math.abs(remainingDistance) / totalDistance)
+        
+        // Create new auto-scroll from current position
+        const newAutoScroll = gsap.to(carousel, {
+          x: maxDrag,
+          duration: remainingDuration,
+          ease: "none",
+          repeat: -1,
+          repeatDelay: 0,
+          onRepeat: () => {
+            gsap.set(carousel, { x: 0 })
+          }
+        })
+        
+        setAutoScrollRef(newAutoScroll)
+      }
+    })
+
     const autoScroll = gsap.to(carousel, {
-      x: -totalWidth,
+      x: maxDrag,
       duration: animationDuration,
       ease: "none",
       repeat: -1,
-      repeatDelay: 1
+      repeatDelay: 0,
+      onRepeat: () => {
+        // Seamless infinite loop - reset to start
+        gsap.set(carousel, { x: 0 })
+      }
     })
 
-    const pauseAnimation = () => autoScroll.pause()
-    const resumeAnimation = () => autoScroll.resume()
-
-    carousel.addEventListener('mouseenter', pauseAnimation)
-    carousel.addEventListener('mouseleave', resumeAnimation)
+    setAutoScrollRef(autoScroll)
 
     return () => {
       autoScroll.kill()
-      if (carousel) {
-        carousel.removeEventListener('mouseenter', pauseAnimation)
-        carousel.removeEventListener('mouseleave', resumeAnimation)
-      }
+      setAutoScrollRef(null)
+      draggable.forEach(d => d.kill())
     }
-  }, [])
+  }, [loading, maxDrag])
+
+  const handleMouseEnter = () => {
+    if (autoScrollRef) {
+      autoScrollRef.pause()
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (autoScrollRef) {
+      autoScrollRef.resume()
+    }
+  }
 
   return (
     <motion.section 
@@ -301,21 +363,25 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
         </h2>
         
         <div className="relative">
-          <div 
+          <div
             ref={carouselRef}
-            className="flex items-stretch"
-            style={{ width: `${testimonials.length * 320 * 2}px` }}
+            className={`flex items-stretch ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            style={{ 
+              width: `${testimonials.length * 320 * 2}px`
+            }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             {/* First set */}
             {testimonials.map((testimonial) => (
               <div key={`first-${testimonial.id}`} className="testimonial-card">
-                <TestimonialCard testimonial={testimonial} />
+                <TestimonialCard testimonial={testimonial} isDragging={isDragging} />
               </div>
             ))}
             {/* Duplicate set for seamless loop */}
             {testimonials.map((testimonial) => (
               <div key={`second-${testimonial.id}`} className="testimonial-card">
-                <TestimonialCard testimonial={testimonial} />
+                <TestimonialCard testimonial={testimonial} isDragging={isDragging} />
               </div>
             ))}
           </div>
