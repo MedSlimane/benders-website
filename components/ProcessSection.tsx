@@ -120,26 +120,26 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
       id: 1,
       title: "Discovery & Strategy",
       description: "We start by understanding your goals — then audit your brand to uncover the clearest path to growth.",
-      icon: <Search className="w-6 h-6 md:w-8 md:h-8" />
+      videoSrc: "/logos/evidence.webm" // Using WebM for better transparency support
     },
     {
       id: 2,
       title: "Launch & Optimize",
       description: "We bring your vision to life, then fine-tune every detail to align with your goals and maximize results.",
-      icon: <Rocket className="w-6 h-6 md:w-8 md:h-8" />
+      videoSrc: "/logos/rocket.webm" // Using WebM for better transparency support
     },
     {
       id: 3,
       title: "Growth & Scale",
       description: "With your long-term success in mind, we scale what works and become your partner in consistent growth.",
-      icon: <TrendingUp className="w-6 h-6 md:w-8 md:h-8" />
+      videoSrc: "/logos/growth.webm" // Using WebM for better transparency support
     }
   ]  
 
   return (
     <section 
       ref={sectionRef} 
-      className={`relative overflow-hidden w-full py-16 md:py-16 ${className}`}
+      className={`relative overflow-hidden w-full py-16 md:py-16 pb-8 md:pb-10 ${className}`}
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
     >
       <div className="container mx-auto px-6 md:px-16 pt-8">
@@ -174,9 +174,22 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
                 >
                   {/* Main Card */}
                   <div className="relative backdrop-blur-sm rounded-2xl p-6 lg:p-8 transition-all duration-500">
-                    {/* Icon */}
-                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl flex items-center justify-center text-[var(--color-mint-cyan)] mb-4 lg:mb-6 transition-all duration-300 mx-auto mt-4">
-                      {step.icon}
+                    {/* Animated Video Icon */}
+                    <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-xl flex items-center justify-center mb-4 lg:mb-6 transition-all duration-300 mx-auto mt-4 overflow-hidden">
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover mix-blend-screen brightness-150 contrast-125"
+                        style={{ filter: 'drop-shadow(0 0 10px rgba(45, 230, 199, 0.3))' }}
+                      >
+                        <source src={step.videoSrc} type="video/webm" />
+                        {/* Fallback for when video doesn't load */}
+                        <div className="w-full h-full bg-[var(--color-electric-blue)]/20 rounded-xl flex items-center justify-center">
+                          <div className="w-8 h-8 bg-[var(--color-mint-cyan)] rounded-full"></div>
+                        </div>
+                      </video>
                     </div>
                     
                     {/* Content */}
@@ -249,9 +262,22 @@ const ProcessSection = ({ className = "", loading }: ProcessSectionProps) => {
                   {/* Process Card */}
                   <div className="timeline-card relative w-full">
                     <div className="relative backdrop-blur-sm rounded-2xl p-6">
-                      {/* Icon - Centered */}
-                      <div className="w-20 h-20 rounded-xl flex items-center justify-center text-[var(--color-mint-cyan)] mb-4 mx-auto mt-4">
-                        {step.icon}
+                      {/* Animated Video Icon - Centered */}
+                      <div className="w-20 h-20 rounded-xl flex items-center justify-center mb-4 mx-auto mt-4 overflow-hidden">
+                        <video
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover mix-blend-screen brightness-150 contrast-125"
+                          style={{ filter: 'drop-shadow(0 0 10px rgba(45, 230, 199, 0.3))' }}
+                        >
+                          <source src={step.videoSrc} type="video/webm" />
+                          {/* Fallback for when video doesn't load */}
+                          <div className="w-full h-full bg-[var(--color-electric-blue)]/20 rounded-xl flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[var(--color-mint-cyan)] rounded-full"></div>
+                          </div>
+                        </video>
                       </div>
                       
                       {/* Content - Centered */}
