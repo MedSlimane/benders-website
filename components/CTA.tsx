@@ -86,7 +86,7 @@ const CTA = ({
   )
 
   const handleBookingClick = () => {
-    window.open('https://calendar.google.com/calendar/appointments/schedules/AcZssZ31zb6ylOEMCB2-9Ry7xOENsETmqbZZQG9l8PV_v2lYL9E81yyeglqpPqSq_Za1sYB9N3YCURuz?gv=true', '_blank')
+    window.open('hhttps://calendar.app.google/ENRJ1d6t9AM9nwy7A', '_blank')
   }
 
   return (
