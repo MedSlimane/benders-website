@@ -11,7 +11,6 @@ const CustomCursor = ({ loading }: CustomCursorProps) => {
   const cursorDotRef = useRef<HTMLDivElement>(null)
   const cursorTextRef = useRef<HTMLSpanElement>(null)
   const [cursorText, setCursorText] = useState("")
-  const [isHovering, setIsHovering] = useState(false)
   const [isMobile, setIsMobile] = useState(true)
 
   useEffect(() => {
@@ -74,8 +73,6 @@ const CustomCursor = ({ loading }: CustomCursorProps) => {
       const centerX = rect.left + rect.width / 2
       const centerY = rect.top + rect.height / 2
 
-      setIsHovering(true)
-
       // Get cursor text from data attribute
       const text = target.dataset.cursor || ""
       setCursorText(text)
@@ -111,7 +108,6 @@ const CustomCursor = ({ loading }: CustomCursorProps) => {
     const handleMagneticLeave = (e: MouseEvent) => {
       const target = e.currentTarget as HTMLElement
       
-      setIsHovering(false)
       setCursorText("")
 
       gsap.to(cursor, {
@@ -137,7 +133,6 @@ const CustomCursor = ({ loading }: CustomCursorProps) => {
 
     // Link hover effect
     const handleLinkEnter = () => {
-      setIsHovering(true)
       gsap.to(cursor, {
         scale: 1.5,
         borderColor: "#2de6c7",
@@ -147,7 +142,6 @@ const CustomCursor = ({ loading }: CustomCursorProps) => {
     }
 
     const handleLinkLeave = () => {
-      setIsHovering(false)
       gsap.to(cursor, {
         scale: 1,
         borderColor: "rgba(255, 255, 255, 0.5)",

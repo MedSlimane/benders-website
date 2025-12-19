@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/structured-data";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -114,6 +115,7 @@ export default function RootLayout({
       >
         <Navbar />
         {children}
+        <Analytics />
       </body>
     </html>
   );

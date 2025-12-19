@@ -13,6 +13,7 @@
     "@lordicon/element": "^1.11.0",
     "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/oxide": "^4.1.11",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.20.1",
