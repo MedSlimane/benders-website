@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 interface LogoCarouselProps {
   loading: boolean
@@ -17,94 +18,82 @@ const logos = [
   { src: "/logos/loryx.png", alt: "Loryx" },
   { src: "/logos/geant.png", alt: "Geant" },
   { src: "/logos/qqcqq.png", alt: "QQCQQ" },
-  { src: "/logos/room.png", alt: "Room" },
+]
+
+// Split logos into groups - 3 for mobile, 4 for desktop (handled in render)
+const mobileGroups = [
+  logos.slice(0, 3),
+  logos.slice(3, 6),
+  logos.slice(6, 9),
+]
+
+const desktopGroups = [
+  logos.slice(0, 4),
+  logos.slice(4, 8),
 ]
 
 export default function LogoCarousel({ loading }: LogoCarouselProps) {
+  const [currentGroup, setCurrentGroup] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  const logoGroups = isMobile ? mobileGroups : desktopGroups
+
+  // Auto-switch between logo groups every 4 seconds
+  useEffect(() => {
+    if (loading) return
+    
+    const interval = setInterval(() => {
+      setCurrentGroup((prev) => (prev + 1) % logoGroups.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [loading, logoGroups.length])
+
   return (
     <motion.section 
-      className="py-4" 
+      className="py-6 md:py-14" 
       style={{ opacity: loading ? 0 : 1, visibility: loading ? 'hidden' : 'visible' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
     >
-      <motion.div 
-        className="text-center mb-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        <h2 className="font-neue-montreal font-medium text-md text-white/90">
-          Brands that <span className="text-gradient-secondary text-xl font-bold">Scale</span> with us :
-        </h2>
-      </motion.div>
-
-      <div className="relative w-full overflow-hidden">
-        {/* Gradient overlays */}
-        <div className="absolute top-0 left-0 w-[150px] h-full bg-gradient-to-r from-[#04082e] to-transparent z-10"></div>
-        <div className="absolute top-0 right-0 w-[150px] h-full bg-gradient-to-l from-[#04082e] to-transparent z-10"></div>
-        
-        {/* Logo container */}
-        <motion.div
-          className="flex items-center"
-          animate={{
-            x: ["0%", "-50%"]
-          }}
-          transition={{
-            duration: 18,
-            ease: "linear",
-            repeat: Infinity,
-          }}
-        >
-          {/* First set of logos */}
-          <div className="flex items-center">
-            {logos.map((logo, index) => (
-              <div 
-                key={index} 
-                className="mx-8 p-4 h-24 w-40 flex items-center justify-center flex-shrink-0"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={200}
-                  height={80}
-                  className="w-auto h-full object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-            ))}
-          </div>
-          
-          {/* Duplicate set for seamless loop */}
-          <div className="flex items-center">
-            {logos.map((logo, index) => (
-              <div 
-                key={`dup-${index}`} 
-                className="mx-8 p-4 h-24 w-40 flex items-center justify-center flex-shrink-0"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={200}
-                  height={80}
-                  className="w-auto h-full object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
-                />
-              </div>
-            ))}
-          </div>
-        </motion.div>
+      {/* Logo Grid - 3 on mobile, 4 on desktop with fade transition */}
+      <div className="relative w-full max-w-6xl mx-auto px-6 md:px-8">
+        <div className="relative h-16 md:h-24">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${currentGroup}-${isMobile ? 'mobile' : 'desktop'}`}
+              className="absolute inset-0 grid grid-cols-3 md:grid-cols-4 gap-8 md:gap-16 items-center justify-items-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              {logoGroups[currentGroup]?.map((logo, index) => (
+                <div 
+                  key={index} 
+                  className="h-12 md:h-20 w-full flex items-center justify-center"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={180}
+                    height={70}
+                    className="w-auto h-full max-w-[90px] md:max-w-[160px] object-contain filter brightness-0 invert opacity-80"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
-
-      <motion.div 
-        className="text-center mt-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-      >
-        <h2 className="font-neue-montreal font-medium text-white/90">
-          You Could Be <span className="text-gradient-secondary text-xl font-bold">Next</span>
-        </h2>
-      </motion.div>
     </motion.section>
   )
-} 
+}
