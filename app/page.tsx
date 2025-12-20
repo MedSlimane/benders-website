@@ -8,11 +8,11 @@ import ContactSection from "@/components/ContactSection"
 import Footer from "@/components/Footer"
 import CustomCursor from "@/components/CustomCursor"
 import SmoothScroll from "@/components/SmoothScroll"
-// import ProcessSection from "@/components/ProcessSection"
+import ServicesSection from "@/components/ServicesSection"
+import CTABanner from "@/components/CTABanner"
+import CreativeReveal from "@/components/CreativeReveal"
+import VideoTestimonials from "@/components/VideoTestimonials"
 import Preloader from "@/components/preloader"
-// import CTA from "@/components/CTA"
-// import Testimonials from "@/components/Testimonials"
-// import Services from "@/components/Services"
 import { useState, useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -70,6 +70,13 @@ export default function Home() {
         <section id="hero" aria-label="Hero section">
           <Hero loading={loading} />
         </section>
+        <section id="services" aria-label="Our services">
+          <ServicesSection loading={loading} />
+        </section>
+        
+        {/* CTA Banner */}
+        <CTABanner loading={loading} />
+        
         <section id="soul-science" aria-label="Soul and Science">
           <SoulScience loading={loading} />
         </section>
@@ -82,6 +89,21 @@ export default function Home() {
           <WorkSection loading={loading} />
         </section>
 
+        {/* CTA Banner after Work - tighter spacing */}
+        <div className="-mt-12 md:-mt-20">
+          <CTABanner loading={loading} />
+        </div>
+
+        {/* Creative Reveal - What people think about us - minimal gap */}
+        <section id="creative-reveal" aria-label="What people think about us" className="-mt-16 md:-mt-24">
+          <CreativeReveal loading={loading} />
+        </section>
+
+        {/* Video Testimonials - flows right after */}
+        <section id="testimonials" aria-label="Client testimonials" className="-mt-8 md:-mt-12">
+          <VideoTestimonials loading={loading} />
+        </section>
+
         {/* Contact section */}
         <section id="contact" aria-label="Get in touch">
           <ContactSection loading={loading} />
@@ -91,20 +113,6 @@ export default function Home() {
         <Footer loading={loading} />
         </div>
       </SmoothScroll>
-
-        {/* <section id="services" aria-label="Our services">
-          <Services loading={loading} />
-        </section> */}
-        {/* <section id="process" aria-label="Our process">
-          <ProcessSection loading={loading} />
-        </section>
-        <section id="testimonials" aria-label="Client testimonials">
-          <Testimonials loading={loading} />
-        </section>
-        <section id="contact" aria-label="Contact us">
-          <CTA loading={loading} />
-        </section> */}
-
     </main>
   )
 }

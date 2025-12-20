@@ -5,6 +5,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import BIcon from "./BIcon"
+import MagneticButton from "./MagneticButton"
 
 interface HeroProps {
   loading: boolean
@@ -148,6 +149,7 @@ const Hero = ({ loading }: HeroProps) => {
   const heroRef = useRef<HTMLElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLDivElement>(null)
   const videoTriggerRef = useRef<HTMLDivElement>(null)
   const videoPinRef = useRef<HTMLDivElement>(null)
   const videoWrapperRef = useRef<HTMLDivElement>(null)
@@ -198,6 +200,11 @@ const Hero = ({ loading }: HeroProps) => {
         opacity: 0,
         y: 30,
       })
+      gsap.set(buttonRef.current, {
+        opacity: 0,
+        y: 40,
+        scale: 0.9,
+      })
 
       if (loading) return
 
@@ -216,6 +223,13 @@ const Hero = ({ loading }: HeroProps) => {
         duration: 0.8,
         ease: "power2.out",
       }, "-=0.2")
+      .to(buttonRef.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.7,
+        ease: "back.out(1.7)",
+      }, "-=0.4")
 
       // Desktop only: Scroll-driven video expansion with pinning
       if (!isMobile && videoTriggerRef.current && videoPinRef.current && videoWrapperRef.current) {
@@ -317,6 +331,33 @@ const Hero = ({ loading }: HeroProps) => {
           {/* Huge Headline Text */}
           <div ref={subtitleRef}>
             <AnimatedHeroText />
+          </div>
+          
+          {/* Book a Call Button - Primary CTA */}
+          <div ref={buttonRef} className="mt-10 md:mt-14">
+            <MagneticButton
+              href="https://calendar.app.google/ENRJ1d6t9AM9nwy7A"
+              variant="primary"
+              size="lg"
+              icon={
+                <svg 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5"
+                >
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              }
+            >
+              Book a Free Call
+            </MagneticButton>
           </div>
         </div>
       </div>

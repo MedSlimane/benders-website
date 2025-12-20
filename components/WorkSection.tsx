@@ -195,18 +195,18 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
       if (!content || !title || !subtitle) return
 
       // Set initial states
-      gsap.set(title, { y: 80, opacity: 0 })
-      gsap.set(subtitle, { y: 40, opacity: 0 })
+      gsap.set(title, { y: 50, opacity: 0 })
+      gsap.set(subtitle, { y: 30, opacity: 0 })
 
-      // Animate title and subtitle
+      // Animate title and subtitle - faster trigger
       gsap.to(title, {
         y: 0,
         opacity: 1,
         scrollTrigger: {
           trigger: content,
-          start: "top 85%",
-          end: "top 55%",
-          scrub: 1,
+          start: "top 95%",
+          end: "top 75%",
+          scrub: 0.5,
         },
       })
 
@@ -215,9 +215,9 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
         opacity: 1,
         scrollTrigger: {
           trigger: content,
-          start: "top 80%",
-          end: "top 50%",
-          scrub: 1,
+          start: "top 92%",
+          end: "top 72%",
+          scrub: 0.5,
         },
       })
 
@@ -267,17 +267,17 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
     <section ref={sectionRef} className="relative">
       <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-20">
         {/* Title */}
-        <div className="text-center mb-16 md:mb-24 px-4">
+        <div className="text-center mb-12 md:mb-16 lg:mb-20 px-4">
           <h2 
             ref={titleRef}
             data-skew
-            className="font-gilroy font-black text-5xl md:text-7xl lg:text-[8rem] text-white leading-none tracking-tight"
+            className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight"
           >
             OUR WORK
           </h2>
           <p 
             ref={subtitleRef}
-            className="font-neue-montreal text-white/60 text-base md:text-lg mt-4 md:mt-6"
+            className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4"
           >
             See what we&apos;ve got brewing.
           </p>
