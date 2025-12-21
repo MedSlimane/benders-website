@@ -334,22 +334,22 @@ const Hero = ({ loading }: HeroProps) => {
           </div>
           
           {/* Book a Call Button - Primary CTA */}
-          <div ref={buttonRef} className="mt-10 md:mt-14">
+          <div ref={buttonRef} className="mt-8 md:mt-14">
             <MagneticButton
               href="https://calendar.app.google/ENRJ1d6t9AM9nwy7A"
               variant="glass"
               size="lg"
               icon={
                 <svg 
-                  width="20" 
-                  height="20" 
+                  width="16" 
+                  height="16" 
                   viewBox="0 0 24 24" 
                   fill="none" 
                   stroke="currentColor" 
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="w-5 h-5"
+                  className="w-4 h-4 md:w-5 md:h-5"
                 >
                   <line x1="7" y1="17" x2="17" y2="7" />
                   <polyline points="7 7 17 7 17 17" />

@@ -193,11 +193,11 @@ const MagneticButton = ({
     }
   }, [isMobile, magnetic])
 
-  // Size classes
+  // Size classes - responsive for mobile
   const sizeClasses = {
-    sm: "px-5 py-2.5 text-sm",
-    md: "px-7 py-3.5 text-base",
-    lg: "px-10 py-5 text-lg",
+    sm: "px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm",
+    md: "px-5 py-2.5 text-sm md:px-7 md:py-3.5 md:text-base",
+    lg: "px-6 py-3 text-sm md:px-10 md:py-5 md:text-lg",
   }
 
   // Variant styles
