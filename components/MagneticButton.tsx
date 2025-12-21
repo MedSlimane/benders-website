@@ -180,16 +180,16 @@ const MagneticButton = ({
       })
     }
 
-    button.addEventListener("mousemove", handleMouseMove)
+    button.addEventListener("mousemove", handleMouseMove as EventListener)
     button.addEventListener("mouseenter", handleMouseEnter)
     button.addEventListener("mouseleave", handleMouseLeave)
-    button.addEventListener("click", handleClick)
+    button.addEventListener("click", handleClick as EventListener)
 
     return () => {
-      button.removeEventListener("mousemove", handleMouseMove)
+      button.removeEventListener("mousemove", handleMouseMove as EventListener)
       button.removeEventListener("mouseenter", handleMouseEnter)
       button.removeEventListener("mouseleave", handleMouseLeave)
-      button.removeEventListener("click", handleClick)
+      button.removeEventListener("click", handleClick as EventListener)
     }
   }, [isMobile, magnetic])
 
