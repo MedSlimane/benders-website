@@ -12,6 +12,8 @@ import ServicesSection from "@/components/ServicesSection"
 import CTABanner from "@/components/CTABanner"
 import CreativeReveal from "@/components/CreativeReveal"
 import VideoTestimonials from "@/components/VideoTestimonials"
+import OwnerReveal from "@/components/OwnerReveal"
+import Testimonials from "@/components/Testimonials"
 import Preloader from "@/components/preloader"
 import { useState, useEffect, useRef } from "react"
 import { gsap } from "gsap"
@@ -102,6 +104,16 @@ export default function Home() {
         {/* Video Testimonials - flows right after */}
         <section id="testimonials" aria-label="Client testimonials" className="-mt-8 md:-mt-12">
           <VideoTestimonials loading={loading} />
+        </section>
+
+        {/* Owner Reveal - We will make it work for you + Founder video */}
+        <section id="owner-reveal" aria-label="Meet the founder">
+          <OwnerReveal loading={loading} />
+        </section>
+
+        {/* Client Feedback - Text testimonials carousel */}
+        <section id="client-feedback" aria-label="Client feedback">
+          <Testimonials loading={loading} />
         </section>
 
         {/* Contact section */}

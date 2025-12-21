@@ -337,7 +337,7 @@ const Hero = ({ loading }: HeroProps) => {
           <div ref={buttonRef} className="mt-10 md:mt-14">
             <MagneticButton
               href="https://calendar.app.google/ENRJ1d6t9AM9nwy7A"
-              variant="primary"
+              variant="glass"
               size="lg"
               icon={
                 <svg 
