@@ -1,8 +1,9 @@
 "use client"
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Flag, Palette, Code, Video, Target, MessageSquare } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,264 +15,234 @@ interface Service {
   id: number
   title: string
   description: string
-  number: string
-  gradient: string
+  icon: React.ReactNode
 }
 
 const services: Service[] = [
   {
     id: 1,
     title: "Brand Strategy",
-    description: "Define your brand's purpose and create a comprehensive strategy that resonates with your audience.",
-    number: "01",
-    gradient: "from-[#2de6c7]/20 via-[#2de6c7]/5 to-transparent",
+    description: "Positioning, offers, messaging, roadmap.",
+    icon: <Flag className="w-8 h-8" strokeWidth={1.5} />,
   },
   {
     id: 2,
     title: "Visual Identity",
-    description: "Craft memorable visual identities that capture your brand essence and stand out from the crowd.",
-    number: "02",
-    gradient: "from-[#0055ff]/20 via-[#0055ff]/5 to-transparent",
+    description: "Logo, brand system, guidelines, assets.",
+    icon: <Palette className="w-8 h-8" strokeWidth={1.5} />,
   },
   {
     id: 3,
     title: "Web Development",
-    description: "Build responsive, high-performance websites that convert visitors into loyal customers.",
-    number: "03",
-    gradient: "from-[#2de6c7]/20 via-[#2de6c7]/5 to-transparent",
+    description: "Landing pages, websites, Webflow/Next.js.",
+    icon: <Code className="w-8 h-8" strokeWidth={1.5} />,
   },
   {
     id: 4,
     title: "Video Production",
-    description: "Create stunning visual content with professional video production, motion graphics and VFX.",
-    number: "04",
-    gradient: "from-[#0055ff]/20 via-[#0055ff]/5 to-transparent",
+    description: "Ads, reels, motion, VFX, post-production.",
+    icon: <Video className="w-8 h-8" strokeWidth={1.5} />,
   },
   {
     id: 5,
     title: "Digital Marketing",
-    description: "Maximize ROI with targeted campaigns across Meta, Google and emerging platforms.",
-    number: "05",
-    gradient: "from-[#2de6c7]/20 via-[#2de6c7]/5 to-transparent",
+    description: "Funnels, ads, tracking, optimization.",
+    icon: <Target className="w-8 h-8" strokeWidth={1.5} />,
   },
   {
     id: 6,
     title: "Social Media",
-    description: "Engage your audience with strategic campaigns that build community and drive growth.",
-    number: "06",
-    gradient: "from-[#0055ff]/20 via-[#0055ff]/5 to-transparent",
+    description: "Content system, strategy, community growth.",
+    icon: <MessageSquare className="w-8 h-8" strokeWidth={1.5} />,
   },
 ]
 
 const ServiceCard = ({ 
   service,
-  index,
 }: { 
   service: Service
-  index: number
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
-  const bgRef = useRef<HTMLDivElement>(null)
-  const numberRef = useRef<HTMLSpanElement>(null)
+  const borderRef = useRef<HTMLDivElement>(null)
+  const glowTopRef = useRef<HTMLDivElement>(null)
+  const glowBottomRef = useRef<HTMLDivElement>(null)
+  const iconRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
-  const lineRef = useRef<HTMLDivElement>(null)
   const descRef = useRef<HTMLParagraphElement>(null)
-  const glowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const card = cardRef.current
-    const bg = bgRef.current
-    const number = numberRef.current
+    const border = borderRef.current
+    const glowTop = glowTopRef.current
+    const glowBottom = glowBottomRef.current
+    const icon = iconRef.current
     const title = titleRef.current
-    const line = lineRef.current
     const desc = descRef.current
-    const glow = glowRef.current
-    if (!card || !bg || !number || !title || !line || !desc || !glow) return
-
-    // Smooth cursor tracking for glow
-    const xTo = gsap.quickTo(glow, "x", { duration: 0.5, ease: "power3.out" })
-    const yTo = gsap.quickTo(glow, "y", { duration: 0.5, ease: "power3.out" })
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect()
-      xTo(e.clientX - rect.left)
-      yTo(e.clientY - rect.top)
-    }
+    
+    if (!card || !border || !glowTop || !glowBottom || !icon || !title || !desc) return
 
     const handleMouseEnter = () => {
-      // Background gradient reveal - smoother
-      gsap.to(bg, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.8,
-        ease: "power2.out",
-      })
-
-      // Glow appears smoothly
-      gsap.to(glow, {
-        opacity: 1,
-        scale: 1.1,
+      // Border glow intensifies - more subtle
+      gsap.to(border, {
+        boxShadow: "0 0 30px rgba(0, 85, 255, 0.4), inset 0 0 30px rgba(0, 85, 255, 0.15)",
         duration: 0.6,
         ease: "power2.out",
       })
 
-      // Number subtle scale and color
-      gsap.to(number, {
-        scale: 1.05,
-        color: "#2de6c7",
+      // Corner glows intensify - smoother
+      gsap.to([glowTop, glowBottom], {
+        opacity: 0.8,
+        scale: 1.15,
         duration: 0.6,
         ease: "power2.out",
       })
 
-      // Title shifts right smoothly
+      // Icon lifts and glows - smoother
+      gsap.to(icon, {
+        y: -4,
+        scale: 1.08,
+        boxShadow: "0 0 15px rgba(0, 85, 255, 0.4)",
+        duration: 0.5,
+        ease: "power2.out",
+      })
+
+      // Title brightens - smoother
       gsap.to(title, {
-        x: 12,
         color: "#ffffff",
-        duration: 0.6,
+        duration: 0.4,
         ease: "power2.out",
       })
 
-      // Line expands smoothly
-      gsap.to(line, {
-        scaleX: 1,
-        opacity: 1,
-        duration: 0.7,
-        ease: "power2.out",
-      })
-
-      // Description fades in smoothly
+      // Description brightens - smoother
       gsap.to(desc, {
-        opacity: 1,
-        y: 0,
+        color: "rgba(255, 255, 255, 0.75)",
+        duration: 0.4,
+        ease: "power2.out",
+      })
+
+      // Card lifts slightly - smoother
+      gsap.to(card, {
+        y: -6,
         duration: 0.6,
-        delay: 0.05,
         ease: "power2.out",
       })
     }
 
     const handleMouseLeave = () => {
-      gsap.to(bg, {
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.5,
+      gsap.to(border, {
+        boxShadow: "0 0 15px rgba(0, 85, 255, 0.25), inset 0 0 15px rgba(0, 85, 255, 0.08)",
+        duration: 0.6,
         ease: "power2.out",
       })
 
-      gsap.to(glow, {
-        opacity: 0,
+      gsap.to([glowTop, glowBottom], {
+        opacity: 0.5,
         scale: 1,
-        duration: 0.4,
+        duration: 0.6,
         ease: "power2.out",
       })
 
-      gsap.to(number, {
+      gsap.to(icon, {
+        y: 0,
         scale: 1,
-        color: "rgba(255,255,255,0.15)",
+        boxShadow: "0 0 0px rgba(0, 85, 255, 0)",
         duration: 0.5,
         ease: "power2.out",
       })
 
       gsap.to(title, {
-        x: 0,
-        color: "rgba(255,255,255,0.8)",
-        duration: 0.5,
-        ease: "power2.out",
-      })
-
-      gsap.to(line, {
-        scaleX: 0,
-        opacity: 0,
+        color: "rgba(255, 255, 255, 0.9)",
         duration: 0.4,
         ease: "power2.out",
       })
 
       gsap.to(desc, {
-        opacity: 0,
-        y: 8,
+        color: "rgba(255, 255, 255, 0.5)",
         duration: 0.4,
+        ease: "power2.out",
+      })
+
+      gsap.to(card, {
+        y: 0,
+        duration: 0.6,
         ease: "power2.out",
       })
     }
 
-    card.addEventListener("mousemove", handleMouseMove)
     card.addEventListener("mouseenter", handleMouseEnter)
     card.addEventListener("mouseleave", handleMouseLeave)
 
     return () => {
-      card.removeEventListener("mousemove", handleMouseMove)
       card.removeEventListener("mouseenter", handleMouseEnter)
       card.removeEventListener("mouseleave", handleMouseLeave)
     }
   }, [])
 
-  const isEven = index % 2 === 0
-
   return (
     <div
       ref={cardRef}
-      className="service-card relative cursor-pointer overflow-hidden"
+      className="service-card relative cursor-pointer"
+      style={{ willChange: "transform" }}
     >
-      {/* Animated background gradient */}
+      {/* Glowing border container */}
       <div
-        ref={bgRef}
-        className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 scale-95 rounded-2xl`}
-      />
-
-      {/* Cursor-following glow orb */}
-      <div
-        ref={glowRef}
-        className="absolute w-[300px] h-[300px] rounded-full pointer-events-none opacity-0"
+        ref={borderRef}
+        className="relative rounded-2xl p-[1.5px] transition-all duration-500"
         style={{
-          background: isEven 
-            ? "radial-gradient(circle, rgba(45, 230, 199, 0.15) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(0, 85, 255, 0.15) 0%, transparent 70%)",
-          transform: "translate(-50%, -50%)",
-          filter: "blur(40px)",
+          background: "linear-gradient(135deg, rgba(0, 85, 255, 0.3) 0%, rgba(0, 85, 255, 0.15) 50%, rgba(0, 85, 255, 0.3) 100%)",
+          boxShadow: "0 0 15px rgba(0, 85, 255, 0.25), inset 0 0 15px rgba(0, 85, 255, 0.08)",
         }}
-      />
+      >
+        {/* Top-right corner glow */}
+        <div 
+          ref={glowTopRef}
+          className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none opacity-50 transition-all duration-500"
+          style={{
+            background: "radial-gradient(circle, rgba(0, 85, 255, 0.7) 0%, rgba(0, 85, 255, 0.4) 30%, transparent 70%)",
+            filter: "blur(30px)",
+            willChange: "opacity, transform",
+          }}
+        />
 
-      {/* Main content */}
-      <div className="relative py-5 md:py-6 px-4 md:px-6 flex items-center gap-4 md:gap-6">
-        {/* Large number */}
-        <span 
-          ref={numberRef}
-          className="font-gilroy font-black text-4xl md:text-5xl lg:text-6xl text-white/[0.15] select-none transition-transform"
-          style={{ minWidth: "60px", textAlign: "center" }}
-        >
-          {service.number}
-        </span>
+        {/* Bottom-left corner glow */}
+        <div 
+          ref={glowBottomRef}
+          className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full pointer-events-none opacity-50 transition-all duration-500"
+          style={{
+            background: "radial-gradient(circle, rgba(0, 85, 255, 0.7) 0%, rgba(0, 85, 255, 0.4) 30%, transparent 70%)",
+            filter: "blur(30px)",
+            willChange: "opacity, transform",
+          }}
+        />
 
-        {/* Title and description */}
-        <div className="flex-1 overflow-hidden">
+        {/* Card content */}
+        <div className="relative p-6 md:p-8 rounded-2xl bg-[#0a0f2e]/95 backdrop-blur-xl overflow-hidden">
+          {/* Icon */}
+          <div 
+            ref={iconRef}
+            className="w-14 h-14 rounded-full border border-[#0055ff]/40 flex items-center justify-center mb-6 text-[#0055ff] bg-[#0055ff]/5 transition-all duration-300"
+            style={{ willChange: "transform, box-shadow" }}
+          >
+            {service.icon}
+          </div>
+
+          {/* Title */}
           <h3 
             ref={titleRef}
-            className="font-gilroy font-bold text-white/80 text-lg md:text-xl lg:text-2xl mb-1"
+            className="font-gilroy font-bold text-white/90 text-xl md:text-2xl mb-3 transition-colors duration-300"
           >
             {service.title}
           </h3>
-          
-          {/* Animated line */}
-          <div 
-            ref={lineRef}
-            className="h-[1.5px] w-full max-w-[120px] mb-2 origin-left scale-x-0 opacity-0"
-            style={{
-              background: isEven 
-                ? "linear-gradient(90deg, #2de6c7, transparent)"
-                : "linear-gradient(90deg, #0055ff, transparent)",
-            }}
-          />
-          
+
+          {/* Description */}
           <p 
             ref={descRef}
-            className="font-neue-montreal text-white/50 text-xs md:text-sm max-w-sm opacity-0 translate-y-2"
+            className="font-neue-montreal text-white/50 text-sm md:text-base transition-colors duration-300"
           >
             {service.description}
           </p>
         </div>
       </div>
-
-      {/* Bottom border */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-white/[0.06]" />
     </div>
   )
 }
@@ -282,14 +253,6 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
 
   useGSAP(() => {
     if (loading) return
@@ -302,100 +265,96 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
     if (!title || !subtitle || !content) return
 
     // Set initial states
-    gsap.set(title, { y: 50, opacity: 0 })
+    gsap.set(title, { y: 60, opacity: 0, scale: 0.95 })
     gsap.set(subtitle, { y: 30, opacity: 0 })
 
-    // Title reveal - faster trigger
+    // Title reveal with scale - smoother
     gsap.to(title, {
       y: 0,
       opacity: 1,
+      scale: 1,
+      duration: 1.4,
+      ease: "power3.out",
       scrollTrigger: {
         trigger: content,
-        start: "top 95%",
-        end: "top 75%",
-        scrub: 0.5,
+        start: "top 85%",
+        toggleActions: "play none none reverse",
       },
     })
 
-    // Subtitle reveal - faster
+    // Subtitle reveal - smoother
     gsap.to(subtitle, {
       y: 0,
       opacity: 1,
+      duration: 1.2,
+      delay: 0.3,
+      ease: "power3.out",
       scrollTrigger: {
         trigger: content,
-        start: "top 92%",
-        end: "top 72%",
-        scrub: 0.5,
+        start: "top 85%",
+        toggleActions: "play none none reverse",
       },
     })
 
-    // Cards staggered reveal - much earlier trigger
+    // Cards staggered reveal - smoother
     cards.forEach((card, index) => {
       if (!card) return
 
-      const direction = index % 2 === 0 ? -1 : 1
-
       gsap.set(card, { 
-        y: 40, 
+        y: 80, 
         opacity: 0,
-        rotateX: 5,
-        x: direction * 20,
+        scale: 0.95,
       })
       
       gsap.to(card, {
         y: 0,
         opacity: 1,
-        rotateX: 0,
-        x: 0,
-        duration: 0.6,
+        scale: 1,
+        duration: 1.2,
+        delay: index * 0.15,
         ease: "power3.out",
         scrollTrigger: {
           trigger: card,
-          start: "top 98%",
+          start: "top 90%",
           toggleActions: "play none none reverse",
         },
       })
     })
 
-  }, { scope: sectionRef, dependencies: [loading, isMobile] })
+  }, { scope: sectionRef, dependencies: [loading] })
 
   return (
-    <section ref={sectionRef} className="relative">
+    <section ref={sectionRef} className="relative overflow-hidden">
       <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-20">
-        {/* Title - Centered like WorkSection */}
+        {/* Title - Centered */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20 px-4">
           <h2 
             ref={titleRef}
             data-skew
-            className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight"
+            className="font-gilroy font-black text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-none tracking-tight mb-4"
           >
             OUR SERVICES
           </h2>
           <p 
             ref={subtitleRef}
-            className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4"
+            className="font-neue-montreal text-white/60 text-sm md:text-base lg:text-lg max-w-2xl mx-auto"
           >
             Everything you need to build, launch, and scale your brand.
           </p>
         </div>
 
-        {/* Service Cards */}
+        {/* Service Cards Grid */}
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
-          {/* Top border */}
-          <div className="h-px bg-white/[0.06] mb-0" />
-          
-          {services.map((service, index) => (
-            <div
-              key={service.id}
-              ref={(el) => { cardsRef.current[index] = el }}
-              style={{ perspective: "1000px" }}
-            >
-              <ServiceCard 
-                service={service}
-                index={index}
-              />
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" style={{ perspective: "1000px" }}>
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                ref={(el) => { cardsRef.current[index] = el }}
+              >
+                <ServiceCard service={service} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -403,14 +362,14 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
       <div 
         className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full opacity-[0.03] pointer-events-none"
         style={{
-          background: "radial-gradient(circle, #2de6c7 0%, transparent 70%)",
+          background: "radial-gradient(circle, #0055ff 0%, transparent 70%)",
           filter: "blur(100px)",
         }}
       />
       <div 
         className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] rounded-full opacity-[0.03] pointer-events-none"
         style={{
-          background: "radial-gradient(circle, #0055ff 0%, transparent 70%)",
+          background: "radial-gradient(circle, #2de6c7 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
       />

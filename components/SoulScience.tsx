@@ -96,16 +96,16 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         duration: 0.1,
       }, "<0.1")
 
-      // Phase 3: WHY US scales in
+      // Phase 3: WHY US scales in - slower
       .to(text2, {
         opacity: 1,
         scale: 1,
-        duration: 0.15,
-        ease: "back.out(1.7)",
+        duration: 0.25,
+        ease: "power2.out",
       })
 
-      // Hold WHY US
-      .to({}, { duration: 0.1 })
+      // Hold WHY US - longer
+      .to({}, { duration: 0.15 })
 
       // Phase 4: WHY US fades, BECAUSE appears
       .to(text2, {
@@ -259,21 +259,21 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         duration: 0.10,
       }, "<0.10")
 
-      // Phase 3: Show marquee text and scroll it left
+      // Phase 3: Show marquee text and scroll it left - slower
       tl.to(marqueeText, {
         opacity: 1,
-        duration: 0.02,
+        duration: 0.03,
       })
       .to(marqueeText, {
         xPercent: -150,
-        duration: 0.20,
+        duration: 0.30,
         ease: "none",
       }, "<")
 
-      // Phase 4: Fade out marquee, show "Because" container
+      // Phase 4: Fade out marquee, show "Because" container - slower
       tl.to(marqueeText, {
         opacity: 0,
-        duration: 0.05,
+        duration: 0.08,
       })
       .to(because, {
         opacity: 1,
@@ -293,52 +293,17 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         }, `-=${i === 0 ? 0 : 0.12}`)
       })
 
-      // Phase 6: Letters do a wave effect
-      tl.to(letters, {
-        y: -30,
-        stagger: {
-          each: 0.02,
-          from: "start",
-        },
-        duration: 0.08,
-        ease: "power2.out",
-      })
-      .to(letters, {
-        y: 0,
-        stagger: {
-          each: 0.02,
-          from: "start",
-        },
-        duration: 0.08,
-        ease: "bounce.out",
-      })
+      // Hold for a moment
+      tl.to({}, { duration: 0.1 })
 
-      // Phase 7: Color shift wave
-      tl.to(letters, {
-        color: "#2de6c7",
-        stagger: {
-          each: 0.015,
-          from: "center",
-        },
-        duration: 0.05,
-      })
-      .to(letters, {
-        color: "var(--color-electric-blue)",
-        stagger: {
-          each: 0.015,
-          from: "edges",
-        },
-        duration: 0.05,
-      })
-
-      // Phase 8: Because fades out
+      // Phase 6: Because fades out
       tl.to(because, {
         opacity: 0,
         scale: 0.8,
         duration: 0.08,
       })
 
-      // Phase 9: "We did that multiple times" appears
+      // Phase 7: "We did that multiple times" appears
       tl.to(weDid, {
         opacity: 1,
         duration: 0.02,
@@ -358,7 +323,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
       // Hold for a moment
       tl.to({}, { duration: 0.10 })
 
-      // Phase 10: Circle shrinks, "We did that" fades
+      // Phase 8: Circle shrinks, "We did that" fades
       tl.to(circle, {
         scale: 0,
         duration: 0.20,
@@ -370,7 +335,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         duration: 0.10,
       }, "<0.05")
 
-      // Phase 11: Main text fades back in
+      // Phase 9: Main text fades back in
       tl.to(mainText, {
         opacity: 1,
         y: 0,
@@ -416,7 +381,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
             className="absolute inset-0 flex items-center justify-center z-20 px-6"
           >
             <h2 
-              className="font-gilroy font-black text-[18vw] uppercase tracking-tight"
+              className="font-gilroy font-black text-[14vw] uppercase tracking-tight"
               style={{ color: "var(--color-electric-blue)" }}
             >
               WHY US
@@ -485,7 +450,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
           className="absolute inset-0 flex items-center z-20 pointer-events-none"
         >
           <h2 
-            className="font-gilroy font-black text-[20vw] md:text-[25vw] whitespace-nowrap uppercase tracking-tight"
+            className="font-gilroy font-black text-[16vw] md:text-[20vw] whitespace-nowrap uppercase tracking-tight"
             style={{
               color: "var(--color-electric-blue)",
             }}

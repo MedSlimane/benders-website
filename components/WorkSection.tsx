@@ -265,7 +265,7 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
 
   return (
     <section ref={sectionRef} className="relative">
-      <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-20">
+      <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-0">
         {/* Title */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20 px-4">
           <h2 
@@ -293,7 +293,7 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
             return (
               <div 
                 key={pairIndex}
-                className="flex flex-col md:flex-row justify-between gap-16 md:gap-8 mb-20 md:mb-56 items-start"
+                className="flex flex-col md:flex-row justify-between gap-12 md:gap-8 mb-12 md:mb-20 items-start"
               >
                 {orderedPair.map((project, index) => {
                   const isLarge = project.size === "large"

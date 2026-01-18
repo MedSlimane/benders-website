@@ -91,13 +91,13 @@ export default function Home() {
           <WorkSection loading={loading} />
         </section>
 
-        {/* CTA Banner after Work - tighter spacing */}
-        <div className="-mt-12 md:-mt-20">
+        {/* CTA Banner after Work */}
+        <div className="-mt-12 md:-mt-20 relative z-20">
           <CTABanner loading={loading} />
         </div>
 
-        {/* Creative Reveal - What people think about us - minimal gap */}
-        <section id="creative-reveal" aria-label="What people think about us" className="-mt-16 md:-mt-24">
+        {/* Creative Reveal - What people think about us - ultra tight gap */}
+        <section id="creative-reveal" aria-label="What people think about us" className="-mt-[36rem] md:-mt-[50rem] relative z-10">
           <CreativeReveal loading={loading} />
         </section>
 
