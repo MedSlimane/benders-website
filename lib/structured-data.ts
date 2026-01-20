@@ -85,3 +85,27 @@ export function generateWebsiteSchema() {
     },
   }
 }
+
+export function generateProjectStructuredData(project: any) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bendersagency.com'
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.subtitle,
+    creator: {
+      '@type': 'Organization',
+      name: 'Benders Agency',
+      url: baseUrl,
+    },
+    datePublished: project.year,
+    image: project.thumbnail,
+    ...(project.client && {
+      sponsor: {
+        '@type': 'Organization',
+        name: project.client,
+      },
+    }),
+  }
+}

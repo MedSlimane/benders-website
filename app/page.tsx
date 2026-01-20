@@ -97,7 +97,7 @@ export default function Home() {
         </div>
 
         {/* Creative Reveal - What people think about us - ultra tight gap */}
-        <section id="creative-reveal" aria-label="What people think about us" className="-mt-[36rem] md:-mt-[50rem] relative z-10">
+        <section id="creative-reveal" aria-label="What people think about us" className="-mt-[36rem] md:-mt-[50rem] relative z-10 pointer-events-none">
           <CreativeReveal loading={loading} />
         </section>
 

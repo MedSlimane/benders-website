@@ -6,11 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "sanity dev"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@lordicon/element": "^1.11.0",
+    "@sanity/client": "^7.14.0",
+    "@sanity/image-url": "^2.0.3",
+    "@sanity/vision": "^5.5.0",
     "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/oxide": "^4.1.11",
     "@vercel/analytics": "^1.5.0",
@@ -22,10 +26,12 @@
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.525.0",
     "next": "15.3.8",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-infinite-logo-slider": "^1.1.4",
     "react-simple-typewriter": "^5.0.1",
+    "sanity": "^5.5.0",
+    "styled-components": "^6.3.8",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {

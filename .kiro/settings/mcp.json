@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "Sanity": {
+      "type": "http",
+      "url": "https://mcp.sanity.io",
+      "autoApprove": [
+        "list_projects",
+        "create_project",
+        "deploy_schema",
+        "query_documents",
+        "get_project_studios",
+        "create_documents_from_json",
+        "patch_document_from_json"
+      ]
+    }
+  }
+}
