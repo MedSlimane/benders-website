@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { urlFor } from './sanity'
 import type { Project } from './sanity'
 
-interface ProjectWithSEO extends Project {
+type ProjectWithSEO = Project & {
   seo?: {
     metaTitle?: string
     metaDescription?: string
@@ -60,7 +60,7 @@ export function generateProjectMetadata(project: Project): Metadata {
   }
 }
 
-interface ProjectWithYear extends Project {
+type ProjectWithYear = Project & {
   year?: string
 }
 
