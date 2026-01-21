@@ -481,9 +481,6 @@ export default function ProjectPage() {
                       href={`/projects/${slugString}`}
                       ref={(el) => { moreProjectsRef.current[index] = el }}
                       className="group block cursor-pointer"
-                      onClick={(e) => {
-                        console.log('Link clicked!', `/projects/${slugString}`)
-                      }}
                     >
                       <div className="relative rounded-3xl overflow-hidden aspect-[4/5] border border-white/10 hover:border-[#2de6c7]/50 transition-all duration-500 hover:shadow-[0_0_60px_rgba(45,230,199,0.3)] hover:scale-105">
                         <Image

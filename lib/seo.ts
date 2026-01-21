@@ -2,8 +2,18 @@ import type { Metadata } from 'next'
 import { urlFor } from './sanity'
 import type { Project } from './sanity'
 
+interface ProjectWithSEO extends Project {
+  seo?: {
+    metaTitle?: string
+    metaDescription?: string
+    ogImage?: string
+    keywords?: string[]
+  }
+}
+
 export function generateProjectMetadata(project: Project): Metadata {
-  const seo = (project as any).seo || {}
+  const projectWithSEO = project as ProjectWithSEO
+  const seo = projectWithSEO.seo || {}
   
   const title = seo.metaTitle || `${project.title} | Benders Agency`
   const description = seo.metaDescription || project.subtitle || `${project.title} - A creative project by Benders Agency`
@@ -50,9 +60,14 @@ export function generateProjectMetadata(project: Project): Metadata {
   }
 }
 
+interface ProjectWithYear extends Project {
+  year?: string
+}
+
 export function generateProjectStructuredData(project: Project) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://benders.agency'
   const imageUrl = urlFor(project.thumbnail).width(1200).height(630).format('jpg').url()
+  const projectWithYear = project as ProjectWithYear
 
   return {
     '@context': 'https://schema.org',
@@ -70,7 +85,7 @@ export function generateProjectStructuredData(project: Project) {
       '@type': 'Organization',
       name: 'Benders Agency',
     },
-    datePublished: (project as any).year || new Date().getFullYear().toString(),
+    datePublished: projectWithYear.year || new Date().getFullYear().toString(),
     inLanguage: 'en-US',
   }
 }

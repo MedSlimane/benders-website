@@ -86,7 +86,15 @@ export function generateWebsiteSchema() {
   }
 }
 
-export function generateProjectStructuredData(project: any) {
+interface ProjectData {
+  title: string
+  subtitle: string
+  year?: string
+  thumbnail: string
+  client?: string
+}
+
+export function generateProjectStructuredData(project: ProjectData) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bendersagency.com'
   
   return {
