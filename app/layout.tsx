@@ -114,8 +114,8 @@ export default function RootLayout({
         className={`${inter.variable} antialiased`}
         suppressHydrationWarning
       >
-        {/* Maintenance is on by default; the Navbar only renders when explicitly disabled */}
-        {process.env.MAINTENANCE_MODE === 'false' && <Navbar />}
+        {/* Site is live by default; Navbar hides only when maintenance is explicitly on */}
+        {process.env.MAINTENANCE_MODE !== 'true' && <Navbar />}
         {children}
         <Analytics />
       </body>

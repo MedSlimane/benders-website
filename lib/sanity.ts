@@ -24,6 +24,7 @@ export interface VideoProject {
   slug: { current: string }
   subtitle: string
   thumbnail: string
+  category?: string
   videoType: 'horizontal' | 'reel'
   videos?: Array<{
     videoUrl: string
@@ -62,6 +63,7 @@ export interface WebProject {
   slug: { current: string }
   subtitle: string
   thumbnail: string
+  category?: string
   websiteUrl?: string
   images?: Array<{
     asset: string
@@ -96,6 +98,15 @@ export interface WebProject {
 
 export type Project = VideoProject | WebProject
 
+export interface VideoTestimonial {
+  _id: string
+  name: string
+  company?: string
+  quote?: string
+  videoUrl?: string
+  poster?: string
+}
+
 // Query Helper Functions
 
 /**
@@ -111,6 +122,9 @@ export async function fetchAllProjects(): Promise<Project[]> {
       subtitle,
       "slug": slug.current,
       "thumbnail": thumbnail.asset->url,
+      category,
+      services,
+      results,
       featured,
       order
     }`
@@ -120,6 +134,29 @@ export async function fetchAllProjects(): Promise<Project[]> {
   } catch (error) {
     console.error('Error fetching projects:', error)
     throw new Error('Failed to fetch projects')
+  }
+}
+
+/**
+ * Fetches all video testimonials, ordered. Returns [] if there are none.
+ * @returns Promise<VideoTestimonial[]>
+ */
+export async function fetchVideoTestimonials(): Promise<VideoTestimonial[]> {
+  try {
+    const query = `*[_type == "videoTestimonial"] | order(order asc, _createdAt desc) {
+      _id,
+      name,
+      company,
+      quote,
+      "videoUrl": select(videoSource == "url" => videoUrl, videoFile.asset->url),
+      "poster": posterImage.asset->url
+    }`
+
+    const items = await client.fetch<VideoTestimonial[]>(query)
+    return (items || []).filter((t) => t.videoUrl)
+  } catch (error) {
+    console.error('Error fetching video testimonials:', error)
+    return []
   }
 }
 

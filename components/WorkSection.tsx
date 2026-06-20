@@ -1,10 +1,14 @@
 "use client"
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useMemo } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
+import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import { fetchAllProjects } from "@/lib/sanity"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface WorkSectionProps {
   loading: boolean
@@ -15,126 +19,77 @@ interface DisplayProject {
   title: string
   subtitle: string
   thumbnail: string
-  slug: string  // Changed from { current: string } to string
-  size: "large" | "small"
+  slug: string
+  category?: string
+  topResult?: { metric: string; value: string }
 }
 
-// Large card component with blurred background and noise texture
-const LargeCard = ({ project }: { project: DisplayProject }) => {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const blurRef = useRef<HTMLDivElement>(null)
+// Category metadata — order controls the tab order; labels are what visitors see
+const CATEGORY_ORDER = ["ai", "web", "photography", "video", "social", "seo", "branding"] as const
+const CATEGORY_LABELS: Record<string, string> = {
+  ai: "AI Products",
+  web: "Web Development",
+  photography: "Photography",
+  video: "Video Production",
+  social: "Social Media",
+  seo: "SEO",
+  branding: "Branding",
+}
 
-  useGSAP(() => {
-    if (!blurRef.current || !cardRef.current) return
-
-    // Blur becomes more visible as card scrolls out of view
-    gsap.fromTo(
-      blurRef.current,
-      { opacity: 0.6 },
-      {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: cardRef.current,
-          start: "top center",
-          end: "bottom top",
-          scrub: 1,
-        },
-      }
-    )
-  }, { scope: cardRef })
-
+const ProjectCard = ({ project }: { project: DisplayProject }) => {
   return (
-    <div
-      ref={cardRef}
-      className="relative overflow-hidden rounded-2xl md:rounded-3xl group aspect-[16/10] md:aspect-[16/10]"
+    <Link
+      href={`/projects/${project.slug}`}
+      className="work-card group block overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-1.5"
+      style={{
+        background: "rgba(255, 255, 255, 0.03)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+      }}
     >
-      {/* Blurred background image - same image */}
-      <div 
-        ref={blurRef}
-        className="absolute inset-0 z-0"
-      >
-        <Image
-          src={project.thumbnail}
-          alt=""
-          fill
-          className="object-cover blur-2xl scale-150 saturate-[0.8]"
-        />
-      </div>
-
-      {/* Noise texture overlay for grainy effect */}
-      <div 
-        className="absolute inset-0 z-[1] opacity-[0.35] mix-blend-overlay pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-        }}
-      />
-
-      {/* Subtle gradient overlay for depth */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-br from-white/5 via-transparent to-black/10 pointer-events-none" />
-
-      {/* Sharp image on the right */}
-      <div className="absolute right-4 top-4 bottom-4 w-[55%] md:w-[50%] rounded-xl md:rounded-2xl overflow-hidden z-10 shadow-2xl">
+      {/* Thumbnail */}
+      <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={project.thumbnail}
           alt={project.title}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#04082e]/80 via-transparent to-transparent" />
+
+        {/* Headline result chip */}
+        {project.topResult?.value && (
+          <div
+            className="absolute left-4 top-4 rounded-full px-3 py-1.5 font-gilroy font-bold text-sm text-[#04082e]"
+            style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
+          >
+            {project.topResult.value}
+          </div>
+        )}
+
+        {/* Arrow */}
+        <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#04082e] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#2de6c7]">
+          <ArrowUpRight className="h-5 w-5" />
+        </div>
       </div>
 
-      {/* Arrow icon */}
-      <div className="absolute top-4 left-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 z-20 pointer-events-none">
-        <svg 
-          width="20" 
-          height="20" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="black" 
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-4 h-4 md:w-5 md:h-5 rotate-[-45deg]"
-        >
-          <path d="M5 12h14" />
-          <path d="M12 5l7 7-7 7" />
-        </svg>
+      {/* Content — title + the value it drove */}
+      <div className="p-5 md:p-6">
+        <h3 className="font-gilroy font-bold text-lg md:text-xl text-white transition-colors duration-300 group-hover:text-[#2de6c7]">
+          {project.title}
+        </h3>
+        {project.topResult?.metric ? (
+          <p className="mt-1.5 font-neue-montreal text-sm text-white/55">
+            <span className="font-semibold text-[#2de6c7]">{project.topResult.value}</span>{" "}
+            {project.topResult.metric}
+          </p>
+        ) : (
+          <p className="mt-1.5 font-neue-montreal text-sm text-white/50">{project.subtitle}</p>
+        )}
       </div>
-    </div>
-  )
-}
-
-// Small card component - simple image
-const SmallCard = ({ project }: { project: DisplayProject }) => {
-  return (
-    <div
-      className="relative overflow-hidden rounded-2xl md:rounded-3xl group aspect-[16/10] md:aspect-[16/11]"
-    >
-      <Image
-        src={project.thumbnail}
-        alt={project.title}
-        fill
-        className="object-cover transition-transform duration-700 group-hover:scale-105"
-      />
-
-      {/* Arrow icon */}
-      <div className="absolute top-4 left-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 z-10 pointer-events-none">
-        <svg 
-          width="20" 
-          height="20" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="black" 
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-4 h-4 md:w-5 md:h-5 rotate-[-45deg]"
-        >
-          <path d="M5 12h14" />
-          <path d="M12 5l7 7-7 7" />
-        </svg>
-      </div>
-    </div>
+    </Link>
   )
 }
 
@@ -143,157 +98,92 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
-  const [isMobile, setIsMobile] = useState(false)
+  const tabsRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+
   const [projects, setProjects] = useState<DisplayProject[]>([])
   const [dataLoading, setDataLoading] = useState(true)
+  const [activeCategory, setActiveCategory] = useState<string>("all")
 
-  // Fetch projects from Sanity
+  // Fetch projects from Sanity (client side)
   useEffect(() => {
     async function loadProjects() {
       try {
-        const fetchedProjects = await fetchAllProjects()
-        
-        // Transform projects and assign alternating sizes
-        // Filter out projects without thumbnails
-        const displayProjects: DisplayProject[] = fetchedProjects
-          .filter(project => project.thumbnail) // Only show projects with thumbnails
-          .map((project, index) => {
-            // Extract slug string - handle both object and string formats
-            const slugString = typeof project.slug === 'string' 
-              ? project.slug 
-              : project.slug?.current || ''
-            
-            console.log('Project slug:', slugString) // Debug log
+        const fetched = await fetchAllProjects()
+        const display: DisplayProject[] = fetched
+          .filter((p) => p.thumbnail)
+          .map((p) => {
+            const slug = typeof p.slug === "string" ? p.slug : p.slug?.current || ""
+            const results = (p as { results?: { metric: string; value: string }[] }).results
             return {
-              _id: project._id,
-              title: project.title,
-              subtitle: project.subtitle,
-              thumbnail: project.thumbnail,
-              slug: slugString,
-              size: index % 2 === 0 ? 'small' : 'large' // Alternate small/large
+              _id: p._id,
+              title: p.title,
+              subtitle: p.subtitle,
+              thumbnail: p.thumbnail,
+              slug,
+              category: (p as { category?: string }).category,
+              topResult: results && results.length > 0 ? results[0] : undefined,
             }
           })
-        
-        setProjects(displayProjects)
+        setProjects(display)
       } catch (error) {
-        console.error('Failed to load projects:', error)
+        console.error("Failed to load projects:", error)
       } finally {
         setDataLoading(false)
       }
     }
-
     loadProjects()
   }, [])
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
-
-  // Combined loading state
   const isReady = !loading && !dataLoading
 
-  useGSAP(
-    () => {
-      gsap.registerPlugin(ScrollTrigger)
+  // Which category tabs to show (only those that actually have projects)
+  const tabs = useMemo(() => {
+    const present = CATEGORY_ORDER.filter((c) => projects.some((p) => p.category === c))
+    return ["all", ...present]
+  }, [projects])
 
-      if (!isReady) return
-
-      const content = contentRef.current
-      const title = titleRef.current
-      const subtitle = subtitleRef.current
-
-      if (!content || !title || !subtitle) return
-
-      // Set initial states
-      gsap.set(title, { y: 50, opacity: 0 })
-      gsap.set(subtitle, { y: 30, opacity: 0 })
-
-      // Animate title and subtitle
-      gsap.to(title, {
-        y: 0,
-        opacity: 1,
-        scrollTrigger: {
-          trigger: content,
-          start: "top 95%",
-          end: "top 75%",
-          scrub: 0.5,
-        },
-      })
-
-      gsap.to(subtitle, {
-        y: 0,
-        opacity: 1,
-        scrollTrigger: {
-          trigger: content,
-          start: "top 92%",
-          end: "top 72%",
-          scrub: 0.5,
-        },
-      })
-
-      // Card animations with parallax
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return
-        
-        const speed = projects[index]?.size === "large" ? 40 : 25
-        
-        // Set initial state
-        gsap.set(card, { y: 60, opacity: 0 })
-        
-        // Fade in animation
-        gsap.to(card, {
-          y: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 95%",
-            end: "top 70%",
-            scrub: 0.8,
-          },
-        })
-        
-        // Parallax movement
-        gsap.to(card, {
-          y: -speed,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 65%",
-            end: "bottom top",
-            scrub: 0.8,
-          },
-        })
-      })
-    },
-    { scope: sectionRef, dependencies: [isReady, isMobile, projects] }
+  const filtered = useMemo(
+    () => (activeCategory === "all" ? projects : projects.filter((p) => p.category === activeCategory)),
+    [projects, activeCategory]
   )
 
-  // Group projects into pairs (small on left, large on right)
-  const projectPairs = []
-  for (let i = 0; i < projects.length; i += 2) {
-    projectPairs.push(projects.slice(i, i + 2))
-  }
+  // Header entrance
+  useGSAP(() => {
+    if (!isReady) return
+    const els = [titleRef.current, subtitleRef.current, tabsRef.current].filter(Boolean)
+    gsap.set(els, { y: 40, opacity: 0 })
+    gsap.to(els, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      stagger: 0.12,
+      ease: "power3.out",
+      scrollTrigger: { trigger: contentRef.current, start: "top 80%", toggleActions: "play none none reverse" },
+    })
+  }, { scope: sectionRef, dependencies: [isReady] })
+
+  // Cards animate in on first load and on every filter change
+  useGSAP(() => {
+    if (!isReady || !gridRef.current) return
+    const cards = gridRef.current.querySelectorAll(".work-card")
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 30, scale: 0.97 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.06, ease: "power3.out" }
+    )
+  }, { scope: sectionRef, dependencies: [isReady, activeCategory, filtered.length] })
 
   // Empty state
-  if (projects.length === 0 && !dataLoading) {
+  if (isReady && projects.length === 0) {
     return (
       <section ref={sectionRef} className="relative">
-        <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-0">
-          <div className="text-center mb-12 md:mb-16 lg:mb-20 px-4">
-            <h2 
-              ref={titleRef}
-              data-skew
-              className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight"
-            >
+        <div ref={contentRef} className="relative pt-24 md:pt-32 pb-20">
+          <div className="text-center px-4">
+            <h2 ref={titleRef} data-skew className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight">
               OUR WORK
             </h2>
-            <p 
-              ref={subtitleRef}
-              className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4"
-            >
+            <p ref={subtitleRef} className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4">
               No projects available yet.
             </p>
           </div>
@@ -304,78 +194,45 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
 
   return (
     <section ref={sectionRef} className="relative">
-      <div ref={contentRef} className="relative min-h-screen pt-24 md:pt-32 pb-0">
+      <div ref={contentRef} className="relative pt-24 md:pt-32 pb-20">
         {/* Title */}
-        <div className="text-center mb-12 md:mb-16 lg:mb-20 px-4">
-          <h2 
-            ref={titleRef}
-            data-skew
-            className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight"
-          >
+        <div className="text-center mb-8 md:mb-10 px-4">
+          <h2 ref={titleRef} data-skew className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight">
             OUR WORK
           </h2>
-          <p 
-            ref={subtitleRef}
-            className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4"
-          >
-            See what we&apos;ve got brewing.
+          <p ref={subtitleRef} className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4">
+            Real projects, real outcomes — filter by what you need.
           </p>
         </div>
 
-        {/* Project Pairs */}
-        <div className="w-full px-3 md:px-4 lg:px-6">
-          {projectPairs.map((pair, pairIndex) => {
-            // Reverse order for odd rows (second row has small on right)
-            const isReversed = pairIndex % 2 === 1
-            const orderedPair = isReversed ? [...pair].reverse() : pair
-            
+        {/* Category filter tabs */}
+        <div ref={tabsRef} className="mb-10 md:mb-14 flex flex-wrap items-center justify-center gap-2.5 px-4">
+          {tabs.map((tab) => {
+            const active = activeCategory === tab
             return (
-              <div 
-                key={pairIndex}
-                className="flex flex-col md:flex-row justify-between gap-12 md:gap-8 mb-12 md:mb-20 items-start"
+              <button
+                key={tab}
+                onClick={() => setActiveCategory(tab)}
+                className="rounded-full px-4 py-2 font-neue-montreal text-sm transition-all duration-300"
+                style={
+                  active
+                    ? { background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)", color: "#04082e", fontWeight: 600 }
+                    : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.1)" }
+                }
               >
-                {orderedPair.map((project, index) => {
-                  const isLarge = project.size === "large"
-                  const cardIndex = pairIndex * 2 + (isReversed ? 1 - index : index)
-                  
-                  return (
-                    <div
-                      key={project._id}
-                      ref={(el) => {
-                        cardsRef.current[cardIndex] = el
-                      }}
-                      className={`
-                        ${isLarge ? 'md:w-[52%]' : 'md:w-[34%]'}
-                        w-full
-                      `}
-                    >
-                      <div 
-                        onClick={() => {
-                          window.location.href = `/projects/${project.slug}`
-                        }}
-                      >
-                        {isLarge ? (
-                          <LargeCard project={project} />
-                        ) : (
-                          <SmallCard project={project} />
-                        )}
-
-                        {/* Title & Subtitle below card */}
-                        <div className="mt-4 md:mt-5">
-                          <h3 className="font-gilroy font-bold text-white text-lg md:text-xl">
-                            {project.title}
-                          </h3>
-                          <p className="font-neue-montreal text-white/50 text-sm md:text-base mt-1">
-                            {project.subtitle}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
+                {tab === "all" ? "All" : CATEGORY_LABELS[tab]}
+              </button>
             )
           })}
+        </div>
+
+        {/* Project grid */}
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
+          <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7">
+            {filtered.map((project) => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

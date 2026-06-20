@@ -3,6 +3,8 @@ import { useRef, useEffect, useState } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { createPortal } from "react-dom"
+import ExpectCard from "./ExpectCard"
 
 interface OwnerRevealProps {
   loading: boolean
@@ -23,6 +25,17 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
   const glowOrb1Ref = useRef<HTMLDivElement>(null)
   const glowOrb2Ref = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+  // "What do you expect?" button appears over the video once it settles
+  const [buttonRevealed, setButtonRevealed] = useState(false)
+  // Founder video grows to fullscreen on click
+  const [videoOpen, setVideoOpen] = useState(false)
+
+  useEffect(() => {
+    if (!videoOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [videoOpen])
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -95,7 +108,7 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
 
       if (!section || !pin || !word1 || !word2 || !word3 || !word4 || !word5 || !word6 || !ctaCircle || !videoWrapper || !orb1 || !orb2) return
 
-      const scrollDistance = isMobile ? 3000 : 5000
+      const scrollDistance = isMobile ? 1700 : 2400
 
       // Calculate scale for fullscreen video
       const getScaleToFullscreen = () => {
@@ -134,23 +147,25 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
           pinSpacing: true,
           scrub: 2,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Reveal the button once the video has settled near the end
+            const show = self.progress > 0.88
+            setButtonRevealed((prev) => (prev === show ? prev : show))
+          },
         },
       })
 
-      // Phase 1: Orbs fade in
-      tl.to(orb1, { scale: 1, opacity: 0.4, duration: 0.06, ease: "power2.out" })
-        .to(orb2, { scale: 1, opacity: 0.3, duration: 0.06, ease: "power2.out" }, "-=0.04")
-
-      // Phase 2: Words fly in and assemble
-      tl.to(word1, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" })
-        .to(word2, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" }, "-=0.04")
-        .to(word3, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" }, "-=0.04")
-        .to(word4, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" }, "-=0.04")
-        .to(word5, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" }, "-=0.04")
-        .to(word6, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, ease: "back.out(1.7)" }, "-=0.04")
+      // Phase 1+2: orbs + words assemble IMMEDIATELY (from timeline position 0) so
+      // the section never sits as empty gradient while you scroll into it
+      tl.to([orb1, orb2], { scale: 1, opacity: 0.35, duration: 0.05, ease: "power2.out" }, 0)
+        .to(
+          [word1, word2, word3, word4, word5, word6],
+          { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.06, stagger: 0.018, ease: "back.out(1.7)" },
+          0
+        )
 
       // Phase 3: Hold text
-      tl.to({}, { duration: 0.06 })
+      tl.to({}, { duration: 0.08 })
 
       // Phase 4: CTA circle spins in
       tl.to(ctaCircle, {
@@ -187,8 +202,8 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
         ease: "power3.out",
       })
 
-      // Phase 8: Hold video as card
-      tl.to({}, { duration: 0.08 })
+      // Phase 8: brief beat on the card
+      tl.to({}, { duration: 0.03 })
 
       if (!isMobile) {
         // Desktop only: Video expands to fullscreen
@@ -200,7 +215,7 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
         })
 
         // Hold fullscreen
-        tl.to({}, { duration: 0.12 })
+        tl.to({}, { duration: 0.1 })
 
         // Video shrinks back to card
         tl.to(videoWrapper, {
@@ -211,14 +226,12 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
         })
       }
 
-      // Hold video as card (final state - video stays visible)
-      tl.to({}, { duration: 0.1 })
-
-      // Fade out orbs only, keep video visible
+      // Fade out orbs as soon as the card settles — release the pin promptly into
+      // the next section instead of holding the video pinned (that was the dead gap)
       tl.to([orb1, orb2], {
         scale: 0,
         opacity: 0,
-        duration: 0.08,
+        duration: 0.05,
       })
 
       setTimeout(() => {
@@ -234,12 +247,12 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
         {/* Floating glow orbs */}
         <div
           ref={glowOrb1Ref}
-          className="absolute top-1/3 left-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full pointer-events-none blur-3xl"
+          className="hidden md:block absolute top-1/3 left-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full pointer-events-none blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(45, 230, 199, 0.3) 0%, transparent 70%)" }}
         />
         <div
           ref={glowOrb2Ref}
-          className="absolute bottom-1/3 right-1/4 w-72 h-72 md:w-[28rem] md:h-[28rem] rounded-full pointer-events-none blur-3xl"
+          className="hidden md:block absolute bottom-1/3 right-1/4 w-72 h-72 md:w-[28rem] md:h-[28rem] rounded-full pointer-events-none blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(0, 85, 255, 0.3) 0%, transparent 70%)" }}
         />
 
@@ -325,11 +338,12 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
           </span>
         </a>
 
-        {/* Video wrapper */}
+        {/* Video wrapper — click to grow to fullscreen */}
         <div
           ref={videoWrapperRef}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[95%] md:w-[80%] max-w-[900px] overflow-hidden"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[95%] md:w-[80%] max-w-[900px] overflow-hidden cursor-pointer group"
           style={{ aspectRatio: "16/9" }}
+          onClick={() => setVideoOpen(true)}
         >
           <video
             ref={videoRef}
@@ -340,8 +354,75 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
             loop
             playsInline
           />
+          {/* Play / expand affordance */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
+              style={{
+                background: "rgba(255, 255, 255, 0.12)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              <svg className="ml-1 h-7 w-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* "What do you expect?" — on desktop it sits ON the video (centered); on
+            mobile it sits UNDER the video so it's easy to tap. The wrapper stays
+            click-through so it never blocks tapping the video behind it. */}
+        <div
+          className={`pointer-events-none absolute left-1/2 z-40 -translate-x-1/2 transition-opacity duration-500
+            top-[64%] md:top-1/2 md:-translate-y-1/2
+            ${buttonRevealed ? "opacity-100" : "opacity-0"}`}
+        >
+          <div className={buttonRevealed ? "pointer-events-auto" : "pointer-events-none"}>
+            <ExpectCard />
+          </div>
         </div>
       </div>
+
+      {/* Fullscreen founder video */}
+      {videoOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-8"
+            style={{ background: "rgba(4, 8, 46, 0.97)" }}
+            onClick={() => setVideoOpen(false)}
+          >
+            <button
+              onClick={() => setVideoOpen(false)}
+              aria-label="Close video"
+              className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
+              style={{
+                background: "rgba(255, 255, 255, 0.08)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+              }}
+            >
+              <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <video
+              className="block max-h-[80vh] max-w-[94vw] rounded-2xl"
+              style={{ boxShadow: "0 0 100px rgba(45, 230, 199, 0.2)" }}
+              src="/Videos/itel.mp4"
+              controls
+              autoPlay
+              playsInline
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>,
+          document.body
+        )}
     </section>
   )
 }

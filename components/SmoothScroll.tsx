@@ -17,40 +17,49 @@ const SmoothScroll = ({ children, loading }: SmoothScrollProps) => {
   useEffect(() => {
     if (loading) return
 
-    let lastScrollTop = 0
+    // Respect users who prefer reduced motion — skip the velocity-driven FX entirely
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    let lastScrollTop = window.scrollY
     let velocity = 0
     let rafId: number
 
+    // Cache the affected elements ONCE instead of querying the DOM every frame,
+    // and drive them with reusable quickTo setters instead of spawning a new
+    // tween per element per frame (the previous approach was a major jank source).
+    const skewElements = Array.from(document.querySelectorAll<HTMLElement>("[data-skew]"))
+    const scaleElements = Array.from(document.querySelectorAll<HTMLElement>("[data-scale-scroll]"))
+
+    const skewSetters = skewElements.map((el) =>
+      gsap.quickTo(el, "skewY", { duration: 0.4, ease: "power2.out" })
+    )
+    const scaleSetters = scaleElements.map((el) =>
+      gsap.quickTo(el, "scale", { duration: 0.4, ease: "power2.out" })
+    )
+
+    let lastApplied = Number.NaN
+
     // Track scroll velocity
     const updateVelocity = () => {
-      const currentScroll = window.scrollY
-      velocity = (currentScroll - lastScrollTop) * 0.5
-      lastScrollTop = currentScroll
+      if (!prefersReduced) {
+        const currentScroll = window.scrollY
+        velocity = (currentScroll - lastScrollTop) * 0.5
+        lastScrollTop = currentScroll
 
-      // Clamp velocity
-      velocity = Math.max(-50, Math.min(50, velocity))
-      scrollVelocityRef.current = velocity
+        // Clamp velocity
+        velocity = Math.max(-50, Math.min(50, velocity))
+        scrollVelocityRef.current = velocity
 
-      // Apply skew effect to elements with data-skew
-      const skewElements = document.querySelectorAll("[data-skew]")
-      skewElements.forEach((el) => {
-        gsap.to(el, {
-          skewY: velocity * 0.05,
-          duration: 0.3,
-          ease: "power2.out",
-        })
-      })
-
-      // Apply scale effect to elements with data-scale-scroll
-      const scaleElements = document.querySelectorAll("[data-scale-scroll]")
-      scaleElements.forEach((el) => {
-        const absVelocity = Math.abs(velocity)
-        gsap.to(el, {
-          scale: 1 - absVelocity * 0.002,
-          duration: 0.3,
-          ease: "power2.out",
-        })
-      })
+        // Only push updates when the value actually changed meaningfully —
+        // avoids redundant work while idle or coasting.
+        const rounded = Math.round(velocity * 100) / 100
+        if (rounded !== lastApplied) {
+          lastApplied = rounded
+          const absVelocity = Math.abs(rounded)
+          for (const set of skewSetters) set(rounded * 0.05)
+          for (const set of scaleSetters) set(1 - absVelocity * 0.002)
+        }
+      }
 
       rafId = requestAnimationFrame(updateVelocity)
     }

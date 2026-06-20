@@ -18,6 +18,16 @@ import Preloader from "@/components/preloader"
 
 gsap.registerPlugin(ScrollTrigger)
 
+const CATEGORY_LABELS: Record<string, string> = {
+  ai: "AI Products",
+  web: "Web Development",
+  photography: "Photography",
+  video: "Video Production",
+  social: "Social Media",
+  seo: "SEO",
+  branding: "Branding",
+}
+
 export default function ProjectPage() {
   const params = useParams()
   const [project, setProject] = useState<Project | null>(null)
@@ -27,6 +37,7 @@ export default function ProjectPage() {
   const heroRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const categoryRef = useRef<HTMLDivElement>(null)
   const metaRef = useRef<HTMLDivElement>(null)
   const backButtonRef = useRef<HTMLAnchorElement>(null)
   const gradientRef = useRef<HTMLDivElement>(null)
@@ -89,15 +100,18 @@ export default function ProjectPage() {
     const subtitle = subtitleRef.current
     const meta = metaRef.current
     const backButton = backButtonRef.current
+    const category = categoryRef.current
 
     if (!title || !subtitle || !meta || !backButton) return
 
-    gsap.set([backButton, title, subtitle, meta], { opacity: 0, y: 60 })
+    const heroEls = category ? [backButton, category, title, subtitle, meta] : [backButton, title, subtitle, meta]
+    gsap.set(heroEls, { opacity: 0, y: 60 })
 
     const tl = gsap.timeline({ delay: 0.2 })
-    
+
     tl.to(backButton, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" })
-      .to(title, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5")
+    if (category) tl.to(category, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.5")
+    tl.to(title, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.4")
       .to(subtitle, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
       .to(meta, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.5")
   }, { dependencies: [loading, project] })
@@ -259,7 +273,17 @@ export default function ProjectPage() {
           </Link>
 
           <div className="max-w-7xl mx-auto text-center" style={{ perspective: "1000px" }}>
-            <h1 
+            {project.category && (
+              <div ref={categoryRef} className="mb-6 flex justify-center">
+                <span
+                  className="rounded-full px-5 py-2 font-neue-montreal text-xs font-semibold uppercase tracking-[0.2em] text-[#04082e]"
+                  style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
+                >
+                  {CATEGORY_LABELS[project.category] || project.category}
+                </span>
+              </div>
+            )}
+            <h1
               ref={titleRef}
               data-skew
               className="font-gilroy font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white leading-[0.9] tracking-tight mb-8"

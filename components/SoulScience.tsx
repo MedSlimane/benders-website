@@ -65,10 +65,10 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=4000",
+          end: "+=2000",
           pin: pin,
           pinSpacing: true,
-          scrub: 3,
+          scrub: 2,
           invalidateOnRefresh: true,
         },
       })
@@ -229,10 +229,10 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=9000",
+          end: "+=2600",
           pin: pin,
           pinSpacing: true,
-          scrub: 3,
+          scrub: 2,
           invalidateOnRefresh: true,
           id: "soulScience",
         },

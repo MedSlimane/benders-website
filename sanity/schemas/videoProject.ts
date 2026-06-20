@@ -37,6 +37,25 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      description: 'Primary service category — used to filter the Work section',
+      options: {
+        list: [
+          {title: 'AI Products', value: 'ai'},
+          {title: 'Web Development', value: 'web'},
+          {title: 'Photography', value: 'photography'},
+          {title: 'Video Production', value: 'video'},
+          {title: 'Social Media', value: 'social'},
+          {title: 'SEO', value: 'seo'},
+          {title: 'Branding', value: 'branding'},
+        ],
+        layout: 'dropdown',
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'videoType',
       title: 'Video Type',
       type: 'string',

@@ -3,14 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 /**
  * Maintenance-mode gate.
  *
- * Maintenance is ON BY DEFAULT — no env var required. This means a fresh
- * production deploy (e.g. on Vercel) shows the "we'll be back soon" page
- * without anyone needing to touch the hosting dashboard.
- *
- * To work on the real site on your own machine, set in .env.local:
- *     MAINTENANCE_MODE=false
- * When the site is ready to go fully live, either set MAINTENANCE_MODE=false
- * in the host's env, or just delete this middleware file and redeploy.
+ * The site is LIVE BY DEFAULT. To put it back into "we'll be back soon" mode,
+ * set MAINTENANCE_MODE=true (in the host env, or .env.local for local) and
+ * redeploy — no code change needed.
  *
  * Previewing the real site while maintenance is on (without disabling it):
  *   visit  /?bypass=<MAINTENANCE_BYPASS_TOKEN>  (default token: "benders")
@@ -21,7 +16,7 @@ const BYPASS_TOKEN = process.env.MAINTENANCE_BYPASS_TOKEN || "benders"
 const BYPASS_COOKIE = "maint_bypass"
 
 export function middleware(request: NextRequest) {
-  const isOn = process.env.MAINTENANCE_MODE !== "false"
+  const isOn = process.env.MAINTENANCE_MODE === "true"
   if (!isOn) return NextResponse.next()
 
   const { pathname, searchParams } = request.nextUrl

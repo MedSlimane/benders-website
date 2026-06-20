@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import { useRef, useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -159,6 +160,7 @@ const Hero = ({ loading }: HeroProps) => {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [videoOpen, setVideoOpen] = useState(false)
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -167,6 +169,14 @@ const Hero = ({ loading }: HeroProps) => {
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
+
+  // Lock background scroll while the fullscreen video is open
+  useEffect(() => {
+    if (!videoOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [videoOpen])
 
   // Video control handlers
   const togglePlay = () => {
@@ -253,10 +263,10 @@ const Hero = ({ loading }: HeroProps) => {
           scrollTrigger: {
             trigger: videoTriggerRef.current,
             start: "top top",
-            end: "+=2500", // Reduced scroll distance
+            end: "+=1600", // Reduced scroll distance
             pin: videoPinRef.current,
             pinSpacing: true,
-            scrub: 1.5,
+            scrub: 1,
             invalidateOnRefresh: true,
             id: "heroVideo",
           },
@@ -362,10 +372,14 @@ const Hero = ({ loading }: HeroProps) => {
         </div>
       </div>
 
-      {/* Mobile Video Section - Static card with "See Showreel" button */}
+      {/* Mobile Video Section - Static card; tap to grow to fullscreen */}
       {isMobile && (
         <div className="relative w-full px-4 pb-8 mt-6">
-          <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          <div
+            className="relative w-full rounded-2xl overflow-hidden bg-black/30 cursor-pointer"
+            style={{ aspectRatio: "16/9" }}
+            onClick={() => setVideoOpen(true)}
+          >
             <video
               ref={videoRef}
               className="absolute inset-0 h-full w-full object-cover"
@@ -377,13 +391,7 @@ const Hero = ({ loading }: HeroProps) => {
             />
             {/* See Showreel Button */}
             <button
-              onClick={() => {
-                if (videoRef.current) {
-                  videoRef.current.requestFullscreen?.()
-                  videoRef.current.muted = false
-                  setIsMuted(false)
-                }
-              }}
+              onClick={(e) => { e.stopPropagation(); setVideoOpen(true) }}
               className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full"
               aria-label="See Showreel"
             >
@@ -395,6 +403,43 @@ const Hero = ({ loading }: HeroProps) => {
           </div>
         </div>
       )}
+
+      {/* Fullscreen hero video — same behaviour as the other videos */}
+      {videoOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-8"
+            style={{ background: "rgba(4, 8, 46, 0.97)" }}
+            onClick={() => setVideoOpen(false)}
+          >
+            <button
+              onClick={() => setVideoOpen(false)}
+              aria-label="Close video"
+              className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
+              style={{
+                background: "rgba(255, 255, 255, 0.08)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+              }}
+            >
+              <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <video
+              className="block max-h-[80vh] max-w-[94vw] rounded-2xl"
+              style={{ boxShadow: "0 0 100px rgba(45, 230, 199, 0.2)" }}
+              src="/Videos/itel.mp4"
+              controls
+              autoPlay
+              playsInline
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>,
+          document.body
+        )}
 
       {/* Desktop Video Section with Pin Trigger - Scroll animation */}
       {!isMobile && (
