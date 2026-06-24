@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/admin/'], // Disallow crawling of API routes and admin pages
+      disallow: ['/api/', '/admin/', '/studio/'], // Disallow crawling of API routes and the Sanity Studio
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   }

@@ -10,6 +10,9 @@ export default defineConfig({
   projectId: '75e2zogt',
   dataset: 'production',
 
+  // Studio is embedded in the Next app and reachable at /studio in production
+  basePath: '/studio',
+
   plugins: [structureTool(), visionTool()],
 
   schema: {

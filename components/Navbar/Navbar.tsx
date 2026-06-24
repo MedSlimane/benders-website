@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { usePathname } from "next/navigation";
 import "./Navbar.css";
 
 interface NavLink {
@@ -25,7 +26,8 @@ export default function Navbar() {
   const [activeLink, setActiveLink] = useState("#hero");
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  
+  const pathname = usePathname();
+
   const navRef = useRef<HTMLElement>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
   const activePillRef = useRef<HTMLDivElement>(null);
@@ -254,6 +256,9 @@ export default function Navbar() {
       },
     },
   };
+
+  // The Studio route renders its own full-screen UI — no site navbar there
+  if (pathname?.startsWith("/studio")) return null;
 
   return (
     <>
