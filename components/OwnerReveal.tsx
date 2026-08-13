@@ -8,9 +8,12 @@ import ExpectCard from "./ExpectCard"
 
 interface OwnerRevealProps {
   loading: boolean
+  founderVideoUrl?: string
 }
 
-const OwnerReveal = ({ loading }: OwnerRevealProps) => {
+const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
+  // Sanity-managed founder video, with the bundled file as a fallback
+  const founderVideoSrc = founderVideoUrl || "/Videos/itel.mp4"
   const sectionRef = useRef<HTMLDivElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
   const word1Ref = useRef<HTMLSpanElement>(null)
@@ -348,7 +351,7 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover"
-            src="/Videos/itel.mp4"
+            src={founderVideoSrc}
             autoPlay
             muted
             loop
@@ -414,7 +417,7 @@ const OwnerReveal = ({ loading }: OwnerRevealProps) => {
             <video
               className="block max-h-[80vh] max-w-[94vw] rounded-2xl"
               style={{ boxShadow: "0 0 100px rgba(45, 230, 199, 0.2)" }}
-              src="/Videos/itel.mp4"
+              src={founderVideoSrc}
               controls
               autoPlay
               playsInline

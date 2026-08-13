@@ -107,6 +107,27 @@ export interface VideoTestimonial {
   poster?: string
 }
 
+export interface SiteSettings {
+  heroVideoUrl?: string
+  founderVideoUrl?: string
+  contactEmail?: string
+  bookingUrl?: string
+  social?: {
+    instagram?: string
+    linkedin?: string
+    twitter?: string
+  }
+}
+
+export interface Testimonial {
+  _id: string
+  name: string
+  role?: string
+  content: string
+  avatar?: string
+  handle?: string
+}
+
 // Query Helper Functions
 
 /**
@@ -185,6 +206,47 @@ export async function fetchProjectBySlug(slug: string): Promise<Project | null> 
   } catch (error) {
     console.error('Error fetching project by slug:', error)
     throw new Error(`Failed to fetch project with slug: ${slug}`)
+  }
+}
+
+/**
+ * Fetches the single Site Settings document (hero/founder videos, contact, socials, booking).
+ * Video URLs are resolved to a direct URL whether uploaded or external.
+ */
+export async function fetchSiteSettings(): Promise<SiteSettings | null> {
+  try {
+    const query = `*[_type == "siteSettings"][0]{
+      "heroVideoUrl": select(heroVideo.videoSource == "url" => heroVideo.videoUrl, heroVideo.videoFile.asset->url),
+      "founderVideoUrl": select(founderVideo.videoSource == "url" => founderVideo.videoUrl, founderVideo.videoFile.asset->url),
+      contactEmail,
+      bookingUrl,
+      social
+    }`
+    return await client.fetch<SiteSettings | null>(query)
+  } catch (error) {
+    console.error('Error fetching site settings:', error)
+    return null
+  }
+}
+
+/**
+ * Fetches text testimonials, ordered. Returns [] if there are none.
+ */
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  try {
+    const query = `*[_type == "testimonial"] | order(order asc, _createdAt desc){
+      _id,
+      name,
+      role,
+      content,
+      handle,
+      "avatar": avatar.asset->url
+    }`
+    const items = await client.fetch<Testimonial[]>(query)
+    return items || []
+  } catch (error) {
+    console.error('Error fetching testimonials:', error)
+    return []
   }
 }
 

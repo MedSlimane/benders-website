@@ -1,0 +1,85 @@
+{
+  "projects": [
+    {
+      "type": "web",
+      "title": "Listings.sg & Buycondo.sg",
+      "subtitle": "Turned two disconnected property portals into a unified AI-powered real estate platform serving the Singapore market",
+      "category": "ai",
+      "order": 1,
+      "client": "Gary Lim, ERA Realty Network",
+      "year": "2025-2026",
+      "services": [
+        "Fractional CTO",
+        "Full-Stack Development",
+        "AI Integration",
+        "SEO Engineering",
+        "Data Pipeline Architecture",
+        "Web Scraping Infrastructure",
+        "API Design",
+        "WordPress Integration"
+      ],
+      "websiteUrl": "https://listings.sg",
+      "technologies": [
+        "Next.js 15",
+        "Express.js",
+        "TypeScript",
+        "MongoDB",
+        "OpenAI GPT-4o",
+        "Pinecone",
+        "Apify",
+        "PM2",
+        "AWS Lightsail",
+        "GitHub Actions",
+        "WordPress",
+        "Flatsome",
+        "Tailwind CSS",
+        "Radix UI",
+        "Leaflet",
+        "Redis"
+      ],
+      "overview": "Long-term fractional CTO engagement across 6 phases spanning 8+ months. Built the entire technical infrastructure from scratch: AI-powered property search and chat, automated 99.co listing scraper covering 192K+ properties, programmatic SEO engine generating 70K+ indexed pages, real-time property valuation engine, MCP API for Claude integration, CRM with behavioral lead scoring, and a floor plan processing pipeline handling 43K images. Connected two separate platforms (listings.sg on Next.js and buycondo.sg on WordPress) into a unified lead generation ecosystem.",
+      "challenge": "The client had two property websites operating in isolation. Listings.sg had ~62 monthly visits with a noindex tag accidentally blocking Google. Buycondo.sg had 13K monthly traffic from floor plans but zero conversion. No CRM, no lead tracking, no AI capabilities, no data pipeline. The client was manually typing REIT vacancy PDFs into listing forms and had no visibility into who was visiting the site or what they were looking for. Monthly infrastructure costs were $400+ with no ROI tracking.",
+      "solution": "Built the platform across 6 phases, each solving a specific business problem. Phase 1-2: Core platform, HDB block P-SEO (9,300+ pages), AI chat with property search. Phase 3: ERA E-Book extraction pipeline, 100+ new launch project pages. Phase 4: User intelligence dashboard with behavioral scoring, commercial vacancy PDF uploader, condo playbook generator with tracked URLs, condo P-SEO pages. Phase 5: Gated REST API with MCP for Claude, buycondo.sg integration with cross-linking, dual homepage revamp (SgCarmart/Carousell style), 7 consultant calculator tools, QR codes on 1,324 floor plans, WhatsApp lead capture. Phase 6: 43K floor plan image pipeline with watermark removal and rebranding. Also delivered a 54-bug site audit, AI cost optimization that cut OpenAI spend from $150 to $30/month, scraper overhaul achieving 90%+ coverage, and multiple agent removal workflows with preventative scraper safeguards.",
+      "results": [
+        { "value": "5,260", "metric": "monthly search clicks (from 62)" },
+        { "value": "192K+", "metric": "active property listings" },
+        { "value": "70,974", "metric": "Google-indexed pages" },
+        { "value": "188K", "metric": "monthly search impressions" },
+        { "value": "43K", "metric": "floor plans processed" },
+        { "value": "100+", "metric": "new launch project pages" },
+        { "value": "-80%", "metric": "AI infrastructure cost reduction" },
+        { "value": "302/302", "metric": "Core Web Vitals pass rate" },
+        { "value": "45%", "metric": "click growth (trending)" },
+        { "value": "20x", "metric": "faster page loads after optimization" }
+      ],
+      "insights": [
+        "Built a private REST API with key authentication and Swagger docs that the client connects to Claude Max via MCP, turning their property database into a competitive intelligence tool only their team can access.",
+        "Discovered that search engine bots were triggering AI valuations on 192K property pages, causing 353,000 OpenAI calls per month with only 2,000 real visitors. Added bot detection, caching, and rate limiting to cut the cost by 80%.",
+        "Programmatic SEO at scale: generated unique content, FAQ schema, breadcrumbs, and meta tags for 70K+ pages across HDB blocks, condos, and new launches. Each page is individually indexed and ranks for long-tail property queries.",
+        "Connected two isolated platforms (Next.js + WordPress) into a unified lead ecosystem. Buycondo.sg's 13K monthly floor plan visitors now flow into listings.sg's CRM with full UTM attribution and behavioral scoring.",
+        "Processing 43,000 floor plan images: automated watermark removal, dual-site rebranding, condo-name matching via filename parsing, and bulk upload. Turned a static Dropbox folder into a live content pipeline serving both platforms."
+      ],
+      "testimonial": {
+        "quote": "",
+        "author": "Gary Lim",
+        "position": "Principal Strategist, ERA Realty Network"
+      },
+      "seo": {
+        "metaTitle": "Listings.sg - AI-Powered Singapore Property Platform | Benders Agency",
+        "metaDescription": "Fractional CTO engagement building a full-stack AI property platform: 192K listings, 70K indexed pages, GPT-4o chat, MCP API, programmatic SEO, and dual-site lead ecosystem.",
+        "keywords": [
+          "fractional CTO",
+          "AI property platform",
+          "programmatic SEO",
+          "Singapore real estate",
+          "Next.js",
+          "OpenAI integration",
+          "MCP API",
+          "web scraping",
+          "property valuation",
+          "lead generation"
+        ]
+      }
+    }
+  ]
+}

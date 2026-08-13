@@ -1,0 +1,68 @@
+{
+  "_instructions": [
+    "Fill in ONE object per project inside the 'projects' array.",
+    "Leave ALL images out — you'll upload them later in /studio (thumbnail, gallery images, videos, og image).",
+    "REQUIRED fields: type, title, subtitle, category, order.",
+    "type        -> 'web'  (websites / AI products / SEO / social / branding)  OR  'video' (video / reels).",
+    "category    -> one of: ai | web | photography | video | social | seo | branding   (drives the Work filter tabs).",
+    "order       -> a number; lower shows first.",
+    "results     -> array of { value, metric }; the FIRST one becomes the headline on the Work card.",
+    "Everything else is optional — delete any line you don't need.",
+    "When done, send me this file and I'll import every project into Sanity (images stay empty for you to add)."
+  ],
+
+  "projects": [
+    {
+      "type": "web",
+      "title": "Acme Roofing Website",
+      "subtitle": "A lead-generation site that books jobs on autopilot",
+      "category": "web",
+      "order": 1,
+      "client": "Acme Roofing",
+      "year": "2025",
+      "services": ["Web Development", "SEO", "Lead Generation"],
+      "websiteUrl": "https://example.com",
+      "technologies": ["Next.js", "Sanity", "Vercel"],
+      "overview": "What the project was about, in 1-3 sentences.",
+      "challenge": "The problem the client had before working with you.",
+      "solution": "What you built / did to solve it.",
+      "results": [
+        { "value": "+250%", "metric": "more booked inspections" },
+        { "value": "3.2x", "metric": "conversion rate" }
+      ],
+      "insights": [
+        "A short takeaway from the project.",
+        "Another takeaway (optional)."
+      ],
+      "testimonial": {
+        "quote": "Optional client quote about the result.",
+        "author": "Client Name",
+        "position": "Owner"
+      },
+      "seo": {
+        "metaTitle": "",
+        "metaDescription": "",
+        "keywords": []
+      }
+    },
+    {
+      "type": "video",
+      "title": "Brand Hype Reel",
+      "subtitle": "A 30-second reel that drove 1M+ views",
+      "category": "video",
+      "order": 2,
+      "client": "Client Name",
+      "year": "2025",
+      "videoType": "reel",
+      "services": ["Video Production", "Editing"],
+      "overview": "...",
+      "challenge": "...",
+      "solution": "...",
+      "results": [
+        { "value": "1M+", "metric": "views" }
+      ],
+      "insights": [],
+      "testimonial": { "quote": "", "author": "", "position": "" }
+    }
+  ]
+}

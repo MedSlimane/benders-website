@@ -10,6 +10,7 @@ import MagneticButton from "./MagneticButton"
 
 interface HeroProps {
   loading: boolean
+  heroVideoUrl?: string
 }
 
 // Rotating words for "Systems"
@@ -146,7 +147,9 @@ const AnimatedHeroText = () => {
   )
 }
 
-const Hero = ({ loading }: HeroProps) => {
+const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
+  // Sanity-managed hero video, with the bundled file as a fallback
+  const heroVideoSrc = heroVideoUrl || "/Videos/itel.mp4"
   const heroRef = useRef<HTMLElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLDivElement>(null)
@@ -383,7 +386,7 @@ const Hero = ({ loading }: HeroProps) => {
             <video
               ref={videoRef}
               className="absolute inset-0 h-full w-full object-cover"
-              src="/Videos/itel.mp4"
+              src={heroVideoSrc}
               autoPlay
               muted
               loop
@@ -431,7 +434,7 @@ const Hero = ({ loading }: HeroProps) => {
             <video
               className="block max-h-[80vh] max-w-[94vw] rounded-2xl"
               style={{ boxShadow: "0 0 100px rgba(45, 230, 199, 0.2)" }}
-              src="/Videos/itel.mp4"
+              src={heroVideoSrc}
               controls
               autoPlay
               playsInline
@@ -463,7 +466,7 @@ const Hero = ({ loading }: HeroProps) => {
               <video
                 ref={videoRef}
                 className="absolute inset-0 h-full w-full object-cover"
-                src="/Videos/itel.mp4"
+                src={heroVideoSrc}
                 autoPlay
                 muted
                 loop

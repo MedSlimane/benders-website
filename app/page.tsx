@@ -17,19 +17,28 @@ import Preloader from "@/components/preloader"
 import { useState, useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { fetchVideoTestimonials, type VideoTestimonial } from "@/lib/sanity"
+import {
+  fetchVideoTestimonials,
+  fetchSiteSettings,
+  fetchTestimonials,
+  type VideoTestimonial,
+  type SiteSettings,
+  type Testimonial,
+} from "@/lib/sanity"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [testimonials, setTestimonials] = useState<VideoTestimonial[]>([])
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [textTestimonials, setTextTestimonials] = useState<Testimonial[]>([])
   const mainRef = useRef<HTMLDivElement>(null)
   const gradientRef = useRef<HTMLDivElement>(null)
 
-  // Load client video testimonials (the section is hidden entirely if there are none)
+  // Load all Sanity-managed content for the homepage
   useEffect(() => {
-    fetchVideoTestimonials()
-      .then(setTestimonials)
-      .catch(() => setTestimonials([]))
+    fetchVideoTestimonials().then(setTestimonials).catch(() => setTestimonials([]))
+    fetchSiteSettings().then(setSettings).catch(() => setSettings(null))
+    fetchTestimonials().then(setTextTestimonials).catch(() => setTextTestimonials([]))
   }, [])
 
   useEffect(() => {
@@ -87,7 +96,7 @@ export default function Home() {
       <SmoothScroll loading={loading}>
         <div className={`content-transition ${loading ? 'loading-hidden' : 'opacity-100'}`}>
         <section id="hero" aria-label="Hero section">
-          <Hero loading={loading} />
+          <Hero loading={loading} heroVideoUrl={settings?.heroVideoUrl} />
         </section>
         <section id="services" aria-label="Our services">
           <ServicesSection loading={loading} />
@@ -123,12 +132,12 @@ export default function Home() {
 
         {/* Owner Reveal — founder video + "What do you expect?" button overlaid at the end */}
         <section id="owner-reveal" aria-label="Meet the founder">
-          <OwnerReveal loading={loading} />
+          <OwnerReveal loading={loading} founderVideoUrl={settings?.founderVideoUrl} />
         </section>
 
         {/* Client Feedback - Text testimonials carousel */}
         <section id="client-feedback" aria-label="Client feedback">
-          <Testimonials loading={loading} />
+          <Testimonials loading={loading} testimonials={textTestimonials} />
         </section>
 
         {/* Contact section */}

@@ -1,14 +1,15 @@
 "use client"
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useMemo } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
+import type { Testimonial as SanityTestimonial } from "@/lib/sanity"
 
 gsap.registerPlugin(ScrollTrigger)
 
 interface Testimonial {
-  id: number
+  id: number | string
   name: string
   handle: string
   avatar: string
@@ -18,9 +19,10 @@ interface Testimonial {
 
 interface TestimonialsProps {
   loading: boolean
+  testimonials?: SanityTestimonial[]
 }
 
-const testimonials: Testimonial[] = [
+const fallbackTestimonials: Testimonial[] = [
   {
     id: 1,
     name: "Mohamed Amine Gharbi",
@@ -79,10 +81,6 @@ const testimonials: Testimonial[] = [
   }
 ]
 
-// Split testimonials into two rows
-const row1Testimonials = testimonials.filter((_, i) => i % 2 === 0)
-const row2Testimonials = testimonials.filter((_, i) => i % 2 === 1)
-
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <a
@@ -120,13 +118,19 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 
       {/* Author */}
       <div className="relative z-10 flex items-center gap-3 pt-4 border-t border-white/10">
-        <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-[#2de6c7]/30 transition-all duration-300">
-          <Image
-            src={testimonial.avatar}
-            alt={testimonial.name}
-            fill
-            className="object-cover"
-          />
+        <div className="relative flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-[#2de6c7]/30 transition-all duration-300 bg-[#2de6c7]/15">
+          {testimonial.avatar ? (
+            <Image
+              src={testimonial.avatar}
+              alt={testimonial.name}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <span className="font-gilroy font-bold text-[#2de6c7] text-sm">
+              {testimonial.name?.charAt(0) || "?"}
+            </span>
+          )}
         </div>
         <div className="flex-1">
           <h4 className="font-gilroy font-semibold text-white text-sm md:text-base">
@@ -147,12 +151,29 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   )
 }
 
-const Testimonials = ({ loading }: TestimonialsProps) => {
+const Testimonials = ({ loading, testimonials: sanityTestimonials }: TestimonialsProps) => {
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const row1Ref = useRef<HTMLDivElement>(null)
   const row2Ref = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+
+  // Use Sanity testimonials when available, otherwise the bundled defaults
+  const items: Testimonial[] = useMemo(() => {
+    if (sanityTestimonials && sanityTestimonials.length > 0) {
+      return sanityTestimonials.map((t, i) => ({
+        id: t._id || i,
+        name: t.name,
+        handle: t.handle || "",
+        avatar: t.avatar || "",
+        content: t.content,
+        role: t.role,
+      }))
+    }
+    return fallbackTestimonials
+  }, [sanityTestimonials])
+  const row1Items = useMemo(() => items.filter((_, i) => i % 2 === 0), [items])
+  const row2Items = useMemo(() => items.filter((_, i) => i % 2 === 1), [items])
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -199,13 +220,13 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
     const row1 = row1Ref.current
     const row2 = row2Ref.current
     const cardWidth = isMobile ? 296 : 364 // card width + margin
-    const row1Width = row1Testimonials.length * cardWidth
-    const row2Width = row2Testimonials.length * cardWidth
+    const row1Width = row1Items.length * cardWidth
+    const row2Width = row2Items.length * cardWidth
 
     // Row 1: Continuous scroll left using modifiers for seamless loop
     const autoScroll1 = gsap.to(row1, {
       x: `-=${row1Width}`,
-      duration: row1Testimonials.length * 6,
+      duration: row1Items.length * 6,
       ease: "none",
       repeat: -1,
       modifiers: {
@@ -218,7 +239,7 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
     // Row 2: Continuous scroll right
     const autoScroll2 = gsap.to(row2, {
       x: `+=${row2Width}`,
-      duration: row2Testimonials.length * 6,
+      duration: row2Items.length * 6,
       ease: "none",
       repeat: -1,
       modifiers: {
@@ -248,7 +269,7 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
       row2.removeEventListener("mouseenter", handleMouseEnter2)
       row2.removeEventListener("mouseleave", handleMouseLeave2)
     }
-  }, [loading, isMobile])
+  }, [loading, isMobile, row1Items.length, row2Items.length])
 
   return (
     <section ref={sectionRef} className="relative py-16 md:py-24 overflow-hidden">
@@ -269,14 +290,14 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
           <div 
             ref={row1Ref}
             className="flex items-stretch"
-            style={{ width: `${row1Testimonials.length * 2 * (isMobile ? 296 : 364)}px` }}
+            style={{ width: `${row1Items.length * 2 * (isMobile ? 296 : 364)}px` }}
           >
             {/* First set */}
-            {row1Testimonials.map((testimonial) => (
+            {row1Items.map((testimonial) => (
               <TestimonialCard key={`r1-first-${testimonial.id}`} testimonial={testimonial} />
             ))}
             {/* Duplicate for seamless loop */}
-            {row1Testimonials.map((testimonial) => (
+            {row1Items.map((testimonial) => (
               <TestimonialCard key={`r1-second-${testimonial.id}`} testimonial={testimonial} />
             ))}
           </div>
@@ -287,14 +308,14 @@ const Testimonials = ({ loading }: TestimonialsProps) => {
           <div 
             ref={row2Ref}
             className="flex items-stretch"
-            style={{ width: `${row2Testimonials.length * 2 * 364}px` }}
+            style={{ width: `${row2Items.length * 2 * 364}px` }}
           >
             {/* First set */}
-            {row2Testimonials.map((testimonial) => (
+            {row2Items.map((testimonial) => (
               <TestimonialCard key={`r2-first-${testimonial.id}`} testimonial={testimonial} />
             ))}
             {/* Duplicate for seamless loop */}
-            {row2Testimonials.map((testimonial) => (
+            {row2Items.map((testimonial) => (
               <TestimonialCard key={`r2-second-${testimonial.id}`} testimonial={testimonial} />
             ))}
           </div>
