@@ -27,11 +27,18 @@ export const siteUrl: Record<Locale, string> = {
 const TN_HOST = /(^|\.)benders\.tn$|^tn\.localhost$/
 const EN_HOST = /(^|\.)bendersagency\.com$/
 
+// On Vercel's production deployment every host that isn't benders.tn is the
+// English site, whatever its exact domain is. (NEXT_PUBLIC_VERCEL_ENV is
+// exposed to the browser automatically by Vercel for Next.js projects.)
+const IS_PRODUCTION_DEPLOYMENT =
+  (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) === "production"
+
 export function localeFromHost(host: string | null | undefined): Locale | null {
   const h = (host || "").split(":")[0].toLowerCase()
   if (TN_HOST.test(h)) return "tn"
   if (EN_HOST.test(h)) return "en"
-  return null // localhost, *.vercel.app previews, etc.
+  if (IS_PRODUCTION_DEPLOYMENT) return "en"
+  return null // localhost and Vercel preview deployments: ?locale= works
 }
 
 export const PREVIEW_LOCALE_COOKIE = "preview_locale"
