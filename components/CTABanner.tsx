@@ -3,6 +3,7 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslations } from "next-intl"
 import MagneticButton from "./MagneticButton"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -12,6 +13,7 @@ interface CTABannerProps {
 }
 
 const CTABanner = ({ loading }: CTABannerProps) => {
+  const t = useTranslations("hero.ctaBanner")
   const sectionRef = useRef<HTMLElement>(null)
   const buttonRef = useRef<HTMLDivElement>(null)
 
@@ -55,7 +57,7 @@ const CTABanner = ({ loading }: CTABannerProps) => {
             </svg>
           }
         >
-          Book a Free Call
+          {t("bookFreeCall")}
         </MagneticButton>
       </div>
     </section>

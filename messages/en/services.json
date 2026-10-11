@@ -1,0 +1,30 @@
+{
+  "title": "OUR SERVICES",
+  "subtitle": "Everything you need to build, launch, and scale your brand.",
+  "items": {
+    "brandStrategy": {
+      "title": "Brand Strategy",
+      "description": "Positioning, offers, messaging, roadmap."
+    },
+    "visualIdentity": {
+      "title": "Visual Identity",
+      "description": "Logo, brand system, guidelines, assets."
+    },
+    "webDevelopment": {
+      "title": "Web Development",
+      "description": "Landing pages, websites, Webflow/Next.js."
+    },
+    "videoProduction": {
+      "title": "Video Production",
+      "description": "Ads, reels, motion, VFX, post-production."
+    },
+    "digitalMarketing": {
+      "title": "Digital Marketing",
+      "description": "Funnels, ads, tracking, optimization."
+    },
+    "socialMedia": {
+      "title": "Social Media",
+      "description": "Content system, strategy, community growth."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "logoAlt": "لوغو Benders",
+  "line1": "نبنيو",
+  "rotating": ["سيستامات", "ستراتيجيات", "فانلز", "براندات"],
+  "thatPrint": " اللي يطبعو",
+  "money": "«الفلوس»",
+  "cursorLine1": "احجز",
+  "cursorLine2": "مكالمة مجانية",
+  "bookFreeCall": "احجز مكالمة مجانية",
+  "seeShowreel": "شوف خدمتنا",
+  "closeVideo": "سكّر الفيديو",
+  "pauseVideo": "وقّف الفيديو",
+  "playVideo": "شغّل الفيديو",
+  "muteVideo": "قصّ الصوت",
+  "unmuteVideo": "رجّع الصوت",
+  "ctaBanner": {
+    "bookFreeCall": "احجز مكالمة مجانية"
+  }
+}

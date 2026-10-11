@@ -1,13 +1,12 @@
 "use client"
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
+import { useTranslations } from "next-intl"
 import MagneticButton from "./MagneticButton"
 
 const CAL_URL = "https://cal.com/forms/3a5fbe49-4c14-4ecd-a327-786e05d3ce7c"
 
-// TODO: replace this placeholder copy
-const PLACEHOLDER =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+// TODO: replace the placeholder copy in messages/<locale>/expect.json ("body")
 
 /**
  * "What do you expect?" button. Clicking opens a FULLSCREEN modal (via portal so
@@ -15,6 +14,7 @@ const PLACEHOLDER =
  * Flips on hover (desktop) and on tap (mobile, which has no hover).
  */
 const ExpectCard = () => {
+  const t = useTranslations("expect")
   const [open, setOpen] = useState(false)
   const [flipped, setFlipped] = useState(false)
 
@@ -45,7 +45,7 @@ const ExpectCard = () => {
           </svg>
         }
       >
-        What do you expect?
+        {t("button")}
       </MagneticButton>
 
       {open &&
@@ -59,7 +59,7 @@ const ExpectCard = () => {
             {/* Close */}
             <button
               onClick={close}
-              aria-label="Close"
+              aria-label={t("close")}
               className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
               style={{
                 background: "rgba(255, 255, 255, 0.08)",
@@ -86,7 +86,7 @@ const ExpectCard = () => {
               >
                 {/* Front — placeholder copy (tap on mobile to flip) */}
                 <div
-                  className="absolute inset-0 flex flex-col justify-center overflow-hidden rounded-3xl p-8 text-left [backface-visibility:hidden]"
+                  className="absolute inset-0 flex flex-col justify-center overflow-hidden rounded-3xl p-8 text-start [backface-visibility:hidden]"
                   style={{
                     background: "rgba(8, 12, 40, 0.85)",
                     backdropFilter: "blur(24px)",
@@ -95,11 +95,11 @@ const ExpectCard = () => {
                   }}
                   onClick={() => setFlipped(true)}
                 >
-                  <h3 className="mb-4 font-gilroy font-bold text-2xl md:text-3xl text-white">What to expect</h3>
-                  <p className="font-neue-montreal text-sm md:text-base leading-relaxed text-white/70">{PLACEHOLDER}</p>
+                  <h3 className="mb-4 font-gilroy font-bold text-2xl md:text-3xl text-white">{t("title")}</h3>
+                  <p className="font-neue-montreal text-sm md:text-base leading-relaxed text-white/70">{t("body")}</p>
                   <span className="mt-7 inline-flex items-center gap-2 font-neue-montreal text-xs uppercase tracking-widest text-[#2de6c7]">
-                    Hover or tap to book
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {t("hint")}
+                    <svg className="rtl:-scale-x-100" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </span>
@@ -120,10 +120,10 @@ const ExpectCard = () => {
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <path d="M16 2v4M8 2v4M3 10h18" />
                   </svg>
-                  <span className="font-gilroy font-black text-3xl text-[#04082e]">Book a call</span>
+                  <span className="font-gilroy font-black text-3xl text-[#04082e]">{t("bookCall")}</span>
                   <span className="inline-flex items-center gap-2 font-neue-montreal text-base font-medium text-[#04082e]/80">
-                    Let&apos;s talk
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {t("letsTalk")}
+                    <svg className="rtl:-scale-x-100" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </span>

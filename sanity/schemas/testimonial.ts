@@ -1,10 +1,12 @@
 import {defineField, defineType} from 'sanity'
+import {derjaGroups, derjaString, derjaText, withDerja} from './derja'
 
 export default defineType({
   name: 'testimonial',
   title: 'Testimonial (text)',
   type: 'document',
-  fields: [
+  groups: derjaGroups,
+  fields: withDerja([
     defineField({name: 'name', title: 'Name', type: 'string', validation: (R) => R.required()}),
     defineField({name: 'role', title: 'Role / Title', type: 'string'}),
     defineField({
@@ -22,6 +24,6 @@ export default defineType({
       description: 'Without the @ (optional). Links the card to instagram.com/<handle>.',
     }),
     defineField({name: 'order', title: 'Display Order', type: 'number', initialValue: 1}),
-  ],
+  ], [derjaString('role', 'Role / Title'), derjaText('content', 'Quote', 3)]),
   preview: {select: {title: 'name', subtitle: 'role', media: 'avatar'}},
 })

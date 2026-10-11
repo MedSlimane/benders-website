@@ -1,0 +1,19 @@
+{
+  "logoAlt": "Benders Logo",
+  "line1": "We build",
+  "rotating": ["Systems", "Strategies", "Funnels", "Brands"],
+  "thatPrint": " that print",
+  "money": "“money”",
+  "cursorLine1": "Book a",
+  "cursorLine2": "free call",
+  "bookFreeCall": "Book a Free Call",
+  "seeShowreel": "See Showreel",
+  "closeVideo": "Close video",
+  "pauseVideo": "Pause video",
+  "playVideo": "Play video",
+  "muteVideo": "Mute video",
+  "unmuteVideo": "Unmute video",
+  "ctaBanner": {
+    "bookFreeCall": "Book a Free Call"
+  }
+}

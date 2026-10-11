@@ -5,19 +5,21 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import "./Navbar.css";
 
 interface NavLink {
-  label: string;
+  key: "home" | "services" | "work" | "clients" | "contact";
   href: string;
 }
 
 const navLinks: NavLink[] = [
-  { label: "Home", href: "#hero" },
-  { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "Clients", href: "#clients" },
-  { label: "Contact", href: "#contact" },
+  { key: "home", href: "#hero" },
+  { key: "services", href: "#services" },
+  { key: "work", href: "#work" },
+  { key: "clients", href: "#clients" },
+  { key: "contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -27,6 +29,7 @@ export default function Navbar() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   const navRef = useRef<HTMLElement>(null);
   const desktopNavRef = useRef<HTMLDivElement>(null);
@@ -290,9 +293,10 @@ export default function Navbar() {
                 onMouseEnter={() => setHoveredLink(link.href)}
                 onMouseLeave={() => setHoveredLink(null)}
               >
-                {link.label}
+                {t(link.key)}
               </a>
             ))}
+            <LanguageSwitcher className="navbar__link navbar__lang" />
           </nav>
 
           {/* Hamburger Button - Mobile Only */}
@@ -300,7 +304,7 @@ export default function Navbar() {
             ref={hamburgerRef}
             className="navbar__hamburger"
             onClick={toggleMenu}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={isMenuOpen}
           >
             <span className="hamburger-line hamburger-line--top" />
@@ -342,7 +346,7 @@ export default function Navbar() {
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <span className="fullscreen-menu__link-text">
-                          {link.label}
+                          {t(link.key)}
                         </span>
                       </a>
                     </motion.div>
@@ -358,14 +362,15 @@ export default function Navbar() {
                 transition={{ delay: 0.6, duration: 0.5 }}
               >
                 <div className="fullscreen-menu__contact">
-                  <span className="fullscreen-menu__label">Get in touch</span>
+                  <span className="fullscreen-menu__label">{t("getInTouch")}</span>
                   <a
                     href="mailto:contact@benders.io"
-                    className="fullscreen-menu__email"
+                    className="fullscreen-menu__email ltr-isolate"
                   >
                     contact@benders.io
                   </a>
                 </div>
+                <LanguageSwitcher className="fullscreen-menu__lang" />
                 <div className="fullscreen-menu__socials">
                   <a 
                     href="https://twitter.com" 

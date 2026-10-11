@@ -1,10 +1,12 @@
 import {defineField, defineType} from 'sanity'
+import {derjaGroups, projectDerjaFields, withDerja} from './derja'
 
 export default defineType({
   name: 'webProject',
   title: 'Web Project',
   type: 'document',
-  fields: [
+  groups: derjaGroups,
+  fields: withDerja([
     defineField({
       name: 'title',
       title: 'Title',
@@ -238,7 +240,7 @@ export default defineType({
         },
       ],
     }),
-  ],
+  ], projectDerjaFields),
   preview: {
     select: {
       title: 'title',

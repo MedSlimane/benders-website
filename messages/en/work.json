@@ -1,0 +1,15 @@
+{
+  "title": "OUR WORK",
+  "subtitle": "Real projects, real outcomes — filter by what you need.",
+  "empty": "No projects available yet.",
+  "categories": {
+    "all": "All",
+    "ai": "AI Products",
+    "web": "Web Development",
+    "photography": "Photography",
+    "video": "Video Production",
+    "social": "Social Media",
+    "seo": "SEO",
+    "branding": "Branding"
+  }
+}

@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { createPortal } from "react-dom"
+import { useTranslations } from "next-intl"
 import ExpectCard from "./ExpectCard"
 
 interface OwnerRevealProps {
@@ -12,6 +13,7 @@ interface OwnerRevealProps {
 }
 
 const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
+  const t = useTranslations("owner")
   // Sanity-managed founder video, with the bundled file as a fallback
   const founderVideoSrc = founderVideoUrl || "/Videos/itel.mp4"
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -267,13 +269,13 @@ const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
               ref={word1Ref}
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white uppercase tracking-tight"
             >
-              We
+              {t("w1")}
             </span>
             <span
               ref={word2Ref}
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white uppercase tracking-tight"
             >
-              will
+              {t("w2")}
             </span>
           </div>
 
@@ -283,13 +285,13 @@ const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
               ref={word3Ref}
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white uppercase tracking-tight"
             >
-              make
+              {t("w3")}
             </span>
             <span
               ref={word4Ref}
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white uppercase tracking-tight"
             >
-              it
+              {t("w4")}
             </span>
           </div>
 
@@ -300,13 +302,13 @@ const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl uppercase tracking-tight"
               style={{ color: "var(--color-electric-blue)" }}
             >
-              work
+              {t("w5")}
             </span>
             <span
               ref={word6Ref}
               className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white uppercase tracking-tight"
             >
-              for you
+              {t("w6")}
             </span>
           </div>
         </div>
@@ -337,7 +339,7 @@ const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
             className="relative z-10 font-gilroy font-bold text-sm md:text-base uppercase tracking-wider text-center transition-colors duration-300 group-hover:text-[#04082e]"
             style={{ color: "var(--color-mint-cyan)" }}
           >
-            Book a<br />Call
+            {t("ctaLine1")}<br />{t("ctaLine2")}
           </span>
         </a>
 
@@ -400,7 +402,7 @@ const OwnerReveal = ({ loading, founderVideoUrl }: OwnerRevealProps) => {
           >
             <button
               onClick={() => setVideoOpen(false)}
-              aria-label="Close video"
+              aria-label={t("closeVideo")}
               className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
               style={{
                 background: "rgba(255, 255, 255, 0.08)",

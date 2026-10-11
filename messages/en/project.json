@@ -1,0 +1,40 @@
+{
+  "categories": {
+    "ai": "AI Products",
+    "web": "Web Development",
+    "photography": "Photography",
+    "video": "Video Production",
+    "social": "Social Media",
+    "seo": "SEO",
+    "branding": "Branding"
+  },
+  "logoAlt": "Benders Logo",
+  "back": "Back",
+  "client": "Client",
+  "year": "Year",
+  "services": "Services",
+  "visitWebsite": "Visit Website",
+  "overview": "OVERVIEW",
+  "challengePrefix": "THE ",
+  "challengeWord": "CHALLENGE",
+  "solutionPrefix": "THE ",
+  "solutionWord": "SOLUTION",
+  "resultsPrefix": "THE ",
+  "resultsWord": "RESULTS",
+  "insightsPrefix": "KEY ",
+  "insightsWord": "INSIGHTS",
+  "exploreMore": "Explore More",
+  "morePrefix": "More ",
+  "moreWord": "Projects",
+  "viewProject": "View Project",
+  "viewAllProjects": "View All Projects",
+  "notFound": "Project Not Found",
+  "backToWork": "Back to Work",
+  "gallery": {
+    "play": "Play video",
+    "pause": "Pause video",
+    "mute": "Mute video",
+    "unmute": "Unmute video",
+    "videoLabel": "{title} video"
+  }
+}

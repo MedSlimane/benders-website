@@ -1,12 +1,15 @@
-export function generateOrganizationSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bendersagency.com'
-  
+import { siteUrl, htmlLang, type Locale } from '@/i18n/config'
+
+export function generateOrganizationSchema(locale: Locale = 'en') {
+  const baseUrl = siteUrl[locale]
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Benders Agency',
     alternateName: 'Benders',
     url: baseUrl,
+    sameAs: [siteUrl.en, siteUrl.tn].filter((u) => u !== baseUrl),
     logo: `${baseUrl}/Benders-logo/SVG/1.svg`,
     description: 'Digital marketing agency providing web development, social media marketing, and creative solutions to help businesses grow online.',
     foundingDate: '2025',
@@ -65,14 +68,15 @@ export function generateOrganizationSchema() {
   }
 }
 
-export function generateWebsiteSchema() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bendersagency.com'
-  
+export function generateWebsiteSchema(locale: Locale = 'en') {
+  const baseUrl = siteUrl[locale]
+
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Benders Agency',
     url: baseUrl,
+    inLanguage: htmlLang[locale],
     description: 'Digital marketing agency providing comprehensive online solutions',
     publisher: {
       '@type': 'Organization',

@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {derjaGroups, derjaString, derjaUrl, withDerja} from './derja'
 
 // Reusable "video" object: upload a file OR paste an external URL
 const videoField = (name: string, title: string, description: string) =>
@@ -43,7 +44,8 @@ export default defineType({
   title: 'Site Settings',
   type: 'document',
   // Singleton: there is only ever one of these
-  fields: [
+  groups: derjaGroups,
+  fields: withDerja([
     videoField('heroVideo', 'Hero Video', 'The big video at the top of the homepage.'),
     videoField('founderVideo', 'Founder Video', 'The video in the "We will make it work for you" section near the bottom.'),
     defineField({
@@ -69,7 +71,10 @@ export default defineType({
         {name: 'twitter', title: 'Twitter / X', type: 'url'},
       ],
     }),
-  ],
+  ], [
+    derjaString('contactEmail', 'Contact Email'),
+    derjaUrl('bookingUrl', 'Booking / Calendar Link', 'Optional separate booking link for Tunisian visitors. Leave empty to use the main one.'),
+  ]),
   preview: {
     prepare: () => ({title: 'Site Settings'}),
   },

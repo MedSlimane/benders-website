@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 import { fetchAllProjects } from "@/lib/sanity"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -24,17 +25,9 @@ interface DisplayProject {
   topResult?: { metric: string; value: string }
 }
 
-// Category metadata — order controls the tab order; labels are what visitors see
+// Category metadata — order controls the tab order; labels (what visitors see)
+// live in messages/<locale>/work.json under "categories"
 const CATEGORY_ORDER = ["ai", "web", "photography", "video", "social", "seo", "branding"] as const
-const CATEGORY_LABELS: Record<string, string> = {
-  ai: "AI Products",
-  web: "Web Development",
-  photography: "Photography",
-  video: "Video Production",
-  social: "Social Media",
-  seo: "SEO",
-  branding: "Branding",
-}
 
 const ProjectCard = ({ project }: { project: DisplayProject }) => {
   return (
@@ -62,7 +55,7 @@ const ProjectCard = ({ project }: { project: DisplayProject }) => {
         {/* Headline result chip */}
         {project.topResult?.value && (
           <div
-            className="absolute left-4 top-4 rounded-full px-3 py-1.5 font-gilroy font-bold text-sm text-[#04082e]"
+            className="absolute start-4 top-4 rounded-full px-3 py-1.5 font-gilroy font-bold text-sm text-[#04082e]"
             style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
           >
             {project.topResult.value}
@@ -70,23 +63,23 @@ const ProjectCard = ({ project }: { project: DisplayProject }) => {
         )}
 
         {/* Arrow */}
-        <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#04082e] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#2de6c7]">
-          <ArrowUpRight className="h-5 w-5" />
+        <div className="absolute end-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#04082e] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#2de6c7]">
+          <ArrowUpRight className="h-5 w-5 rtl:-scale-x-100" />
         </div>
       </div>
 
       {/* Content — title + the value it drove */}
       <div className="p-5 md:p-6">
-        <h3 className="font-gilroy font-bold text-lg md:text-xl text-white transition-colors duration-300 group-hover:text-[#2de6c7]">
+        <h3 dir="auto" className="font-gilroy font-bold text-lg md:text-xl text-white transition-colors duration-300 group-hover:text-[#2de6c7]">
           {project.title}
         </h3>
         {project.topResult?.metric ? (
-          <p className="mt-1.5 font-neue-montreal text-sm text-white/55">
+          <p dir="auto" className="mt-1.5 font-neue-montreal text-sm text-white/55">
             <span className="font-semibold text-[#2de6c7]">{project.topResult.value}</span>{" "}
             {project.topResult.metric}
           </p>
         ) : (
-          <p className="mt-1.5 font-neue-montreal text-sm text-white/50">{project.subtitle}</p>
+          <p dir="auto" className="mt-1.5 font-neue-montreal text-sm text-white/50">{project.subtitle}</p>
         )}
       </div>
     </Link>
@@ -94,6 +87,8 @@ const ProjectCard = ({ project }: { project: DisplayProject }) => {
 }
 
 const WorkSection = ({ loading }: WorkSectionProps) => {
+  const t = useTranslations("work")
+  const locale = useLocale()
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -109,7 +104,7 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
   useEffect(() => {
     async function loadProjects() {
       try {
-        const fetched = await fetchAllProjects()
+        const fetched = await fetchAllProjects(locale === "tn" ? "tn" : "en")
         const display: DisplayProject[] = fetched
           .filter((p) => p.thumbnail)
           .map((p) => {
@@ -133,7 +128,7 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
       }
     }
     loadProjects()
-  }, [])
+  }, [locale])
 
   const isReady = !loading && !dataLoading
 
@@ -181,10 +176,10 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
         <div ref={contentRef} className="relative pt-24 md:pt-32 pb-20">
           <div className="text-center px-4">
             <h2 ref={titleRef} data-skew className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight">
-              OUR WORK
+              {t("title")}
             </h2>
             <p ref={subtitleRef} className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4">
-              No projects available yet.
+              {t("empty")}
             </p>
           </div>
         </div>
@@ -198,10 +193,10 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
         {/* Title */}
         <div className="text-center mb-8 md:mb-10 px-4">
           <h2 ref={titleRef} data-skew className="font-gilroy font-black text-4xl md:text-5xl lg:text-5xl xl:text-[7rem] text-white leading-none tracking-tight">
-            OUR WORK
+            {t("title")}
           </h2>
           <p ref={subtitleRef} className="font-neue-montreal text-white/60 text-sm md:text-base mt-3 md:mt-4">
-            Real projects, real outcomes — filter by what you need.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -220,7 +215,7 @@ const WorkSection = ({ loading }: WorkSectionProps) => {
                     : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.1)" }
                 }
               >
-                {tab === "all" ? "All" : CATEGORY_LABELS[tab]}
+                {t(`categories.${tab}`)}
               </button>
             )
           })}

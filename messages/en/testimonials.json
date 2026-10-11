@@ -1,0 +1,33 @@
+{
+  "title": "Client Feedback",
+  "fallback": [
+    {
+      "role": "Filmmaker",
+      "content": "Working with Benders was a fantastic experience. Their skills are top-tier, and they know how to tell a story that resonates. Highly recommended!"
+    },
+    {
+      "role": "Creative Director",
+      "content": "Benders' approach was refreshingly different. They listen intently to your vision and then enhance it in ways you never expected."
+    },
+    {
+      "role": "Brand Manager",
+      "content": "Their expertise in both filmmaking and VFX was evident from start to finish. The creative ideas they brought were beyond our expectations."
+    },
+    {
+      "role": "Entrepreneur",
+      "content": "Working with Benders was a game-changer for our brand. Their cinematic approach turned our concept into a visually stunning masterpiece."
+    },
+    {
+      "role": "Content Creator",
+      "content": "Benders' eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. They craft experiences that feel alive."
+    },
+    {
+      "role": "Event Organizer",
+      "content": "Benders captured the soul of our event perfectly. The teaser they crafted wasn't just a highlight reel — it was an experience."
+    },
+    {
+      "role": "Influencer",
+      "content": "I gave Benders a rough idea, and they transformed it into a high-energy, mind-blowing visual. They're magicians with the camera!"
+    }
+  ]
+}

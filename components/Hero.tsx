@@ -5,6 +5,7 @@ import { createPortal } from "react-dom"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslations } from "next-intl"
 import BIcon from "./BIcon"
 import MagneticButton from "./MagneticButton"
 
@@ -13,11 +14,12 @@ interface HeroProps {
   heroVideoUrl?: string
 }
 
-// Rotating words for "Systems"
-const rotatingWords = ["Systems", "Strategies", "Funnels", "Brands"]
-
 // Animated Hero Text with cursor circle and rotating word
 const AnimatedHeroText = () => {
+  const t = useTranslations("hero")
+  // Rotating words for "Systems" (whole words — safe for joined Arabic script)
+  const rotatingWords = t.raw("rotating") as string[]
+  const wordCount = rotatingWords.length
   const containerRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const rotatingWordRef = useRef<HTMLSpanElement>(null)
@@ -33,7 +35,7 @@ const AnimatedHeroText = () => {
           duration: 0.4,
           ease: "power2.inOut",
           onComplete: () => {
-            setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length)
+            setCurrentWordIndex((prev) => (prev + 1) % wordCount)
             // Fade in
             gsap.to(rotatingWordRef.current, {
               opacity: 1,
@@ -46,7 +48,7 @@ const AnimatedHeroText = () => {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [wordCount])
 
   useEffect(() => {
     if (!cursorRef.current) return
@@ -113,13 +115,13 @@ const AnimatedHeroText = () => {
         }}
       >
         <span className="text-black font-gilroy font-bold text-[9px] md:text-[11px] text-center leading-tight px-2 uppercase tracking-wide">
-          Book a<br />free call
+          {t("cursorLine1")}<br />{t("cursorLine2")}
         </span>
       </div>
 
       {/* Line 1: We build */}
       <h1 className="font-gilroy font-bold text-[2.25rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[7rem] text-white leading-[1.05] tracking-[-0.03em]">
-        We build
+        {t("line1")}
       </h1>
       
       {/* Line 2: Rotating word + that print */}
@@ -136,18 +138,19 @@ const AnimatedHeroText = () => {
         >
           {rotatingWords[currentWordIndex]}
         </span>
-        <span className="whitespace-pre"> that print</span>
+        <span className="whitespace-pre">{t("thatPrint")}</span>
       </h1>
 
-      {/* Line 3: "money" - white with quotes */}
-      <h1 className="font-gilroy font-bold text-[2.25rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[7rem] leading-[1.05] tracking-[-0.03em] text-white pr-4">
-        <span className="italic">&ldquo;money&rdquo;</span>
+      {/* Line 3: "money" - white with quotes (no faux-italic for Arabic) */}
+      <h1 className="font-gilroy font-bold text-[2.25rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[6rem] xl:text-[7rem] leading-[1.05] tracking-[-0.03em] text-white pe-4">
+        <span className="italic rtl:not-italic">{t("money")}</span>
       </h1>
     </div>
   )
 }
 
 const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
+  const t = useTranslations("hero")
   // Sanity-managed hero video, with the bundled file as a fallback
   const heroVideoSrc = heroVideoUrl || "/Videos/itel.mp4"
   const heroRef = useRef<HTMLElement>(null)
@@ -322,11 +325,11 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
       className={`relative w-full flex flex-col ${loading ? 'opacity-0' : ''}`}
     >
       {/* Logo Bar */}
-      <nav className='flex justify-between items-center p-4 w-full md:px-16 md:pt-8'>
+      <nav className='flex justify-between items-center p-4 w-full md:px-16 md:pt-8 rtl:flex-row-reverse'>
         <div ref={logoRef} className='flex items-center p-2'>
-          <Image 
-            src="/Benders-logo/png/3@2x.png" 
-            alt='Benders Logo' 
+          <Image
+            src="/Benders-logo/png/3@2x.png"
+            alt={t("logoAlt")}
             width={150} 
             height={150}
             className="w-[100px] md:w-[150px]" 
@@ -340,7 +343,7 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
 
       {/* Hero Content - Left Aligned, Big Text */}
       <div className="relative z-10 flex flex-col items-start px-4 sm:px-6 md:px-16 pt-[12vh] sm:pt-[15vh] md:pt-[25vh] pb-8 sm:pb-12 md:pb-28">
-        <div className="text-left w-full">
+        <div className="text-start w-full">
           {/* Huge Headline Text */}
           <div ref={subtitleRef}>
             <AnimatedHeroText />
@@ -362,14 +365,14 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="w-4 h-4 md:w-5 md:h-5"
+                  className="w-4 h-4 md:w-5 md:h-5 rtl:-scale-x-100"
                 >
                   <line x1="7" y1="17" x2="17" y2="7" />
                   <polyline points="7 7 17 7 17 17" />
                 </svg>
               }
             >
-              Book a Free Call
+              {t("bookFreeCall")}
             </MagneticButton>
           </div>
         </div>
@@ -396,12 +399,12 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
             <button
               onClick={(e) => { e.stopPropagation(); setVideoOpen(true) }}
               className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full"
-              aria-label="See Showreel"
+              aria-label={t("seeShowreel")}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="black" className="w-5 h-5">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
-              <span className="text-black font-gilroy font-semibold text-sm">See Showreel</span>
+              <span className="text-black font-gilroy font-semibold text-sm">{t("seeShowreel")}</span>
             </button>
           </div>
         </div>
@@ -418,7 +421,7 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
           >
             <button
               onClick={() => setVideoOpen(false)}
-              aria-label="Close video"
+              aria-label={t("closeVideo")}
               className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110"
               style={{
                 background: "rgba(255, 255, 255, 0.08)",
@@ -483,8 +486,8 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
                 {/* Play/Pause Button */}
                 <button
                   onClick={togglePlay}
-                  className="p-3 hover:bg-white/10 transition-colors rounded-l-full"
-                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                  className="p-3 hover:bg-white/10 transition-colors rounded-s-full"
+                  aria-label={isPlaying ? t("pauseVideo") : t("playVideo")}
                 >
                   {isPlaying ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -506,8 +509,8 @@ const Hero = ({ loading, heroVideoUrl }: HeroProps) => {
                 {/* Mute/Unmute Button */}
                 <button
                   onClick={toggleMute}
-                  className="p-3 hover:bg-white/10 transition-colors rounded-r-full"
-                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                  className="p-3 hover:bg-white/10 transition-colors rounded-e-full"
+                  aria-label={isMuted ? t("unmuteVideo") : t("muteVideo")}
                 >
                   {isMuted ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">

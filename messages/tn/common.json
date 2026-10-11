@@ -1,0 +1,18 @@
+{
+  "notFoundTitle": "الصفحة هاذي ما لقيناهاش",
+  "backHome": "ارجع للصفحة الرئيسية",
+  "languageName": "تونسي",
+  "switchTo": "EN",
+  "switchToLabel": "Switch to the English site",
+  "sections": {
+    "hero": "البداية",
+    "services": "خدماتنا",
+    "soulScience": "الروح والعلم",
+    "clients": "حرفاءنا",
+    "work": "أعمالنا",
+    "creativeReveal": "شنوة يقولو الناس علينا — قصص حرفاءنا",
+    "ownerReveal": "تعرّف على المؤسس",
+    "clientFeedback": "آراء الحرفاء",
+    "contact": "احكي معانا"
+  }
+}

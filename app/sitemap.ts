@@ -1,57 +1,35 @@
 import { MetadataRoute } from 'next'
+import { headers } from 'next/headers'
+import { absoluteUrl, localeFromHost, type Locale } from '@/i18n/config'
+import { fetchAllProjects } from '@/lib/sanity'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.bendersagency.com'
-  
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
+// Each domain serves its own sitemap; every URL lists its other-language twin.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const locale: Locale = localeFromHost((await headers()).get('host')) ?? 'en'
+
+  const entry = (path: string, priority: number, changeFrequency: 'weekly' | 'monthly') => ({
+    url: absoluteUrl(locale, path),
+    lastModified: new Date(),
+    changeFrequency,
+    priority,
+    alternates: {
+      languages: {
+        en: absoluteUrl('en', path),
+        'ar-TN': absoluteUrl('tn', path),
+      },
     },
-    {
-      url: `${baseUrl}#services`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}#process`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}#testimonials`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}#contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    // Add more pages as your site grows
-    // {
-    //   url: `${baseUrl}/about`,
-    //   lastModified: new Date(),
-    //   changeFrequency: 'monthly',
-    //   priority: 0.8,
-    // },
-    // {
-    //   url: `${baseUrl}/portfolio`,
-    //   lastModified: new Date(),
-    //   changeFrequency: 'weekly',
-    //   priority: 0.7,
-    // },
-    // {
-    //   url: `${baseUrl}/blog`,
-    //   lastModified: new Date(),
-    //   changeFrequency: 'daily',
-    //   priority: 0.6,
-    // },
-  ]
+  })
+
+  let projectPaths: string[] = []
+  try {
+    const projects = await fetchAllProjects()
+    projectPaths = projects
+      .map((p) => (typeof p.slug === 'string' ? p.slug : p.slug?.current))
+      .filter(Boolean)
+      .map((slug) => `/projects/${slug}`)
+  } catch {
+    // Sitemap still lists the homepage if Sanity is unreachable
+  }
+
+  return [entry('/', 1, 'weekly'), ...projectPaths.map((p) => entry(p, 0.7, 'monthly'))]
 }

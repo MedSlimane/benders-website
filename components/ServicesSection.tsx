@@ -3,6 +3,7 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslations } from "next-intl"
 import { Flag, Palette, Code, Video, Target, MessageSquare } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -11,23 +12,32 @@ interface ServicesSectionProps {
   loading: boolean
 }
 
+type ServiceKey =
+  | "brandStrategy"
+  | "visualIdentity"
+  | "webDevelopment"
+  | "videoProduction"
+  | "digitalMarketing"
+  | "socialMedia"
+
 interface Service {
   id: number
-  title: string
-  description: string
+  key: ServiceKey
   icon: React.ReactNode
 }
 
+// Titles/descriptions live in messages/<locale>/services.json under items.<key>
 const services: Service[] = [
-  { id: 1, title: "Brand Strategy", description: "Positioning, offers, messaging, roadmap.", icon: <Flag className="h-6 w-6" strokeWidth={1.5} /> },
-  { id: 2, title: "Visual Identity", description: "Logo, brand system, guidelines, assets.", icon: <Palette className="h-6 w-6" strokeWidth={1.5} /> },
-  { id: 3, title: "Web Development", description: "Landing pages, websites, Webflow/Next.js.", icon: <Code className="h-6 w-6" strokeWidth={1.5} /> },
-  { id: 4, title: "Video Production", description: "Ads, reels, motion, VFX, post-production.", icon: <Video className="h-6 w-6" strokeWidth={1.5} /> },
-  { id: 5, title: "Digital Marketing", description: "Funnels, ads, tracking, optimization.", icon: <Target className="h-6 w-6" strokeWidth={1.5} /> },
-  { id: 6, title: "Social Media", description: "Content system, strategy, community growth.", icon: <MessageSquare className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 1, key: "brandStrategy", icon: <Flag className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 2, key: "visualIdentity", icon: <Palette className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 3, key: "webDevelopment", icon: <Code className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 4, key: "videoProduction", icon: <Video className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 5, key: "digitalMarketing", icon: <Target className="h-6 w-6" strokeWidth={1.5} /> },
+  { id: 6, key: "socialMedia", icon: <MessageSquare className="h-6 w-6" strokeWidth={1.5} /> },
 ]
 
 const ServicesSection = ({ loading }: ServicesSectionProps) => {
+  const t = useTranslations("services")
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -66,10 +76,10 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
             data-skew
             className="font-gilroy font-black text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-none tracking-tight mb-4"
           >
-            OUR SERVICES
+            {t("title")}
           </h2>
           <p ref={subtitleRef} className="mx-auto max-w-2xl font-neue-montreal text-white/60 text-sm md:text-base lg:text-lg">
-            Everything you need to build, launch, and scale your brand.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -82,7 +92,7 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
               className="group relative grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-10 rounded-2xl border-t border-white/10 px-3 py-6 transition-colors duration-300 last:border-b hover:bg-white/[0.025] md:px-5 md:py-8"
             >
               {/* Mint accent bar — grows on hover */}
-              <span className="pointer-events-none absolute left-0 top-1/2 h-0 w-[3px] -translate-y-1/2 rounded-full bg-[#2de6c7] transition-all duration-300 group-hover:h-3/5" />
+              <span className="pointer-events-none absolute start-0 top-1/2 h-0 w-[3px] -translate-y-1/2 rounded-full bg-[#2de6c7] transition-all duration-300 group-hover:h-3/5" />
 
               {/* Index */}
               <span className="font-gilroy font-black text-lg md:text-2xl tabular-nums text-white/25 transition-colors duration-300 group-hover:text-[#2de6c7]">
@@ -92,10 +102,10 @@ const ServicesSection = ({ loading }: ServicesSectionProps) => {
               {/* Title + description */}
               <div className="min-w-0">
                 <h3 className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl leading-tight text-white/90 transition-colors duration-300 group-hover:text-white">
-                  {service.title}
+                  {t(`items.${service.key}.title`)}
                 </h3>
                 <p className="mt-1.5 font-neue-montreal text-sm md:text-base text-white/45 transition-colors duration-300 group-hover:text-white/70">
-                  {service.description}
+                  {t(`items.${service.key}.description`)}
                 </p>
               </div>
 

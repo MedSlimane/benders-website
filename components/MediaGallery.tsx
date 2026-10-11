@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useRef, useState } from "react"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -22,6 +23,7 @@ interface VideoControlsProps {
 const VideoControls = ({ videoRef }: VideoControlsProps) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
+  const t = useTranslations("project.gallery")
 
   const togglePlay = () => {
     if (!videoRef.current) return
@@ -46,7 +48,7 @@ const VideoControls = ({ videoRef }: VideoControlsProps) => {
       <button
         onClick={togglePlay}
         className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 group"
-        aria-label={isPlaying ? "Pause video" : "Play video"}
+        aria-label={isPlaying ? t("pause") : t("play")}
       >
         {isPlaying ? (
           <Pause className="w-5 h-5 text-black" />
@@ -58,7 +60,7 @@ const VideoControls = ({ videoRef }: VideoControlsProps) => {
       <button
         onClick={toggleMute}
         className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300"
-        aria-label={isMuted ? "Unmute video" : "Mute video"}
+        aria-label={isMuted ? t("unmute") : t("mute")}
       >
         {isMuted ? (
           <VolumeX className="w-5 h-5 text-black" />
@@ -74,6 +76,7 @@ const MediaGallery = ({ project }: MediaGalleryProps) => {
   const galleryRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<(HTMLDivElement | null)[]>([])
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const t = useTranslations("project.gallery")
 
   const isVideoProject = project._type === 'videoProject'
   const webProject = !isVideoProject ? (project as WebProject) : null
@@ -158,7 +161,7 @@ const MediaGallery = ({ project }: MediaGalleryProps) => {
                           ? urlFor((item as any).posterImage).width(800).format('webp').url()
                           : urlFor(project.thumbnail).width(800).format('webp').url()
                       }
-                      aria-label={(item as { caption?: string }).caption || `${project.title} video`}
+                      aria-label={(item as { caption?: string }).caption || t("videoLabel", { title: project.title })}
                     />
                     <VideoControls 
                       videoRef={{ current: videoRefs.current[index] ?? null }} 

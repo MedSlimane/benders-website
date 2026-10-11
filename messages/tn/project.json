@@ -1,0 +1,40 @@
+{
+  "categories": {
+    "ai": "منتجات AI",
+    "web": "تطوير مواقع الواب",
+    "photography": "تصوير",
+    "video": "إنتاج فيديو",
+    "social": "سوشيال ميديا",
+    "seo": "SEO",
+    "branding": "براندينغ"
+  },
+  "logoAlt": "لوغو Benders",
+  "back": "رجوع",
+  "client": "الحريف",
+  "year": "العام",
+  "services": "الخدمات",
+  "visitWebsite": "زور السيت",
+  "overview": "باختصار",
+  "challengePrefix": "",
+  "challengeWord": "التحدّي",
+  "solutionPrefix": "",
+  "solutionWord": "الحلّ",
+  "resultsPrefix": "",
+  "resultsWord": "النتايج",
+  "insightsPrefix": "شنوّة ",
+  "insightsWord": "تعلّمنا",
+  "exploreMore": "زيد شوف",
+  "morePrefix": "مشاريع ",
+  "moreWord": "أخرى",
+  "viewProject": "شوف المشروع",
+  "viewAllProjects": "شوف المشاريع الكلّ",
+  "notFound": "المشروع هذا ما لقيناهوش",
+  "backToWork": "ارجع لأعمالنا",
+  "gallery": {
+    "play": "شغّل الفيديو",
+    "pause": "وقّف الفيديو",
+    "mute": "نحّي الصوت",
+    "unmute": "شغّل الصوت",
+    "videoLabel": "فيديو {title}"
+  }
+}

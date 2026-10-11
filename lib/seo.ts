@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { urlFor } from './sanity'
 import type { Project } from './sanity'
+import { absoluteUrl, ogLocale, type Locale } from '@/i18n/config'
 
 type ProjectWithSEO = Project & {
   seo?: {
@@ -11,24 +12,27 @@ type ProjectWithSEO = Project & {
   }
 }
 
-export function generateProjectMetadata(project: Project): Metadata {
+export function generateProjectMetadata(project: Project, locale: Locale = 'en'): Metadata {
   const projectWithSEO = project as ProjectWithSEO
   const seo = projectWithSEO.seo || {}
-  
-  const title = seo.metaTitle || `${project.title} | Benders Agency`
+
+  // The [locale] layout's title template appends " | Benders Agency"
+  const title = seo.metaTitle || project.title
   const description = seo.metaDescription || project.subtitle || `${project.title} - A creative project by Benders Agency`
-  
+
   // Generate OG image URL
-  const ogImage = seo.ogImage 
+  const ogImage = seo.ogImage
     ? urlFor(seo.ogImage).width(1200).height(630).format('jpg').url()
     : urlFor(project.thumbnail).width(1200).height(630).format('jpg').url()
 
   const keywords = seo.keywords || []
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://benders.agency'
-  const canonicalUrl = `${baseUrl}/projects/${project.slug}`
+  const slug = typeof project.slug === 'string' ? project.slug : project.slug?.current
+  const path = `/projects/${slug}`
+  const canonicalUrl = absoluteUrl(locale, path)
 
   return {
-    title,
+    // A custom SEO title is used as-is (it usually already names the brand)
+    title: seo.metaTitle ? { absolute: seo.metaTitle } : title,
     description,
     keywords: keywords.join(', '),
     openGraph: {
@@ -44,7 +48,7 @@ export function generateProjectMetadata(project: Project): Metadata {
           alt: project.title,
         },
       ],
-      locale: 'en_US',
+      locale: ogLocale[locale],
       type: 'website',
     },
     twitter: {
@@ -56,6 +60,11 @@ export function generateProjectMetadata(project: Project): Metadata {
     },
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        en: absoluteUrl('en', path),
+        'ar-TN': absoluteUrl('tn', path),
+        'x-default': absoluteUrl('en', path),
+      },
     },
   }
 }

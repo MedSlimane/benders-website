@@ -1,0 +1,18 @@
+{
+  "notFoundTitle": "Page Not Found",
+  "backHome": "Back to home",
+  "languageName": "English",
+  "switchTo": "تونسي",
+  "switchToLabel": "Switch to the Tunisian site",
+  "sections": {
+    "hero": "Hero section",
+    "services": "Our services",
+    "soulScience": "Soul and Science",
+    "clients": "Our clients",
+    "work": "Our work",
+    "creativeReveal": "What people think about us — client stories",
+    "ownerReveal": "Meet the founder",
+    "clientFeedback": "Client feedback",
+    "contact": "Get in touch"
+  }
+}

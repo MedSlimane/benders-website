@@ -128,24 +128,43 @@ export interface Testimonial {
   handle?: string
 }
 
+// Localization
+// The Tunisian site reads optional `<field>_tn` siblings (edited in the Studio's
+// "Tunisian (Derja)" tab) and falls back to the English value when left empty.
+export type ContentLocale = 'en' | 'tn'
+
+function loc(field: string, locale: ContentLocale): string {
+  return locale === 'tn' ? `"${field}": coalesce(${field}_tn, ${field})` : field
+}
+
+const PROJECT_TEXT_FIELDS = ['title', 'subtitle', 'services', 'overview', 'challenge', 'solution', 'results', 'insights']
+
+function localizedProjectText(locale: ContentLocale): string {
+  if (locale !== 'tn') return ''
+  return [
+    ...PROJECT_TEXT_FIELDS.map((f) => loc(f, locale)),
+    `"testimonial": select(defined(testimonial) => testimonial{..., "quote": coalesce(^.testimonialQuote_tn, quote), "position": coalesce(^.testimonialPosition_tn, position)})`,
+  ].join(',\n      ') + ','
+}
+
 // Query Helper Functions
 
 /**
  * Fetches all projects (both video and web) ordered by display order
  * @returns Promise<Project[]> Array of all projects
  */
-export async function fetchAllProjects(): Promise<Project[]> {
+export async function fetchAllProjects(locale: ContentLocale = 'en'): Promise<Project[]> {
   try {
     const query = `*[_type in ["videoProject", "webProject"]] | order(order asc, _createdAt desc) {
       _id,
       _type,
-      title,
-      subtitle,
+      ${loc('title', locale)},
+      ${loc('subtitle', locale)},
       "slug": slug.current,
       "thumbnail": thumbnail.asset->url,
       category,
-      services,
-      results,
+      ${loc('services', locale)},
+      ${loc('results', locale)},
       featured,
       order
     }`
@@ -162,13 +181,13 @@ export async function fetchAllProjects(): Promise<Project[]> {
  * Fetches all video testimonials, ordered. Returns [] if there are none.
  * @returns Promise<VideoTestimonial[]>
  */
-export async function fetchVideoTestimonials(): Promise<VideoTestimonial[]> {
+export async function fetchVideoTestimonials(locale: ContentLocale = 'en'): Promise<VideoTestimonial[]> {
   try {
     const query = `*[_type == "videoTestimonial"] | order(order asc, _createdAt desc) {
       _id,
       name,
       company,
-      quote,
+      ${loc('quote', locale)},
       "videoUrl": select(videoSource == "url" => videoUrl, videoFile.asset->url),
       "poster": posterImage.asset->url
     }`
@@ -186,10 +205,11 @@ export async function fetchVideoTestimonials(): Promise<VideoTestimonial[]> {
  * @param slug - The project slug
  * @returns Promise<Project | null> The project or null if not found
  */
-export async function fetchProjectBySlug(slug: string): Promise<Project | null> {
+export async function fetchProjectBySlug(slug: string, locale: ContentLocale = 'en'): Promise<Project | null> {
   try {
     const query = `*[_type in ["videoProject", "webProject"] && slug.current == $slug][0]{
       ...,
+      ${localizedProjectText(locale)}
       "thumbnail": thumbnail.asset->url,
       "images": images[]{
         "asset": asset->url,
@@ -213,13 +233,13 @@ export async function fetchProjectBySlug(slug: string): Promise<Project | null> 
  * Fetches the single Site Settings document (hero/founder videos, contact, socials, booking).
  * Video URLs are resolved to a direct URL whether uploaded or external.
  */
-export async function fetchSiteSettings(): Promise<SiteSettings | null> {
+export async function fetchSiteSettings(locale: ContentLocale = 'en'): Promise<SiteSettings | null> {
   try {
     const query = `*[_type == "siteSettings"][0]{
       "heroVideoUrl": select(heroVideo.videoSource == "url" => heroVideo.videoUrl, heroVideo.videoFile.asset->url),
       "founderVideoUrl": select(founderVideo.videoSource == "url" => founderVideo.videoUrl, founderVideo.videoFile.asset->url),
-      contactEmail,
-      bookingUrl,
+      ${loc('contactEmail', locale)},
+      ${loc('bookingUrl', locale)},
       social
     }`
     return await client.fetch<SiteSettings | null>(query)
@@ -232,13 +252,13 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
 /**
  * Fetches text testimonials, ordered. Returns [] if there are none.
  */
-export async function fetchTestimonials(): Promise<Testimonial[]> {
+export async function fetchTestimonials(locale: ContentLocale = 'en'): Promise<Testimonial[]> {
   try {
     const query = `*[_type == "testimonial"] | order(order asc, _createdAt desc){
       _id,
       name,
-      role,
-      content,
+      ${loc('role', locale)},
+      ${loc('content', locale)},
       handle,
       "avatar": avatar.asset->url
     }`

@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
+import { useTranslations } from "next-intl"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -12,6 +13,7 @@ interface FooterProps {
 }
 
 const Footer = ({ loading }: FooterProps) => {
+  const t = useTranslations("footer")
   const footerRef = useRef<HTMLElement>(null)
   const glassCardRef = useRef<HTMLDivElement>(null)
   const topSectionRef = useRef<HTMLDivElement>(null)
@@ -101,8 +103,8 @@ const Footer = ({ loading }: FooterProps) => {
   ]
 
   const legalLinks = [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Use", href: "/terms" },
+    { label: t("privacyPolicy"), href: "/privacy" },
+    { label: t("termsOfUse"), href: "/terms" },
   ]
 
   return (
@@ -137,16 +139,16 @@ const Footer = ({ loading }: FooterProps) => {
             className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12 md:mb-16 pb-8 md:pb-12 border-b border-white/10"
           >
             <p className="font-gilroy font-bold text-white text-xl md:text-2xl">
-              COME SAY HI.
+              {t("comeSayHi")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-0">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="bg-white/10 border border-white/20 rounded-full sm:rounded-r-none px-6 py-3 text-white font-neue-montreal text-base placeholder:text-white/50 focus:outline-none focus:border-[#2de6c7] w-full sm:w-64"
+                placeholder={t("emailPlaceholder")}
+                className="bg-white/10 border border-white/20 rounded-full sm:rounded-e-none px-6 py-3 text-white font-neue-montreal text-base placeholder:text-white/50 focus:outline-none focus:border-[#2de6c7] w-full sm:w-64"
               />
-              <button data-magnetic data-cursor="Join" className="bg-[#2de6c7] text-[#04082e] font-gilroy font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded-full sm:rounded-l-none hover:bg-[#04c8aa] transition-colors">
-                Get Updates
+              <button data-magnetic data-cursor={t("cursorJoin")} className="bg-[#2de6c7] text-[#04082e] font-gilroy font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded-full sm:rounded-s-none hover:bg-[#04c8aa] transition-colors">
+                {t("getUpdates")}
               </button>
             </div>
           </div>
@@ -156,7 +158,7 @@ const Footer = ({ loading }: FooterProps) => {
             {/* Follow Us */}
             <div ref={(el) => { columnsRef.current[0] = el }}>
               <h4 className="font-gilroy font-bold text-white text-sm uppercase tracking-wider mb-6">
-                Follow Us
+                {t("followUs")}
               </h4>
               <ul className="space-y-3">
                 {followLinks.map((link, index) => (
@@ -177,7 +179,7 @@ const Footer = ({ loading }: FooterProps) => {
             {/* Contact Us */}
             <div ref={(el) => { columnsRef.current[1] = el }}>
               <h4 className="font-gilroy font-bold text-white text-sm uppercase tracking-wider mb-6">
-                Contact Us
+                {t("contactUs")}
               </h4>
               <ul className="space-y-3">
                 {contactLinks.map((link, index) => (
@@ -199,7 +201,7 @@ const Footer = ({ loading }: FooterProps) => {
             {/* Legal */}
             <div ref={(el) => { columnsRef.current[3] = el }}>
               <h4 className="font-gilroy font-bold text-white text-sm uppercase tracking-wider mb-6">
-                Legal
+                {t("legal")}
               </h4>
               <ul className="space-y-3">
                 {legalLinks.map((link, index) => (

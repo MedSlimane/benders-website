@@ -416,3 +416,62 @@ html, body {
     background-position: 200% 0;
   }
 }
+
+
+/* ==========================================================================
+   Tunisian (Derja) locale — Arabic script, RTL. Scoped to html[lang^="ar"]
+   so the English site is completely unaffected.
+   Latin text & numbers keep the brand fonts; Arabic glyphs fall through to
+   Cairo (loaded via next/font as --font-arabic).
+   ========================================================================== */
+html[lang^="ar"] {
+  --font-gilroy: 'Gilroy', var(--font-arabic, 'Cairo'), system-ui, -apple-system, sans-serif;
+  --font-neue-montreal: 'Neue Montreal', var(--font-arabic, 'Cairo'), system-ui, -apple-system, sans-serif;
+}
+
+html[lang^="ar"] body,
+html[lang^="ar"] .font-sans {
+  font-family: 'Gilroy', var(--font-arabic, 'Cairo'), system-ui, -apple-system, sans-serif;
+}
+
+html[lang^="ar"] .font-gilroy {
+  font-family: 'Gilroy', var(--font-arabic, 'Cairo'), system-ui, -apple-system, sans-serif;
+}
+
+html[lang^="ar"] .font-neue-montreal {
+  font-family: 'Neue Montreal', var(--font-arabic, 'Cairo'), system-ui, -apple-system, sans-serif;
+}
+
+/* Arabic letters are joined — tracking breaks the connections */
+html[lang^="ar"] [class*="tracking-"],
+html[lang^="ar"] h1,
+html[lang^="ar"] h2,
+html[lang^="ar"] h3,
+html[lang^="ar"] p,
+html[lang^="ar"] span,
+html[lang^="ar"] a,
+html[lang^="ar"] button {
+  letter-spacing: 0 !important;
+}
+
+/* Arabic needs more vertical room than tight Latin display leading */
+html[lang^="ar"] h1,
+html[lang^="ar"] h2,
+html[lang^="ar"] h3 {
+  line-height: 1.3;
+}
+
+html[lang^="ar"] [class*="leading-[0.8"],
+html[lang^="ar"] [class*="leading-[0.85"],
+html[lang^="ar"] [class*="leading-[0.9"],
+html[lang^="ar"] [class*="leading-[0.95"],
+html[lang^="ar"] .leading-none,
+html[lang^="ar"] .leading-tight {
+  line-height: 1.3 !important;
+}
+
+/* Keep Latin snippets (emails, brand names, numbers) reading left-to-right */
+html[lang^="ar"] .ltr-isolate {
+  direction: ltr;
+  unicode-bidi: isolate;
+}

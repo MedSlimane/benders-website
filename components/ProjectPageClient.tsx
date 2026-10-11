@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
+import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
 import { gsap } from "gsap"
@@ -11,25 +12,21 @@ import { generateProjectStructuredData } from "@/lib/structured-data"
 import CustomCursor from "@/components/CustomCursor"
 import MediaGallery from "@/components/MediaGallery"
 import { ArrowLeft, ExternalLink, ArrowRight, Sparkles } from "lucide-react"
-import Navbar from "@/components/Navbar"
 import MagneticButton from "@/components/MagneticButton"
 import Footer from "@/components/Footer"
 import Preloader from "@/components/preloader"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CATEGORY_LABELS: Record<string, string> = {
-  ai: "AI Products",
-  web: "Web Development",
-  photography: "Photography",
-  video: "Video Production",
-  social: "Social Media",
-  seo: "SEO",
-  branding: "Branding",
-}
+const CATEGORY_KEYS = ["ai", "web", "photography", "video", "social", "seo", "branding"] as const
+type CategoryKey = (typeof CATEGORY_KEYS)[number]
+const isCategoryKey = (c: string): c is CategoryKey => (CATEGORY_KEYS as readonly string[]).includes(c)
 
 export default function ProjectPage() {
   const params = useParams()
+  const locale = useLocale()
+  const t = useTranslations("project")
+  const contentLocale = locale === "tn" ? "tn" : "en"
   const [project, setProject] = useState<Project | null>(null)
   const [moreProjects, setMoreProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -49,11 +46,11 @@ export default function ProjectPage() {
   useEffect(() => {
     async function loadProject() {
       try {
-        const data = await fetchProjectBySlug(params.slug as string)
+        const data = await fetchProjectBySlug(params.slug as string, contentLocale)
         setProject(data)
         
         // Fetch other projects for "More Projects" section
-        const allProjects = await fetchAllProjects()
+        const allProjects = await fetchAllProjects(contentLocale)
         const otherProjects = allProjects
           .filter(p => {
             const pSlug = typeof p.slug === 'string' ? p.slug : p.slug?.current
@@ -74,7 +71,7 @@ export default function ProjectPage() {
     if (params.slug) {
       loadProject()
     }
-  }, [params.slug])
+  }, [params.slug, contentLocale])
 
   // Gradient animation
   useEffect(() => {
@@ -206,9 +203,9 @@ export default function ProjectPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--gradient-body)' }}>
         <div className="text-center">
-          <h1 className="font-gilroy font-bold text-4xl text-white mb-4">Project Not Found</h1>
+          <h1 className="font-gilroy font-bold text-4xl text-white mb-4">{t("notFound")}</h1>
           <Link href="/#work" className="text-[#0055ff] hover:text-[#2de6c7] transition-colors">
-            Back to Work
+            {t("backToWork")}
           </Link>
         </div>
       </div>
@@ -228,7 +225,6 @@ export default function ProjectPage() {
       />
       
       <CustomCursor loading={false} />
-      <Navbar />
       
       {/* Animated gradient background */}
       <div 
@@ -260,7 +256,7 @@ export default function ProjectPage() {
           <div className="absolute top-4 left-4 md:top-8 md:left-16 z-30">
             <Image
               src="/Benders-logo/png/3@2x.png"
-              alt="Benders Logo"
+              alt={t("logoAlt")}
               width={150}
               height={150}
               priority
@@ -275,8 +271,8 @@ export default function ProjectPage() {
             className="absolute top-24 left-4 md:left-16 z-40 group"
           >
             <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-black/30 backdrop-blur-xl border border-white/15 text-white hover:bg-black/40 hover:border-[#2de6c7]/50 transition-all duration-500">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-              <span className="font-neue-montreal font-medium text-sm">Back</span>
+              <ArrowLeft className="w-4 h-4 rtl:-scale-x-100 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform duration-300" />
+              <span className="font-neue-montreal font-medium text-sm">{t("back")}</span>
             </div>
           </Link>
 
@@ -289,11 +285,11 @@ export default function ProjectPage() {
                     className="rounded-full px-5 py-2 font-neue-montreal text-xs font-semibold uppercase tracking-[0.2em] text-[#04082e]"
                     style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
                   >
-                    {CATEGORY_LABELS[project.category] || project.category}
+                    {isCategoryKey(project.category) ? t(`categories.${project.category}`) : project.category}
                   </span>
                 </div>
               )}
-              <h1
+              <h1 dir="auto"
                 ref={titleRef}
                 data-skew
                 className="font-gilroy font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.95] tracking-tight mb-5"
@@ -302,7 +298,7 @@ export default function ProjectPage() {
                 {project.title}
               </h1>
 
-              <p
+              <p dir="auto"
                 ref={subtitleRef}
                 className="font-neue-montreal text-white/85 text-base md:text-xl lg:text-2xl max-w-3xl mx-auto mb-8"
                 style={{ textShadow: "0 2px 16px rgba(0,0,0,0.5)" }}
@@ -314,19 +310,19 @@ export default function ProjectPage() {
               <div ref={metaRef} className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
                 {project.client && (
                   <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Client</p>
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">{t("client")}</p>
                     <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.client}</p>
                   </div>
                 )}
                 {project.year && (
                   <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Year</p>
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">{t("year")}</p>
                     <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.year}</p>
                   </div>
                 )}
                 {project.services && project.services.length > 0 && (
                   <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Services</p>
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">{t("services")}</p>
                     <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.services.join(" • ")}</p>
                   </div>
                 )}
@@ -337,7 +333,7 @@ export default function ProjectPage() {
                     size="md"
                     icon={<ExternalLink className="w-3.5 h-3.5" />}
                   >
-                    Visit Website
+                    {t("visitWebsite")}
                   </MagneticButton>
                 )}
               </div>
@@ -360,9 +356,9 @@ export default function ProjectPage() {
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-6">
                     <Sparkles className="w-6 h-6 text-[#2de6c7]" />
-                    <h2 className="font-gilroy font-black text-3xl md:text-4xl lg:text-5xl text-white">OVERVIEW</h2>
+                    <h2 className="font-gilroy font-black text-3xl md:text-4xl lg:text-5xl text-white">{t("overview")}</h2>
                   </div>
-                  <p className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
+                  <p dir="auto" className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
                     {project.overview}
                   </p>
                 </div>
@@ -378,10 +374,10 @@ export default function ProjectPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0055ff]/5 via-transparent to-[#2de6c7]/5 opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-700" />
                 <div className="relative">
                   <h2 className="font-gilroy font-black text-3xl md:text-4xl lg:text-5xl mb-6">
-                    <span className="text-white">THE </span>
-                    <span className="text-[#0055ff]">CHALLENGE</span>
+                    <span className="text-white">{t("challengePrefix")}</span>
+                    <span className="text-[#0055ff]">{t("challengeWord")}</span>
                   </h2>
-                  <p className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
+                  <p dir="auto" className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
                     {project.challenge}
                   </p>
                 </div>
@@ -397,10 +393,10 @@ export default function ProjectPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#2de6c7]/5 via-transparent to-[#0055ff]/5 opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-700" />
                 <div className="relative">
                   <h2 className="font-gilroy font-black text-3xl md:text-4xl lg:text-5xl mb-6">
-                    <span className="text-white">THE </span>
-                    <span className="text-[#2de6c7]">SOLUTION</span>
+                    <span className="text-white">{t("solutionPrefix")}</span>
+                    <span className="text-[#2de6c7]">{t("solutionWord")}</span>
                   </h2>
-                  <p className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
+                  <p dir="auto" className="font-neue-montreal text-white/70 text-lg md:text-xl leading-relaxed">
                     {project.solution}
                   </p>
                 </div>
@@ -412,8 +408,8 @@ export default function ProjectPage() {
           {project.showResults !== false && project.results && project.results.length > 0 && (
             <section ref={(el) => { sectionsRef.current[3] = el }} style={{ transformStyle: "preserve-3d" }}>
               <h2 className="font-gilroy font-black text-4xl md:text-5xl lg:text-6xl text-white mb-16 text-center">
-                <span className="text-white">THE </span>
-                <span className="text-[#2de6c7]">RESULTS</span>
+                <span className="text-white">{t("resultsPrefix")}</span>
+                <span className="text-[#2de6c7]">{t("resultsWord")}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {project.results.map((result, index) => (
@@ -427,7 +423,7 @@ export default function ProjectPage() {
                     <p className="relative font-gilroy font-black text-6xl md:text-7xl text-[#2de6c7] mb-4 group-hover:scale-110 transition-transform duration-500">
                       {result.value}
                     </p>
-                    <p className="relative font-neue-montreal text-white/60 text-sm uppercase tracking-wider">
+                    <p dir="auto" className="relative font-neue-montreal text-white/60 text-sm uppercase tracking-wider">
                       {result.metric}
                     </p>
                   </div>
@@ -440,16 +436,16 @@ export default function ProjectPage() {
           {project.showInsights !== false && project.insights && project.insights.length > 0 && (
             <section ref={(el) => { sectionsRef.current[4] = el }} style={{ transformStyle: "preserve-3d" }}>
               <h2 className="font-gilroy font-black text-4xl md:text-5xl lg:text-6xl text-white mb-16 text-center">
-                <span className="text-white">KEY </span>
-                <span className="text-[#0055ff]">INSIGHTS</span>
+                <span className="text-white">{t("insightsPrefix")}</span>
+                <span className="text-[#0055ff]">{t("insightsWord")}</span>
               </h2>
               <div className="space-y-5">
                 {project.insights.map((insight, index) => (
-                  <div key={index} className="group flex gap-5 p-8 rounded-2xl bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#2de6c7]/30 hover:translate-x-2 transition-all duration-500">
+                  <div key={index} className="group flex gap-5 p-8 rounded-2xl bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#2de6c7]/30 hover:translate-x-2 rtl:hover:-translate-x-2 transition-all duration-500">
                     <div className="flex-shrink-0 mt-2">
                       <div className="w-3 h-3 rounded-full bg-[#2de6c7] group-hover:scale-150 group-hover:shadow-[0_0_20px_rgba(45,230,199,0.6)] transition-all duration-300" />
                     </div>
-                    <p className="font-neue-montreal text-white/70 text-lg leading-relaxed group-hover:text-white/90 transition-colors duration-300">
+                    <p dir="auto" className="font-neue-montreal text-white/70 text-lg leading-relaxed group-hover:text-white/90 transition-colors duration-300">
                       {insight}
                     </p>
                   </div>
@@ -470,7 +466,7 @@ export default function ProjectPage() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                     </svg>
                   </div>
-                  <p className="font-gilroy font-medium text-2xl md:text-4xl text-white mb-10 leading-relaxed">
+                  <p dir="auto" className="font-gilroy font-medium text-2xl md:text-4xl text-white mb-10 leading-relaxed">
                     {project.testimonial.quote}
                   </p>
                   <div className="flex items-center gap-4">
@@ -501,17 +497,16 @@ export default function ProjectPage() {
               <div className="text-center mb-20">
                 <p className="font-neue-montreal text-[#2de6c7] text-sm uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  Explore More
+                  {t("exploreMore")}
                 </p>
                 <h2 className="font-gilroy font-black text-5xl md:text-7xl lg:text-8xl text-white">
-                  More <span className="text-[#2de6c7]">Projects</span>
+                  {t("morePrefix")}<span className="text-[#2de6c7]">{t("moreWord")}</span>
                 </h2>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {moreProjects.map((proj, index) => {
                   const slugString = typeof proj.slug === 'string' ? proj.slug : proj.slug?.current || ''
-                  console.log('Project slug:', slugString, 'Full href:', `/projects/${slugString}`)
                   return (
                     <Link
                       key={proj._id}
@@ -532,15 +527,15 @@ export default function ProjectPage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-[#2de6c7]/20 via-transparent to-[#0055ff]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         
                         <div className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
-                          <h3 className="font-gilroy font-black text-2xl md:text-3xl text-white mb-3 group-hover:text-[#2de6c7] transition-colors duration-300">
+                          <h3 dir="auto" className="font-gilroy font-black text-2xl md:text-3xl text-white mb-3 group-hover:text-[#2de6c7] transition-colors duration-300">
                             {proj.title}
                           </h3>
-                          <p className="font-neue-montreal text-white/70 text-sm mb-6 group-hover:text-white/90 transition-colors duration-300">
+                          <p dir="auto" className="font-neue-montreal text-white/70 text-sm mb-6 group-hover:text-white/90 transition-colors duration-300">
                             {proj.subtitle}
                           </p>
                           <div className="flex items-center gap-2 text-[#2de6c7] font-neue-montreal text-sm font-medium group-hover:gap-4 transition-all duration-300">
-                            <span>View Project</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
+                            <span>{t("viewProject")}</span>
+                            <ArrowRight className="w-4 h-4 rtl:-scale-x-100 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300" />
                           </div>
                         </div>
                       </div>
@@ -554,9 +549,9 @@ export default function ProjectPage() {
                   href="/#work"
                   variant="glass"
                   size="lg"
-                  icon={<ArrowRight className="w-4 h-4" />}
+                  icon={<ArrowRight className="w-4 h-4 rtl:-scale-x-100" />}
                 >
-                  View All Projects
+                  {t("viewAllProjects")}
                 </MagneticButton>
               </div>
             </div>

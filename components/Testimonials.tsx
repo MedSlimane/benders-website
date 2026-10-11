@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
+import { useLocale, useTranslations } from "next-intl"
 import type { Testimonial as SanityTestimonial } from "@/lib/sanity"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -22,71 +23,60 @@ interface TestimonialsProps {
   testimonials?: SanityTestimonial[]
 }
 
-const fallbackTestimonials: Testimonial[] = [
+// Names/handles/avatars stay as-is; role + quote come from messages/<locale>/testimonials.json
+// ("fallback" array, same order)
+const fallbackPeople: Pick<Testimonial, "id" | "name" | "handle" | "avatar">[] = [
   {
     id: 1,
     name: "Mohamed Amine Gharbi",
     handle: "transformini_24",
-    avatar: "/testo/mouhamed.jpg",
-    content: "Working with Benders was a fantastic experience. Their skills are top-tier, and they know how to tell a story that resonates. Highly recommended!",
-    role: "Filmmaker"
+    avatar: "/testo/mouhamed.jpg"
   },
   {
     id: 2,
     name: "Zied Grombali",
     handle: "ziedgrombali",
-    avatar: "/testo/zied.jpg",
-    content: "Benders' approach was refreshingly different. They listen intently to your vision and then enhance it in ways you never expected.",
-    role: "Creative Director"
+    avatar: "/testo/zied.jpg"
   },
   {
     id: 3,
     name: "Aziz Mbarek",
     handle: "mahfelroom",
-    avatar: "/testo/aziz.jpg",
-    content: "Their expertise in both filmmaking and VFX was evident from start to finish. The creative ideas they brought were beyond our expectations.",
-    role: "Brand Manager"
+    avatar: "/testo/aziz.jpg"
   },
   {
     id: 4,
     name: "Ahmed Amraoui",
     handle: "gameworld.tn",
-    avatar: "/testo/ahmed.jpg",
-    content: "Working with Benders was a game-changer for our brand. Their cinematic approach turned our concept into a visually stunning masterpiece.",
-    role: "Entrepreneur"
+    avatar: "/testo/ahmed.jpg"
   },
   {
     id: 5,
     name: "Emna Sadfii",
     handle: "emnasadfii",
-    avatar: "/testo/emna.jpg",
-    content: "Benders' eye for detail and ability to blend VFX seamlessly into the narrative is unmatched. They craft experiences that feel alive.",
-    role: "Content Creator"
+    avatar: "/testo/emna.jpg"
   },
   {
     id: 6,
     name: "Seif Eddine Bayaa",
     handle: "seifeddinebayaa",
-    avatar: "/testo/seif.jpeg",
-    content: "Benders captured the soul of our event perfectly. The teaser they crafted wasn't just a highlight reel — it was an experience.",
-    role: "Event Organizer"
+    avatar: "/testo/seif.jpeg"
   },
   {
     id: 7,
     name: "Foued Rouchka",
     handle: "foued_rouchka",
-    avatar: "/testo/foued.jpeg",
-    content: "I gave Benders a rough idea, and they transformed it into a high-energy, mind-blowing visual. They're magicians with the camera!",
-    role: "Influencer"
+    avatar: "/testo/foued.jpeg"
   }
 ]
 
-const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
+const TestimonialCard = ({ testimonial, rtl = false }: { testimonial: Testimonial; rtl?: boolean }) => {
   return (
     <a
       href={`https://instagram.com/${testimonial.handle}`}
       target="_blank"
       rel="noopener noreferrer"
+      dir={rtl ? "rtl" : undefined}
       className="testimonial-card group relative flex flex-col flex-shrink-0 w-[280px] md:w-[340px] p-5 md:p-6 mx-2 md:mx-3 rounded-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02]"
       style={{
         background: "rgba(255, 255, 255, 0.03)",
@@ -104,7 +94,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       />
 
       {/* Quote icon */}
-      <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
+      <div className="absolute top-4 end-4 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#2de6c7]">
           <path d="M11 7H7C5.89543 7 5 7.89543 5 9V13C5 14.1046 5.89543 15 7 15H9C9 16.6569 7.65685 18 6 18V20C8.76142 20 11 17.7614 11 15V7Z" fill="currentColor"/>
           <path d="M21 7H17C15.8954 7 15 7.89543 15 9V13C15 14.1046 15.8954 15 17 15H19C19 16.6569 17.6569 18 16 18V20C18.7614 20 21 17.7614 21 15V7Z" fill="currentColor"/>
@@ -112,8 +102,8 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       </div>
 
       {/* Content */}
-      <p className="relative z-10 text-white/80 text-sm md:text-base leading-relaxed mb-6 font-neue-montreal flex-grow">
-        &ldquo;{testimonial.content}&rdquo;
+      <p dir="auto" className="relative z-10 text-white/80 text-sm md:text-base leading-relaxed mb-6 font-neue-montreal flex-grow">
+        {rtl ? <>&laquo;{testimonial.content}&raquo;</> : <>&ldquo;{testimonial.content}&rdquo;</>}
       </p>
 
       {/* Author */}
@@ -136,7 +126,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
           <h4 className="font-gilroy font-semibold text-white text-sm md:text-base">
             {testimonial.name}
           </h4>
-          <p className="text-white/50 text-xs md:text-sm">
+          <p dir="auto" className="text-white/50 text-xs md:text-sm">
             {testimonial.role}
           </p>
         </div>
@@ -152,6 +142,10 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 }
 
 const Testimonials = ({ loading, testimonials: sanityTestimonials }: TestimonialsProps) => {
+  const t = useTranslations("testimonials")
+  // tn is RTL: the marquee track is forced to LTR (its translateX math assumes the
+  // track starts at the left edge) while each card's text stays RTL.
+  const isRtl = useLocale() === "tn"
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const row1Ref = useRef<HTMLDivElement>(null)
@@ -161,17 +155,18 @@ const Testimonials = ({ loading, testimonials: sanityTestimonials }: Testimonial
   // Use Sanity testimonials when available, otherwise the bundled defaults
   const items: Testimonial[] = useMemo(() => {
     if (sanityTestimonials && sanityTestimonials.length > 0) {
-      return sanityTestimonials.map((t, i) => ({
-        id: t._id || i,
-        name: t.name,
-        handle: t.handle || "",
-        avatar: t.avatar || "",
-        content: t.content,
-        role: t.role,
+      return sanityTestimonials.map((item, i) => ({
+        id: item._id || i,
+        name: item.name,
+        handle: item.handle || "",
+        avatar: item.avatar || "",
+        content: item.content,
+        role: item.role,
       }))
     }
-    return fallbackTestimonials
-  }, [sanityTestimonials])
+    const copy = t.raw("fallback") as { role: string; content: string }[]
+    return fallbackPeople.map((p, i) => ({ ...p, role: copy[i]?.role, content: copy[i]?.content ?? "" }))
+  }, [sanityTestimonials, t])
   const row1Items = useMemo(() => items.filter((_, i) => i % 2 === 0), [items])
   const row2Items = useMemo(() => items.filter((_, i) => i % 2 === 1), [items])
 
@@ -279,14 +274,14 @@ const Testimonials = ({ loading, testimonials: sanityTestimonials }: Testimonial
           ref={titleRef}
           className="font-gilroy font-bold text-3xl md:text-5xl lg:text-6xl text-white uppercase tracking-tight"
         >
-          Client Feedback
+          {t("title")}
         </h2>
       </div>
 
       {/* Carousels Container */}
       <div className="flex flex-col gap-4 md:gap-6">
         {/* Row 1 - Scrolls Left */}
-        <div className="overflow-hidden">
+        <div className="overflow-hidden" dir={isRtl ? "ltr" : undefined}>
           <div 
             ref={row1Ref}
             className="flex items-stretch"
@@ -294,17 +289,17 @@ const Testimonials = ({ loading, testimonials: sanityTestimonials }: Testimonial
           >
             {/* First set */}
             {row1Items.map((testimonial) => (
-              <TestimonialCard key={`r1-first-${testimonial.id}`} testimonial={testimonial} />
+              <TestimonialCard key={`r1-first-${testimonial.id}`} testimonial={testimonial} rtl={isRtl} />
             ))}
             {/* Duplicate for seamless loop */}
             {row1Items.map((testimonial) => (
-              <TestimonialCard key={`r1-second-${testimonial.id}`} testimonial={testimonial} />
+              <TestimonialCard key={`r1-second-${testimonial.id}`} testimonial={testimonial} rtl={isRtl} />
             ))}
           </div>
         </div>
 
         {/* Row 2 - Scrolls Right (Desktop only, on mobile it's single row) */}
-        <div className={`overflow-hidden ${isMobile ? 'hidden' : 'block'}`}>
+        <div className={`overflow-hidden ${isMobile ? 'hidden' : 'block'}`} dir={isRtl ? "ltr" : undefined}>
           <div 
             ref={row2Ref}
             className="flex items-stretch"
@@ -312,11 +307,11 @@ const Testimonials = ({ loading, testimonials: sanityTestimonials }: Testimonial
           >
             {/* First set */}
             {row2Items.map((testimonial) => (
-              <TestimonialCard key={`r2-first-${testimonial.id}`} testimonial={testimonial} />
+              <TestimonialCard key={`r2-first-${testimonial.id}`} testimonial={testimonial} rtl={isRtl} />
             ))}
             {/* Duplicate for seamless loop */}
             {row2Items.map((testimonial) => (
-              <TestimonialCard key={`r2-second-${testimonial.id}`} testimonial={testimonial} />
+              <TestimonialCard key={`r2-second-${testimonial.id}`} testimonial={testimonial} rtl={isRtl} />
             ))}
           </div>
         </div>

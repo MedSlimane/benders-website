@@ -3,12 +3,17 @@ import { useRef, useEffect, useState } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useLocale, useTranslations } from "next-intl"
 
 interface SoulScienceProps {
   loading: boolean
 }
 
 const SoulScience = ({ loading }: SoulScienceProps) => {
+  const t = useTranslations("soul")
+  // Arabic letters must stay joined, so on the Derja site the "BECAUSE"
+  // fly-in animates whole words instead of individual characters.
+  const isTn = useLocale() === "tn"
   const sectionRef = useRef<HTMLDivElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
   const circleRef = useRef<HTMLDivElement>(null)
@@ -349,8 +354,9 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
     { scope: sectionRef, dependencies: [loading, isMobile] }
   )
 
-  const becauseText = "BECAUSE"
-  const weDidText = ["We", "did", "that", "multiple", "times"]
+  const becauseText = t("because")
+  const becauseParts = isTn ? becauseText.split(" ") : becauseText.split("")
+  const weDidText = t.raw("weDid") as string[]
 
   // Mobile version - full screen pinned like desktop
   if (isMobile) {
@@ -371,7 +377,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
             className="absolute inset-0 flex items-center justify-center z-10 px-6"
           >
             <h2 className="font-gilroy font-bold text-3xl text-white text-center leading-tight uppercase">
-              Results That<br />Speak Louder
+              {t("mainLine1")}<br />{t("mainLine2")}
             </h2>
           </div>
 
@@ -384,7 +390,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
               className="font-gilroy font-black text-[14vw] uppercase tracking-tight"
               style={{ color: "var(--color-electric-blue)" }}
             >
-              WHY US
+              {t("whyUs")}
             </h2>
           </div>
 
@@ -400,7 +406,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
                 textShadow: "0 0 40px rgba(45, 230, 199, 0.5)",
               }}
             >
-              BECAUSE
+              {becauseText}
             </h2>
           </div>
 
@@ -413,7 +419,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
               className="font-gilroy font-bold text-2xl text-center leading-tight"
               style={{ color: "var(--color-electric-blue)" }}
             >
-              We did that<br />multiple times
+              {t("weDidMobileLine1")}<br />{t("weDidMobileLine2")}
             </h2>
           </div>
         </div>
@@ -440,7 +446,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
           className="absolute inset-0 flex items-center justify-center z-10"
         >
           <h2 className="font-gilroy font-bold text-4xl md:text-5xl lg:text-6xl text-white text-center leading-tight uppercase">
-            Results That<br />Speak Louder
+            {t("mainLine1")}<br />{t("mainLine2")}
           </h2>
         </div>
 
@@ -455,7 +461,7 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
               color: "var(--color-electric-blue)",
             }}
           >
-            WHY US
+            {t("whyUs")}
           </h2>
         </div>
 
@@ -464,8 +470,9 @@ const SoulScience = ({ loading }: SoulScienceProps) => {
           ref={becauseRef}
           className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
         >
-          <h2 className="font-gilroy font-black text-[12vw] md:text-[15vw] uppercase tracking-tight flex">
-            {becauseText.split("").map((letter, i) => (
+          {/* tn: flex drops whitespace between spans, so word parts get a gap instead */}
+          <h2 className={`font-gilroy font-black text-[12vw] md:text-[15vw] uppercase tracking-tight flex${isTn ? " gap-x-[0.25em]" : ""}`}>
+            {becauseParts.map((letter, i) => (
               <span
                 key={i}
                 ref={(el) => { letterRefs.current[i] = el }}

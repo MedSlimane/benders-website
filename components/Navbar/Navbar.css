@@ -394,3 +394,61 @@
     font-size: 0.9375rem;
   }
 }
+
+/* ===================================
+   LANGUAGE SWITCHER
+   =================================== */
+
+/* Sits inside the desktop pill, after the links, behind a hairline divider */
+.navbar__lang {
+  margin-inline-start: 6px;
+  font-family: 'Gilroy', var(--font-arabic, 'Cairo'), system-ui, sans-serif;
+  font-weight: 600;
+  color: #2de6c7;
+}
+
+.navbar__lang::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -4px;
+  top: 50%;
+  width: 1px;
+  height: 16px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.navbar__lang:hover {
+  color: #fff;
+}
+
+.fullscreen-menu__lang {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 230, 199, 0.35);
+  color: #fff;
+  font-family: 'Gilroy', var(--font-arabic, 'Cairo'), system-ui, sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===================================
+   RTL (Tunisian site) — keep the menu button on the right like the
+   English site; mirror only the text-level motion
+   =================================== */
+
+@media (max-width: 768px) {
+  [dir="rtl"] .navbar__container {
+    justify-content: flex-start;
+  }
+
+  [dir="rtl"] .fullscreen-menu__link:hover .fullscreen-menu__link-text {
+    transform: translateX(-0.5rem);
+  }
+}
+
+[dir="rtl"] .fullscreen-menu__link:hover .fullscreen-menu__link-text {
+  transform: translateX(-1rem);
+}

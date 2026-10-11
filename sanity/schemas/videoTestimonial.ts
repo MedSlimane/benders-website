@@ -1,10 +1,12 @@
 import {defineField, defineType} from 'sanity'
+import {derjaGroups, derjaString, withDerja} from './derja'
 
 export default defineType({
   name: 'videoTestimonial',
   title: 'Video Testimonial',
   type: 'document',
-  fields: [
+  groups: derjaGroups,
+  fields: withDerja([
     defineField({
       name: 'name',
       title: 'Client Name',
@@ -60,7 +62,7 @@ export default defineType({
       title: 'Display Order',
       type: 'number',
     }),
-  ],
+  ], [derjaString('quote', 'Short Quote')]),
   preview: {
     select: {
       title: 'name',

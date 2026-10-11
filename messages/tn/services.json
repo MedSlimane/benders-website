@@ -1,0 +1,30 @@
+{
+  "title": "خدماتنا",
+  "subtitle": "الكل اللي تستحقّو باش تبني البراند متاعك، تلانسيه وتكبّرو.",
+  "items": {
+    "brandStrategy": {
+      "title": "استراتيجية البراند",
+      "description": "التموقع، العروض، الميساج والخطة."
+    },
+    "visualIdentity": {
+      "title": "الهوية البصرية",
+      "description": "اللوغو، سيستام البراند، الغايدلاينز والملفات."
+    },
+    "webDevelopment": {
+      "title": "تطوير الواب",
+      "description": "صفحات لاندينغ، سيتات واب، Webflow/Next.js."
+    },
+    "videoProduction": {
+      "title": "إنتاج الفيديو",
+      "description": "سبوتات، ريلز، موشن، VFX ومونتاج."
+    },
+    "digitalMarketing": {
+      "title": "ماركتينغ ديجيتال",
+      "description": "فانلز، إعلانات، تراكينغ وتحسين النتائج."
+    },
+    "socialMedia": {
+      "title": "سوشيال ميديا",
+      "description": "سيستام محتوى، استراتيجية وتكبير الكوميونيتي."
+    }
+  }
+}

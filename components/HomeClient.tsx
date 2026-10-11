@@ -15,6 +15,7 @@ import OwnerReveal from "@/components/OwnerReveal"
 import Testimonials from "@/components/Testimonials"
 import Preloader from "@/components/preloader"
 import { useState, useEffect, useRef } from "react"
+import { useLocale, useTranslations } from "next-intl"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import {
@@ -26,7 +27,9 @@ import {
   type Testimonial,
 } from "@/lib/sanity"
 
-export default function Home() {
+export default function HomeClient() {
+  const locale = useLocale() === "tn" ? "tn" : "en"
+  const t = useTranslations("common.sections")
   const [loading, setLoading] = useState(true)
   const [testimonials, setTestimonials] = useState<VideoTestimonial[]>([])
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -36,10 +39,10 @@ export default function Home() {
 
   // Load all Sanity-managed content for the homepage
   useEffect(() => {
-    fetchVideoTestimonials().then(setTestimonials).catch(() => setTestimonials([]))
-    fetchSiteSettings().then(setSettings).catch(() => setSettings(null))
-    fetchTestimonials().then(setTextTestimonials).catch(() => setTextTestimonials([]))
-  }, [])
+    fetchVideoTestimonials(locale).then(setTestimonials).catch(() => setTestimonials([]))
+    fetchSiteSettings(locale).then(setSettings).catch(() => setSettings(null))
+    fetchTestimonials(locale).then(setTextTestimonials).catch(() => setTextTestimonials([]))
+  }, [locale])
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
@@ -95,25 +98,25 @@ export default function Home() {
 
       <SmoothScroll loading={loading}>
         <div className={`content-transition ${loading ? 'loading-hidden' : 'opacity-100'}`}>
-        <section id="hero" aria-label="Hero section">
+        <section id="hero" aria-label={t("hero")}>
           <Hero loading={loading} heroVideoUrl={settings?.heroVideoUrl} />
         </section>
-        <section id="services" aria-label="Our services">
+        <section id="services" aria-label={t("services")}>
           <ServicesSection loading={loading} />
         </section>
         
         {/* CTA Banner */}
         <CTABanner loading={loading} />
         
-        <section id="soul-science" aria-label="Soul and Science">
+        <section id="soul-science" aria-label={t("soulScience")}>
           <SoulScience loading={loading} />
         </section>
-        <section id="clients" aria-label="Our clients">
+        <section id="clients" aria-label={t("clients")}>
           <LogoCarousel loading={loading} />
         </section>
         
         {/* Work section */}
-        <section id="work" aria-label="Our work">
+        <section id="work" aria-label={t("work")}>
           <WorkSection loading={loading} />
         </section>
 
@@ -125,23 +128,23 @@ export default function Home() {
         {/* Creative Reveal — "what people think about us" dissolves straight into
             the client videos. Only rendered when there are testimonial videos. */}
         {testimonials.length > 0 && (
-          <section id="creative-reveal" aria-label="What people think about us — client stories" className="-mt-[36rem] md:-mt-[50rem] relative z-10 pointer-events-none">
+          <section id="creative-reveal" aria-label={t("creativeReveal")} className="-mt-[36rem] md:-mt-[50rem] relative z-10 pointer-events-none">
             <CreativeReveal loading={loading} videos={testimonials} />
           </section>
         )}
 
         {/* Owner Reveal — founder video + "What do you expect?" button overlaid at the end */}
-        <section id="owner-reveal" aria-label="Meet the founder">
+        <section id="owner-reveal" aria-label={t("ownerReveal")}>
           <OwnerReveal loading={loading} founderVideoUrl={settings?.founderVideoUrl} />
         </section>
 
         {/* Client Feedback - Text testimonials carousel */}
-        <section id="client-feedback" aria-label="Client feedback">
+        <section id="client-feedback" aria-label={t("clientFeedback")}>
           <Testimonials loading={loading} testimonials={textTestimonials} />
         </section>
 
         {/* Contact section */}
-        <section id="contact" aria-label="Get in touch">
+        <section id="contact" aria-label={t("contact")}>
           <ContactSection loading={loading} />
         </section>
 

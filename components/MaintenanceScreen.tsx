@@ -2,14 +2,16 @@
 
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
+import { useTranslations } from "next-intl"
 import Logo from "./Logo"
 import MagneticButton from "./MagneticButton"
 
 const CONTACT_EMAIL = "contact@benders.io"
 
-const rotatingWords = ["bigger", "bolder", "sharper", "better"]
-
 const MaintenanceScreen = () => {
+  const t = useTranslations("maintenance")
+  const rotatingWords = t.raw("rotatingWords") as string[]
+  const rotatingCount = rotatingWords.length
   const rootRef = useRef<HTMLDivElement>(null)
   const gradientRef = useRef<HTMLDivElement>(null)
   const logoWrapRef = useRef<HTMLDivElement>(null)
@@ -105,7 +107,7 @@ const MaintenanceScreen = () => {
         duration: 0.35,
         ease: "power2.in",
         onComplete: () => {
-          setWordIndex((prev) => (prev + 1) % rotatingWords.length)
+          setWordIndex((prev) => (prev + 1) % rotatingCount)
           gsap.fromTo(
             el,
             { opacity: 0, y: 8 },
@@ -115,7 +117,7 @@ const MaintenanceScreen = () => {
       })
     }, 2600)
     return () => clearInterval(interval)
-  }, [])
+  }, [rotatingCount])
 
   return (
     <div
@@ -158,7 +160,7 @@ const MaintenanceScreen = () => {
         <div ref={contentRef} className="flex flex-col items-center">
           {/* Headline with rotating accent */}
           <h1 className="font-gilroy font-black leading-[1.05] tracking-tight text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-            <span className="block text-white">Something</span>
+            <span className="block text-white">{t("headlineTop")}</span>
             <span className="block">
               <span
                 ref={rotatingRef}
@@ -170,16 +172,15 @@ const MaintenanceScreen = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                {rotatingWords[wordIndex]}
+                {rotatingWords[wordIndex % rotatingCount]}
               </span>
-              <span className="text-white"> is coming.</span>
+              <span className="text-white">{t("headlineEnd")}</span>
             </span>
           </h1>
 
           {/* Subtext */}
           <p className="mt-6 max-w-xl font-neue-montreal text-base md:text-lg text-white/70">
-            Our website is getting a major upgrade. We&apos;ll be back online very
-            soon. In the meantime, let&apos;s talk.
+            {t("subtext")}
           </p>
 
           {/* Primary CTA — direct email, glass button like the rest of the site */}

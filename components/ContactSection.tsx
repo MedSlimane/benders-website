@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react"
 import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useLocale, useTranslations } from "next-intl"
 import BIcon from "./BIcon"
 import MagneticButton from "./MagneticButton"
 
@@ -14,6 +15,8 @@ interface ContactSectionProps {
 }
 
 const ContactSection = ({ loading }: ContactSectionProps) => {
+  const t = useTranslations("contact")
+  const locale = useLocale()
   const sectionRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const titleCharsRef = useRef<(HTMLSpanElement | null)[]>([])
@@ -74,14 +77,16 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
     })
     
     gsap.set(subtitle, { y: 40, opacity: 0, filter: "blur(10px)" })
-    gsap.set(leftCard, { x: -100, opacity: 0, scale: 0.9, rotateY: 12 })
+    // In RTL the card sits in the right-hand column, so it slides in from the right
+    const dir = locale === "tn" ? -1 : 1
+    gsap.set(leftCard, { x: -100 * dir, opacity: 0, scale: 0.9, rotateY: 12 * dir })
     gsap.set(bIcon, { scale: 0, opacity: 0, rotation: -180 })
     gsap.set(email, { y: 30, opacity: 0, scale: 0.8 })
     gsap.set(bottomText, { y: 20, opacity: 0 })
     gsap.set(cta, { y: 50, opacity: 0, scale: 0.85 })
     gsap.set(divider, { scaleX: 0, opacity: 0 })
     gsap.set(orText, { scale: 0, opacity: 0 })
-    gsap.set(formFields, { y: 40, opacity: 0, x: 30 })
+    gsap.set(formFields, { y: 40, opacity: 0, x: 30 * dir })
     gsap.set(submitBtn, { y: 30, opacity: 0, scale: 0.9 })
     gsap.set(glowOrb, { scale: 0, opacity: 0 })
 
@@ -157,10 +162,14 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
       y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)",
       scrollTrigger: { trigger: submitBtn, start: "top 98%", toggleActions: "play none none reverse" },
     })
-  }, { scope: sectionRef, dependencies: [loading] })
+  }, { scope: sectionRef, dependencies: [loading, locale] })
 
-  const titleText = "GET IN TOUCH"
-  const titleChars = titleText.split("")
+  const titleText = t("title")
+  // Arabic letters must stay joined: split by words (keeping the spaces) on tn,
+  // letter-by-letter on en.
+  const titleChars = locale === "tn"
+    ? titleText.split(/(\s+)/).filter(Boolean).map((part) => (part.trim() === "" ? " " : part))
+    : titleText.split("")
 
 
   return (
@@ -193,7 +202,7 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
             ))}
           </h2>
           <p ref={subtitleRef} className="font-neue-montreal text-white/60 text-sm md:text-base mt-3">
-            Let&apos;s create something extraordinary together.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -210,7 +219,7 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
               className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none"
               style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat' }}
             />
-            <h3 className="font-gilroy font-black text-2xl md:text-3xl lg:text-4xl text-[#04082e] leading-tight mb-4 relative z-10">GET IN<br />TOUCH</h3>
+            <h3 className="font-gilroy font-black text-2xl md:text-3xl lg:text-4xl text-[#04082e] leading-tight mb-4 relative z-10">{t("cardTitleLine1")}<br />{t("cardTitleLine2")}</h3>
             <div className="flex-grow flex items-center justify-center relative z-10">
               <div ref={bIconRef} className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32" style={{ opacity: 0.5 }}>
                 <BIcon className="w-full h-full text-[#1a1a1a]" />
@@ -222,7 +231,7 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
               </a>
             </div>
             <p ref={bottomTextRef} className="font-neue-montreal text-[#04082e]/70 text-xs md:text-sm text-center mt-3 relative z-10">
-              We&apos;ll get back to you within 24 hours.
+              {t("replyTime")}
             </p>
           </div>
 
@@ -235,35 +244,35 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
                 variant="glass"
                 size="lg"
                 className="w-full justify-center"
-                icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#2de6c7]"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>}
+                icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#2de6c7] rtl:-scale-x-100"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>}
               >
-                Book a Free Call
+                {t("bookFreeCall")}
               </MagneticButton>
             </div>
 
             {/* OR Divider */}
             <div ref={dividerRef} className="flex items-center gap-4 my-4 origin-center">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-              <span ref={orTextRef} className="font-gilroy font-bold text-white/40 text-xs uppercase tracking-widest">or</span>
+              <span ref={orTextRef} className="font-gilroy font-bold text-white/40 text-xs uppercase tracking-widest">{t("or")}</span>
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3">
               <div ref={(el) => { formFieldsRef.current[0] = el }}>
-                <input type="text" name="name" placeholder="Your name" value={formData.name} onChange={handleChange} onFocus={() => setFocusedField("name")} onBlur={() => setFocusedField(null)} required
+                <input type="text" name="name" placeholder={t("namePlaceholder")} value={formData.name} onChange={handleChange} onFocus={() => setFocusedField("name")} onBlur={() => setFocusedField(null)} required
                   className="w-full rounded-xl px-4 py-3 text-white font-neue-montreal text-sm placeholder:text-white/40 focus:outline-none transition-all duration-300"
                   style={{ background: focusedField === "name" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: focusedField === "name" ? "1px solid rgba(45,230,199,0.5)" : "1px solid rgba(255,255,255,0.1)", boxShadow: focusedField === "name" ? "0 0 25px rgba(45,230,199,0.1)" : "none" }}
                 />
               </div>
               <div ref={(el) => { formFieldsRef.current[1] = el }}>
-                <input type="email" name="email" placeholder="Your email" value={formData.email} onChange={handleChange} onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)} required
+                <input type="email" name="email" placeholder={t("emailPlaceholder")} value={formData.email} onChange={handleChange} onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)} required
                   className="w-full rounded-xl px-4 py-3 text-white font-neue-montreal text-sm placeholder:text-white/40 focus:outline-none transition-all duration-300"
                   style={{ background: focusedField === "email" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: focusedField === "email" ? "1px solid rgba(45,230,199,0.5)" : "1px solid rgba(255,255,255,0.1)", boxShadow: focusedField === "email" ? "0 0 25px rgba(45,230,199,0.1)" : "none" }}
                 />
               </div>
               <div ref={(el) => { formFieldsRef.current[2] = el }}>
-                <textarea name="message" placeholder="Tell us about your project..." value={formData.message} onChange={handleChange} onFocus={() => setFocusedField("message")} onBlur={() => setFocusedField(null)} required rows={3}
+                <textarea name="message" placeholder={t("messagePlaceholder")} value={formData.message} onChange={handleChange} onFocus={() => setFocusedField("message")} onBlur={() => setFocusedField(null)} required rows={3}
                   className="w-full rounded-xl px-4 py-3 text-white font-neue-montreal text-sm placeholder:text-white/40 focus:outline-none transition-all duration-300 resize-none"
                   style={{ background: focusedField === "message" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: focusedField === "message" ? "1px solid rgba(45,230,199,0.5)" : "1px solid rgba(255,255,255,0.1)", boxShadow: focusedField === "message" ? "0 0 25px rgba(45,230,199,0.1)" : "none" }}
                 />
@@ -274,7 +283,7 @@ const ContactSection = ({ loading }: ContactSectionProps) => {
                 onMouseEnter={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)"; e.currentTarget.style.color = "#04082e"; e.currentTarget.style.borderColor = "#2de6c7"; e.currentTarget.style.boxShadow = "0 0 35px rgba(45,230,199,0.4)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.boxShadow = "none"; }}
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? t("sending") : t("send")}
               </button>
             </form>
           </div>

@@ -4,6 +4,7 @@ import { gsap } from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { type VideoTestimonial } from "@/lib/sanity"
+import { useLocale, useTranslations } from "next-intl"
 
 interface CreativeRevealProps {
   loading: boolean
@@ -84,6 +85,11 @@ const VideoCard = ({ video, onOpen }: { video: VideoTestimonial; onOpen: (v: Vid
 }
 
 const CreativeReveal = ({ loading, videos }: CreativeRevealProps) => {
+  const t = useTranslations("reveal")
+  const locale = useLocale()
+  const isRtl = locale === "tn"
+  // Six supporting words (assembled two per row) + the big closing word
+  const words = t.raw("words") as string[]
   const sectionRef = useRef<HTMLDivElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
   const bgRef = useRef<HTMLDivElement>(null)
@@ -138,12 +144,15 @@ const CreativeReveal = ({ loading, videos }: CreativeRevealProps) => {
       if (!section || !pin || !bg || !word1 || !word2 || !word3 || !word4 || !word5 || !word6 || !word7 || !orb1 || !orb2 || !orb3 || !marquee) return
 
       const scatterMultiplier = isMobile ? 0.5 : 1
-      gsap.set(word1, { opacity: 0, x: -200 * scatterMultiplier, y: -100 * scatterMultiplier, rotation: -15, scale: 0.5, force3D: true })
-      gsap.set(word2, { opacity: 0, x: 200 * scatterMultiplier, y: 50 * scatterMultiplier, rotation: 10, scale: 0.5, force3D: true })
-      gsap.set(word3, { opacity: 0, x: -150 * scatterMultiplier, y: 100 * scatterMultiplier, rotation: -8, scale: 0.5, force3D: true })
-      gsap.set(word4, { opacity: 0, x: 100 * scatterMultiplier, y: -80 * scatterMultiplier, rotation: 12, scale: 0.5, force3D: true })
-      gsap.set(word5, { opacity: 0, x: -100 * scatterMultiplier, y: 60 * scatterMultiplier, rotation: -5, scale: 0.5, force3D: true })
-      gsap.set(word6, { opacity: 0, x: 150 * scatterMultiplier, y: -50 * scatterMultiplier, rotation: 8, scale: 0.5, force3D: true })
+      // In RTL the first word of each row sits on the right, so mirror the
+      // horizontal scatter (and tilt) to keep every word flying in from its own side
+      const mirror = isRtl ? -1 : 1
+      gsap.set(word1, { opacity: 0, x: -200 * scatterMultiplier * mirror, y: -100 * scatterMultiplier, rotation: -15 * mirror, scale: 0.5, force3D: true })
+      gsap.set(word2, { opacity: 0, x: 200 * scatterMultiplier * mirror, y: 50 * scatterMultiplier, rotation: 10 * mirror, scale: 0.5, force3D: true })
+      gsap.set(word3, { opacity: 0, x: -150 * scatterMultiplier * mirror, y: 100 * scatterMultiplier, rotation: -8 * mirror, scale: 0.5, force3D: true })
+      gsap.set(word4, { opacity: 0, x: 100 * scatterMultiplier * mirror, y: -80 * scatterMultiplier, rotation: 12 * mirror, scale: 0.5, force3D: true })
+      gsap.set(word5, { opacity: 0, x: -100 * scatterMultiplier * mirror, y: 60 * scatterMultiplier, rotation: -5 * mirror, scale: 0.5, force3D: true })
+      gsap.set(word6, { opacity: 0, x: 150 * scatterMultiplier * mirror, y: -50 * scatterMultiplier, rotation: 8 * mirror, scale: 0.5, force3D: true })
       gsap.set(word7, { opacity: 0, scale: 0, rotation: 0, force3D: true, willChange: "transform, opacity" })
 
       gsap.set(bg, { opacity: 0.8 })
@@ -231,7 +240,7 @@ const CreativeReveal = ({ loading, videos }: CreativeRevealProps) => {
         ScrollTrigger.refresh()
       }, 100)
     },
-    { scope: sectionRef, dependencies: [loading, isMobile] }
+    { scope: sectionRef, dependencies: [loading, isMobile, isRtl] }
   )
 
   // Two continuous marquee rows scrolling opposite ways — same feel as the text testimonials
@@ -312,20 +321,20 @@ const CreativeReveal = ({ loading, videos }: CreativeRevealProps) => {
         {/* Words layer (back) */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 pointer-events-none">
           <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-4">
-            <div ref={word1Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">THIS</span></div>
-            <div ref={word2Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">IS</span></div>
+            <div ref={word1Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[0]}</span></div>
+            <div ref={word2Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[1]}</span></div>
           </div>
           <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-4">
-            <div ref={word3Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">WHAT</span></div>
-            <div ref={word4Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">PEOPLE</span></div>
+            <div ref={word3Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[2]}</span></div>
+            <div ref={word4Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[3]}</span></div>
           </div>
           <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-8">
-            <div ref={word5Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">THINK</span></div>
-            <div ref={word6Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">ABOUT</span></div>
+            <div ref={word5Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[4]}</span></div>
+            <div ref={word6Ref}><span className="font-gilroy font-bold text-2xl md:text-4xl lg:text-5xl text-white uppercase tracking-tight">{words[5]}</span></div>
           </div>
           <div ref={word7Ref} style={{ willChange: "transform, opacity" }}>
             <span className="font-gilroy font-black text-[20vw] md:text-[15vw] text-white uppercase leading-none">
-              US
+              {t("big")}
             </span>
           </div>
         </div>
@@ -368,7 +377,7 @@ const CreativeReveal = ({ loading, videos }: CreativeRevealProps) => {
               border: "1px solid rgba(255, 255, 255, 0.12)",
             }}
             onClick={closeFullscreen}
-            aria-label="Close video"
+            aria-label={t("closeVideo")}
           >
             <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
