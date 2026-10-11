@@ -230,19 +230,6 @@ export default function ProjectPage() {
       <CustomCursor loading={false} />
       <Navbar />
       
-      {/* Benders Logo Bar - Same as main page Hero */}
-      <nav className='flex justify-between items-center p-4 w-full md:px-16 md:pt-8'>
-        <div className='flex items-center p-2'>
-          <Image 
-            src="/Benders-logo/png/3@2x.png" 
-            alt='Benders Logo' 
-            width={150} 
-            height={150}
-            className="w-[100px] md:w-[150px]" 
-          />
-        </div>
-      </nav>
-      
       {/* Animated gradient background */}
       <div 
         ref={gradientRef}
@@ -253,81 +240,107 @@ export default function ProjectPage() {
           backgroundPosition: "0% 0%",
         }}
       />
-        {/* Hero Section */}
-        <section ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center px-4 pt-40 pb-20">
-          {/* Floating decorative orbs */}
-          <div ref={(el) => { floatingOrbsRef.current[0] = el }} className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#2de6c7]/10 blur-3xl pointer-events-none" />
-          <div ref={(el) => { floatingOrbsRef.current[1] = el }} className="absolute top-40 right-20 w-40 h-40 rounded-full bg-[#0055ff]/10 blur-3xl pointer-events-none" />
-          <div ref={(el) => { floatingOrbsRef.current[2] = el }} className="absolute bottom-32 left-1/4 w-36 h-36 rounded-full bg-[#2de6c7]/8 blur-3xl pointer-events-none" />
-          
-          {/* Back Button with magnetic effect */}
+        {/* Hero — full-bleed project image header (desktop + mobile) */}
+        <section ref={heroRef} className="relative w-full h-[100svh] min-h-[600px] overflow-hidden">
+          {/* Full project image */}
+          {project.thumbnail && (
+            <Image
+              src={project.thumbnail}
+              alt={project.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          )}
+          {/* Legibility scrim */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#04082e] via-[#04082e]/45 to-[#04082e]/25 pointer-events-none" />
+
+          {/* Logo (overlay top-left) */}
+          <div className="absolute top-4 left-4 md:top-8 md:left-16 z-30">
+            <Image
+              src="/Benders-logo/png/3@2x.png"
+              alt="Benders Logo"
+              width={150}
+              height={150}
+              priority
+              className="w-[90px] md:w-[140px]"
+            />
+          </div>
+
+          {/* Back Button */}
           <Link
             ref={backButtonRef}
             href="/#work"
-            className="fixed top-24 left-8 z-40 group"
+            className="absolute top-24 left-4 md:left-16 z-40 group"
           >
-            <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 text-white hover:bg-white/10 hover:border-[#2de6c7]/50 transition-all duration-500">
+            <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-black/30 backdrop-blur-xl border border-white/15 text-white hover:bg-black/40 hover:border-[#2de6c7]/50 transition-all duration-500">
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
               <span className="font-neue-montreal font-medium text-sm">Back</span>
             </div>
           </Link>
 
-          <div className="max-w-7xl mx-auto text-center" style={{ perspective: "1000px" }}>
-            {project.category && (
-              <div ref={categoryRef} className="mb-6 flex justify-center">
-                <span
-                  className="rounded-full px-5 py-2 font-neue-montreal text-xs font-semibold uppercase tracking-[0.2em] text-[#04082e]"
-                  style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
-                >
-                  {CATEGORY_LABELS[project.category] || project.category}
-                </span>
-              </div>
-            )}
-            <h1
-              ref={titleRef}
-              data-skew
-              className="font-gilroy font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white leading-[0.9] tracking-tight mb-8"
-            >
-              {project.title}
-            </h1>
-            
-            <p 
-              ref={subtitleRef}
-              className="font-neue-montreal text-white/70 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto mb-12"
-            >
-              {project.subtitle}
-            </p>
+          {/* Content overlaid at the bottom of the image */}
+          <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-14 md:pb-20">
+            <div className="max-w-7xl mx-auto text-center" style={{ perspective: "1000px" }}>
+              {project.category && (
+                <div ref={categoryRef} className="mb-5 flex justify-center">
+                  <span
+                    className="rounded-full px-5 py-2 font-neue-montreal text-xs font-semibold uppercase tracking-[0.2em] text-[#04082e]"
+                    style={{ background: "linear-gradient(135deg, #2de6c7 0%, #04c8aa 100%)" }}
+                  >
+                    {CATEGORY_LABELS[project.category] || project.category}
+                  </span>
+                </div>
+              )}
+              <h1
+                ref={titleRef}
+                data-skew
+                className="font-gilroy font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.95] tracking-tight mb-5"
+                style={{ textShadow: "0 4px 30px rgba(0,0,0,0.55)" }}
+              >
+                {project.title}
+              </h1>
 
-            {/* Meta Info - Premium glass cards with hover effects */}
-            <div ref={metaRef} className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
-              {project.client && (
-                <div className="group px-6 py-3 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                  <p className="font-neue-montreal text-white/40 text-[10px] uppercase tracking-widest mb-0.5">Client</p>
-                  <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.client}</p>
-                </div>
-              )}
-              {project.year && (
-                <div className="group px-6 py-3 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                  <p className="font-neue-montreal text-white/40 text-[10px] uppercase tracking-widest mb-0.5">Year</p>
-                  <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.year}</p>
-                </div>
-              )}
-              {project.services && project.services.length > 0 && (
-                <div className="group px-6 py-3 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
-                  <p className="font-neue-montreal text-white/40 text-[10px] uppercase tracking-widest mb-0.5">Services</p>
-                  <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.services.join(" • ")}</p>
-                </div>
-              )}
-              {webProject?.websiteUrl && (
-                <MagneticButton
-                  href={webProject.websiteUrl}
-                  variant="primary"
-                  size="md"
-                  icon={<ExternalLink className="w-3.5 h-3.5" />}
-                >
-                  Visit Website
-                </MagneticButton>
-              )}
+              <p
+                ref={subtitleRef}
+                className="font-neue-montreal text-white/85 text-base md:text-xl lg:text-2xl max-w-3xl mx-auto mb-8"
+                style={{ textShadow: "0 2px 16px rgba(0,0,0,0.5)" }}
+              >
+                {project.subtitle}
+              </p>
+
+              {/* Meta Info */}
+              <div ref={metaRef} className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                {project.client && (
+                  <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Client</p>
+                    <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.client}</p>
+                  </div>
+                )}
+                {project.year && (
+                  <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Year</p>
+                    <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.year}</p>
+                  </div>
+                )}
+                {project.services && project.services.length > 0 && (
+                  <div className="group px-6 py-3 rounded-full bg-black/25 backdrop-blur-xl border border-white/[0.12] hover:bg-black/40 hover:border-[#2de6c7]/30 hover:scale-105 transition-all duration-500">
+                    <p className="font-neue-montreal text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Services</p>
+                    <p className="font-gilroy font-bold text-white text-sm group-hover:text-[#2de6c7] transition-colors duration-300">{project.services.join(" • ")}</p>
+                  </div>
+                )}
+                {webProject?.websiteUrl && (
+                  <MagneticButton
+                    href={webProject.websiteUrl}
+                    variant="primary"
+                    size="md"
+                    icon={<ExternalLink className="w-3.5 h-3.5" />}
+                  >
+                    Visit Website
+                  </MagneticButton>
+                )}
+              </div>
             </div>
           </div>
         </section>
